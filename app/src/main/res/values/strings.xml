@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Namma Apartments Security</string>
+
+    <!--Base Activity-->
+    <string name="back_button_description">Back button to navigate previous activity</string>
+
+    <!--NammaApartment security Home Screen-->
+    <string name="e_intercom">E - Intercom</string>
+    <string name="otp_validation">OTP Validation</string>
+    <string name="daily_services">Daily Services</string>
+    <string name="notify_gate">Notify Gate</string>
+    <string name="society_member">Society Member</string>
+    <string name="emergency">Emergency</string>
+    <string name="images_of_nammaapartment_security_services">Images of Namma Apartment Security Services</string>
+</resources>

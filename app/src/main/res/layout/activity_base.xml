@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/nmLightBlack"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:weightSum="1"
+    tools:context=".BaseActivity">
+
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_weight="0.05"
+        android:contentDescription="@string/back_button_description"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrow_left_white" />
+
+    <TextView
+        android:id="@+id/textActivityTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_weight="0.9"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+</LinearLayout>
