@@ -1,12 +1,16 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsvalidation.VisitorsValidation;
 
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
     /* ------------------------------------------------------------- *
@@ -36,6 +40,9 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
 
         // Setting the imageAdapter
         gridNammaApartmentsSecurity.setAdapter(getAdapter());
+
+        /*Setting event for grid view items*/
+        gridNammaApartmentsSecurity.setOnItemClickListener(this);
     }
 
     /* ------------------------------------------------------------- *
@@ -43,7 +50,16 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
      * ------------------------------------------------------------- */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        switch (position) {
+            case 0:
+                startActivity(new Intent(NammaApartmentSecurityHome.this, EIntercom.class));
+                break;
+            case 1:
+                startActivity(new Intent(NammaApartmentSecurityHome.this, VisitorsValidation.class));
+                break;
+            default:
+                Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /* ------------------------------------------------------------- *
@@ -61,7 +77,7 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
         };
 
         String[] stringGuardServices = {getString(R.string.e_intercom),
-                getString(R.string.otp_validation),
+                getString(R.string.visitors_validation),
                 getString(R.string.daily_services),
                 getString(R.string.notify_gate),
                 getString(R.string.society_member),
