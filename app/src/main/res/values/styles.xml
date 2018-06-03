@@ -1,0 +1,14 @@
+<resources>
+
+    <!--Namma Apartment Theme-->
+    <style name="NammaApartmentsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="colorPrimary">@color/nmLightBlack</item>
+        <item name="colorPrimaryDark">@color/nmBlack</item>
+        <item name="colorAccent">@color/nmBlack</item>
+    </style>
+
+    <style name="NammaApartmentsTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="NammaApartmentsTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
