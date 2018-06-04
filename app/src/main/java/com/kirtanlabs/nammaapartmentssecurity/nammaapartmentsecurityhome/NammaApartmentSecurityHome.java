@@ -8,9 +8,10 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
+import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
-import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsvalidation.VisitorsValidation;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation;
 
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
     /* ------------------------------------------------------------- *
@@ -55,7 +56,14 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
                 startActivity(new Intent(NammaApartmentSecurityHome.this, EIntercom.class));
                 break;
             case 1:
-                startActivity(new Intent(NammaApartmentSecurityHome.this, VisitorsValidation.class));
+                Intent intentVisitorsValidation = new Intent(NammaApartmentSecurityHome.this, VisitorsAndDailyServicesValidation.class);
+                intentVisitorsValidation.putExtra(Constants.SCREEN_TITLE, R.string.visitors_validation);
+                startActivity(intentVisitorsValidation);
+                break;
+            case 2:
+                Intent intentDailyServicesValidation = new Intent(NammaApartmentSecurityHome.this, VisitorsAndDailyServicesValidation.class);
+                intentDailyServicesValidation.putExtra(Constants.SCREEN_TITLE, R.string.daily_services_validation);
+                startActivity(intentDailyServicesValidation);
                 break;
             default:
                 Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();
@@ -78,7 +86,7 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
 
         String[] stringGuardServices = {getString(R.string.e_intercom),
                 getString(R.string.visitors_validation),
-                getString(R.string.daily_services),
+                getString(R.string.daily_services_validation),
                 getString(R.string.notify_gate),
                 getString(R.string.society_member),
                 getString(R.string.emergency)
