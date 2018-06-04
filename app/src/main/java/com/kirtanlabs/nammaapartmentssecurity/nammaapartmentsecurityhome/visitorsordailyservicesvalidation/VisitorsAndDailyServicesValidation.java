@@ -186,10 +186,11 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     }
 
     /**
-     * This method is invoked to change Some view Titles according to Screen Titles
+     * We update the VisitorOrDailyServiceName Title and  Button AllowVisitorsAndEIntercom Text when this dialog is called inll
+     * Daily Services Validation screen
      *
-     * @param textVisitorOrDailyServiceName   - to change text of this view
-     * @param buttonAllowVisitorsAndEIntercom - to change text of this view
+     * @param textVisitorOrDailyServiceName   - to update title in Daily Services Validation Screen
+     * @param buttonAllowVisitorsAndEIntercom - to update text in Daily Services Validation Screen
      */
     private void changeViewsTitle(TextView textVisitorOrDailyServiceName, Button buttonAllowVisitorsAndEIntercom) {
         String nameTitle = getResources().getString(R.string.visitor_name);
@@ -197,7 +198,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
         textVisitorOrDailyServiceName.setText(nameTitle);
 
         String allowTo = getResources().getString(R.string.allow_visitor);
-        allowTo = allowTo.replace("Visitor", "Daily Services");
+        allowTo = allowTo.replace("Visitor", "Daily Service");
         buttonAllowVisitorsAndEIntercom.setText(allowTo);
     }
 }
