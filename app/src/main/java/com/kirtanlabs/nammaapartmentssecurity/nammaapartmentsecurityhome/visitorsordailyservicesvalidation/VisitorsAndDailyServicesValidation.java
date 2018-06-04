@@ -186,7 +186,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     }
 
     /**
-     * We update the VisitorOrDailyServiceName Title and  Button AllowVisitorsAndEIntercom Text when this dialog is called inll
+     * We update the VisitorOrDailyServiceName Title and  Button AllowVisitorsAndEIntercom Text when this dialog is called in
      * Daily Services Validation screen
      *
      * @param textVisitorOrDailyServiceName   - to update title in Daily Services Validation Screen
