@@ -12,7 +12,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/images_of_nammaapartment_security_services"
-        android:src="@drawable/e_intercom"/>
+        android:src="@drawable/e_intercom" />
 
     <TextView
         android:id="@+id/textNammaApartmentSecurityServices"
@@ -21,6 +21,8 @@
         android:layout_below="@id/imageNammaApartmentSecurityServices"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/nmBlack"
         android:textSize="18sp" />
 

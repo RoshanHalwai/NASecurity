@@ -20,9 +20,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".nammaapartmentsecurityhome.visitorsvalidation.VisitorsValidation"
+            android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".nammaapartmentsecurityhome.eintercom.EIntercom"></activity>
+        <activity android:name=".nammaapartmentsecurityhome.eintercom.EIntercom" />
     </application>
 
 </manifest>

@@ -12,13 +12,28 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/imageSuccess"
+        <RelativeLayout
+            android:id="@+id/layoutProfilePic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/image_success"
-            android:src="@drawable/success" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageSuccess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/image_success"
+                android:src="@drawable/success" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/VisitorAndDailyServiceProfilePic"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/profile_pic" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/row"
@@ -39,7 +54,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textVisitorName"
+                    android:id="@+id/textVisitorOrDailyServiceName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
@@ -76,7 +91,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textVisitorNameValue"
+                    android:id="@+id/textVisitorOrDailyServiceNameValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -124,7 +139,7 @@
             android:src="@drawable/failed" />
 
         <TextView
-            android:id="@+id/textInvalidVisitor"
+            android:id="@+id/textInvalidVisitorOrDailyServices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
@@ -142,7 +157,7 @@
         android:layout_margin="20dp"
         android:background="@color/nmBlack"
         android:text="@string/allow_visitor"
-        android:textAllCaps="false"
+        android:textAllCaps="true"
         android:textColor="@color/nmLightYellow"
         android:textSize="@dimen/button_default_size" />
 </LinearLayout>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".nammaapartmentsecurityhome.visitorsvalidation.VisitorsValidation">
+    tools:context=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation">
 
     <include layout="@layout/activity_base" />
 
@@ -52,14 +52,14 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/buttonVerifyVisitor"
+        android:id="@+id/buttonVerifyVisitorOrDailyServices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layoutMobileNumber"
         android:layout_margin="20dp"
         android:background="@color/nmBlack"
         android:text="@string/verify_visitor"
-        android:textAllCaps="false"
+        android:textAllCaps="true"
         android:textColor="@color/nmLightYellow"
         android:textSize="@dimen/button_default_size" />
 </RelativeLayout>

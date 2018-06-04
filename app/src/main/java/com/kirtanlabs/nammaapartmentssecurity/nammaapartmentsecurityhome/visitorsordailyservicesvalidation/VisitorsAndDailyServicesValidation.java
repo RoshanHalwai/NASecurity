@@ -1,4 +1,4 @@
-package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsvalidation;
+package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,7 +15,7 @@ import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 
-public class VisitorsValidation extends BaseActivity implements View.OnClickListener {
+public class VisitorsAndDailyServicesValidation extends BaseActivity implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
      * Private Members
@@ -24,18 +24,26 @@ public class VisitorsValidation extends BaseActivity implements View.OnClickList
     private View visitorValidationDialog;
     private AlertDialog dialog;
     private boolean validationStatus;
+    private int validationType;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
      * ------------------------------------------------------------- */
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.activity_visitors_validation;
+        return R.layout.activity_visitors_and_daily_services_validation;
     }
 
     @Override
     protected int getActivityTitle() {
-        return R.string.visitors_validation;
+        /*We use a common class for Visitors Validation and Daily Services validation,
+         *we set the title based on the user click on Namma Apartments Security Home screen*/
+        if (getIntent().getIntExtra(Constants.SCREEN_TITLE, 0) == R.string.visitors_validation) {
+            validationType = R.string.visitors_validation;
+        } else {
+            validationType = R.string.daily_services_validation;
+        }
+        return validationType;
     }
 
     @Override
@@ -46,16 +54,20 @@ public class VisitorsValidation extends BaseActivity implements View.OnClickList
         TextView textMobileNumber = findViewById(R.id.textMobileNumber);
         TextView textCountryCode = findViewById(R.id.textCountryCode);
         editMobileNumber = findViewById(R.id.editMobileNumber);
-        Button buttonVerifyVisitor = findViewById(R.id.buttonVerifyVisitor);
+        Button buttonVerifyVisitorOrDailyServices = findViewById(R.id.buttonVerifyVisitorOrDailyServices);
 
         /*Setting font for all the views*/
         textMobileNumber.setTypeface(Constants.setLatoBoldFont(this));
         textCountryCode.setTypeface(Constants.setLatoBoldFont(this));
         editMobileNumber.setTypeface(Constants.setLatoRegularFont(this));
-        buttonVerifyVisitor.setTypeface(Constants.setLatoLightFont(this));
+        buttonVerifyVisitorOrDailyServices.setTypeface(Constants.setLatoLightFont(this));
+
+        /*Since we are using same layout for Visitors and Daily services Validation we need to
+         * set text for buttonVerifyVisitorOrDailyServices to either Verify Visitor or Verify Daily Services*/
+        buttonVerifyVisitorOrDailyServices.setText(getVerifyVisitorOrDailyServicesText());
 
         /*Setting onClickListener for view*/
-        buttonVerifyVisitor.setOnClickListener(this);
+        buttonVerifyVisitorOrDailyServices.setOnClickListener(this);
     }
 
     /* ------------------------------------------------------------- *
@@ -64,7 +76,7 @@ public class VisitorsValidation extends BaseActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.buttonVerifyVisitor:
+            case R.id.buttonVerifyVisitorOrDailyServices:
                 validationStatus = isValidVisitors();
                 openVisitorValidationDialog(validationStatus);
                 break;
@@ -73,7 +85,7 @@ public class VisitorsValidation extends BaseActivity implements View.OnClickList
                 if (validationStatus) {
                     finish();
                 } else {
-                    startActivity(new Intent(VisitorsValidation.this, EIntercom.class));
+                    startActivity(new Intent(VisitorsAndDailyServicesValidation.this, EIntercom.class));
                     finish();
                 }
                 break;
@@ -83,6 +95,13 @@ public class VisitorsValidation extends BaseActivity implements View.OnClickList
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
+    private int getVerifyVisitorOrDailyServicesText() {
+        if (validationType == R.string.visitors_validation) {
+            return R.string.verify_visitor;
+        } else {
+            return R.string.verify_daily_services;
+        }
+    }
 
     /**
      * This method is used to check whether visitor has given valid mobile number or not
@@ -108,29 +127,42 @@ public class VisitorsValidation extends BaseActivity implements View.OnClickList
         /*Getting Id's for all the views*/
         LinearLayout layoutValidationSuccessful = visitorValidationDialog.findViewById(R.id.layoutValidationSuccessful);
         LinearLayout layoutValidationFailed = visitorValidationDialog.findViewById(R.id.layoutValidationFailed);
-        TextView textVisitorName = visitorValidationDialog.findViewById(R.id.textVisitorName);
+        TextView textVisitorOrDailyServiceName = visitorValidationDialog.findViewById(R.id.textVisitorOrDailyServiceName);
         TextView textFlatToVisit = visitorValidationDialog.findViewById(R.id.textFlatToVisit);
         TextView textInvitedBy = visitorValidationDialog.findViewById(R.id.textInvitedBy);
-        TextView textVisitorNameValue = visitorValidationDialog.findViewById(R.id.textVisitorNameValue);
+        TextView textVisitorOrDailyServiceNameValue = visitorValidationDialog.findViewById(R.id.textVisitorOrDailyServiceNameValue);
         TextView textFlatToVisitValue = visitorValidationDialog.findViewById(R.id.textFlatToVisitValue);
         TextView textInvitedByValue = visitorValidationDialog.findViewById(R.id.textInvitedByValue);
-        TextView textInvalidVisitor = visitorValidationDialog.findViewById(R.id.textInvalidVisitor);
+        TextView textInvalidVisitorOrDailyService = visitorValidationDialog.findViewById(R.id.textInvalidVisitorOrDailyServices);
         Button buttonAllowVisitorsAndEIntercom = visitorValidationDialog.findViewById(R.id.buttonAllowVisitorsAndEIntercom);
 
         /*Setting fonts to the views*/
-        textVisitorName.setTypeface(Constants.setLatoRegularFont(this));
+        textVisitorOrDailyServiceName.setTypeface(Constants.setLatoRegularFont(this));
         textFlatToVisit.setTypeface(Constants.setLatoRegularFont(this));
         textInvitedBy.setTypeface(Constants.setLatoRegularFont(this));
-        textVisitorNameValue.setTypeface(Constants.setLatoBoldFont(this));
+        textVisitorOrDailyServiceNameValue.setTypeface(Constants.setLatoBoldFont(this));
         textFlatToVisitValue.setTypeface(Constants.setLatoBoldFont(this));
         textInvitedByValue.setTypeface(Constants.setLatoBoldFont(this));
-        textInvalidVisitor.setTypeface(Constants.setLatoBoldFont(this));
+        textInvalidVisitorOrDailyService.setTypeface(Constants.setLatoBoldFont(this));
         buttonAllowVisitorsAndEIntercom.setTypeface(Constants.setLatoLightFont(this));
 
         if (validationStatus) {
             layoutValidationSuccessful.setVisibility(View.VISIBLE);
+
+            /*Since we are using same Dialog for Visitors and Daily services Validation we need to
+             * we need to change some Views Title*/
+            if (validationType == R.string.daily_services_validation) {
+                changeViewsTitle(textVisitorOrDailyServiceName, buttonAllowVisitorsAndEIntercom);
+                textInvitedBy.setVisibility(View.GONE);
+                textInvitedByValue.setVisibility(View.GONE);
+            }
         } else {
             layoutValidationFailed.setVisibility(View.VISIBLE);
+            if (validationType == R.string.daily_services_validation) {
+                String invalidText = getResources().getString(R.string.invalid_visitor);
+                invalidText = invalidText.replace("Visitor", "Daily Service");
+                textInvalidVisitorOrDailyService.setText(invalidText);
+            }
             buttonAllowVisitorsAndEIntercom.setText(getResources().getText(R.string.e_intercom));
         }
 
@@ -151,5 +183,22 @@ public class VisitorsValidation extends BaseActivity implements View.OnClickList
 
         new Dialog(this);
         dialog.show();
+    }
+
+    /**
+     * We update the VisitorOrDailyServiceName Title and  Button AllowVisitorsAndEIntercom Text when this dialog is called in
+     * Daily Services Validation screen
+     *
+     * @param textVisitorOrDailyServiceName   - to update title in Daily Services Validation Screen
+     * @param buttonAllowVisitorsAndEIntercom - to update text in Daily Services Validation Screen
+     */
+    private void changeViewsTitle(TextView textVisitorOrDailyServiceName, Button buttonAllowVisitorsAndEIntercom) {
+        String nameTitle = getResources().getString(R.string.visitor_name);
+        nameTitle = nameTitle.substring(8);
+        textVisitorOrDailyServiceName.setText(nameTitle);
+
+        String allowTo = getResources().getString(R.string.allow_visitor);
+        allowTo = allowTo.replace("Visitor", "Daily Service");
+        buttonAllowVisitorsAndEIntercom.setText(allowTo);
     }
 }
