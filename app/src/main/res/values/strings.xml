@@ -4,16 +4,16 @@
     <!--Base Activity-->
     <string name="back_button_description">Back button to navigate previous activity</string>
 
-    <!--NammaApartment security Home Screen-->
+    <!--NammaApartment security Home Activity-->
     <string name="e_intercom">E - Intercom</string>
     <string name="visitors_validation">Visitors Validation</string>
     <string name="daily_services_validation">Daily Services Validation</string>
-    <string name="notify_gate">Notify Gate</string>
+    <string name="gate_notification">Gate Notification</string>
     <string name="society_member">Society Member</string>
     <string name="emergency">Emergency</string>
     <string name="images_of_nammaapartment_security_services">Images of Namma Apartment Security Services</string>
 
-    <!--Visitors And Daily Services Validation-->
+    <!--Visitors And Daily Services Validation Activities-->
     <string name="phone_number">Mobile Number</string>
     <string name="_91">+91</string>
     <string name="verify_visitor">Verify Visitor</string>
@@ -25,4 +25,23 @@
     <string name="image_success">Image to indicate for successful visitor validation</string>
     <string name="image_failed">Image to indicate for failed visitor validation</string>
     <string name="invalid_visitor">Invalid Visitor</string>
+
+    <!--Gate Notification Screen Activity-->
+    <string name="expected_cab_arrivals">Expected Cab Arrivals</string>
+    <string name="expected_package_arrivals">Expected Package Arrivals</string>
+    <string name="things_given_to_guest">Things Given To Guest</string>
+    <string name="things_given_to_daily_services">Things Given To Daily Services</string>
+    <string name="service_icon">Service Icon</string>
+
+    <!--Expected Arrivals Activity-->
+    <string name="cab_number">Cab Number</string>
+    <string name="resident_mobile_number">Resident Mobile Number</string>
+    <string name="verify_cab">Verify Cab</string>
+    <string name="verify_package_vendor">Verify Package Vendor</string>
+    <string name="booked_by">Booked By:</string>
+    <string name="flat_number">Flat Number:</string>
+    <string name="date_to_visit">Date To Visit:</string>
+    <string name="time_to_visit">Time To Visit:</string>
+    <string name="allow_cab_driver">Allow Cab Driver</string>
+    <string name="dont_allow_cab_to_enter">Don\'t Allow to Cab to enter into Society</string>
 </resources>

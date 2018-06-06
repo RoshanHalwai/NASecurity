@@ -9,6 +9,7 @@ public class Constants {
      * Intent Keys
      * ------------------------------------------------------------- */
     public static final String SCREEN_TITLE = "screen_title";
+    public static final String ARRIVAL_TYPE = "arrival_type";
 
     /* ------------------------------------------------------------- *
      * Font Types

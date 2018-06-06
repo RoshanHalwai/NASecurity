@@ -11,6 +11,7 @@ import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification.GateNotificationHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation;
 
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -65,6 +66,9 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
                 intentDailyServicesValidation.putExtra(Constants.SCREEN_TITLE, R.string.daily_services_validation);
                 startActivity(intentDailyServicesValidation);
                 break;
+            case 3:
+                startActivity(new Intent(NammaApartmentSecurityHome.this, GateNotificationHome.class));
+                break;
             default:
                 Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();
         }
@@ -87,7 +91,7 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
         String[] stringGuardServices = {getString(R.string.e_intercom),
                 getString(R.string.visitors_validation),
                 getString(R.string.daily_services_validation),
-                getString(R.string.notify_gate),
+                getString(R.string.gate_notification),
                 getString(R.string.society_member),
                 getString(R.string.emergency)
         };
