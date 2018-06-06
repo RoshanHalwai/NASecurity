@@ -104,7 +104,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     }
 
     /**
-     * This method is used to check whether visitor has given valid mobile number or not
+     * This method is used to check whether visitor has given his own valid mobile number or not
      *
      * @return it will return boolean value whether number is valid or not
      */

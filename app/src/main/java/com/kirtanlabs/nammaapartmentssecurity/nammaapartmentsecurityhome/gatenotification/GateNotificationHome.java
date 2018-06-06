@@ -56,8 +56,16 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
                 intentPackageArrivals.putExtra(Constants.ARRIVAL_TYPE, R.string.expected_package_arrivals);
                 startActivity(intentPackageArrivals);
                 break;
-            default:
-                Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();
+            case 2:
+                Intent intentThingsGivenToGuest = new Intent(GateNotificationHome.this, Things_Given.class);
+                intentThingsGivenToGuest.putExtra(Constants.GIVEN_THINGS_TO, R.string.things_given_to_guest);
+                startActivity(intentThingsGivenToGuest);
+                break;
+            case 3:
+                Intent intentThingsGivenToDailyService = new Intent(GateNotificationHome.this, Things_Given.class);
+                intentThingsGivenToDailyService.putExtra(Constants.GIVEN_THINGS_TO, R.string.things_given_to_daily_services);
+                startActivity(intentThingsGivenToDailyService);
+                break;
         }
     }
 

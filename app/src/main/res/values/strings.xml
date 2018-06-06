@@ -44,4 +44,10 @@
     <string name="time_to_visit">Time To Visit:</string>
     <string name="allow_cab_driver">Allow Cab Driver</string>
     <string name="dont_allow_cab_to_enter">Don\'t allow Cab to enter into Society</string>
+
+    <!--Things Given Activity-->
+    <string name="verify_things">Verify Things</string>
+    <string name="resident_has_not_given_things">Resident has not given anything to Visitor</string>
+    <string name="resident_has_given_things">Resident has given things to Visitor</string>
+    <string name="ok">OK</string>
 </resources>
