@@ -43,5 +43,5 @@
     <string name="date_to_visit">Date To Visit:</string>
     <string name="time_to_visit">Time To Visit:</string>
     <string name="allow_cab_driver">Allow Cab Driver</string>
-    <string name="dont_allow_cab_to_enter">Don\'t allow to Cab to enter into Society</string>
+    <string name="dont_allow_cab_to_enter">Don\'t allow Cab to enter into Society</string>
 </resources>
