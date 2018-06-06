@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".nammaapartmentsecurityhome.gatenotification.Expected_Arrivals">
+
+    <include layout="@layout/activity_base" />
+
+    <TextView
+        android:id="@+id/textCabNumberAndResidentMobileNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/cab_number"
+        android:textColor="@color/nmBlack"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editCabNumberAndResidentMobileNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textCabNumberAndResidentMobileNumber"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:inputType="textCapCharacters|textVisiblePassword"
+        android:textColor="@color/nmBlack"
+        android:textSize="@dimen/edit_text_default_size"
+        tools:ignore="LabelFor,TextFields" />
+
+    <Button
+        android:id="@+id/buttonVerifyCabNumberAndPackageVendor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editCabNumberAndResidentMobileNumber"
+        android:layout_margin="20dp"
+        android:background="@color/nmBlack"
+        android:text="@string/verify_cab"
+        android:textAllCaps="true"
+        android:textColor="@color/nmLightYellow"
+        android:textSize="@dimen/button_default_size" />
+</RelativeLayout>

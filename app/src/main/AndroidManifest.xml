@@ -23,6 +23,10 @@
             android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".nammaapartmentsecurityhome.eintercom.EIntercom" />
+        <activity android:name=".nammaapartmentsecurityhome.gatenotification.GateNotificationHome" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.gatenotification.Expected_Arrivals"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
