@@ -12,6 +12,7 @@ import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification.GateNotificationHome;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.societymember.SocietyMember;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation;
 
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -70,6 +71,9 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
                 break;
             case 3:
                 startActivity(new Intent(NammaApartmentSecurityHome.this, GateNotificationHome.class));
+                break;
+            case 4:
+                startActivity(new Intent(NammaApartmentSecurityHome.this, SocietyMember.class));
                 break;
             default:
                 Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();

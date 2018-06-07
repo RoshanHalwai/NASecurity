@@ -75,7 +75,8 @@ public class Things_Given extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonVerifyThings:
-                validationStatus = isThingsGiven();
+                String mobileNumber = editMobileNumber.getText().toString().trim();
+                validationStatus = isValidMobileNumber(mobileNumber);
                 openVerifyThingsDialog(validationStatus);
                 break;
             case R.id.buttonOk:
@@ -99,20 +100,6 @@ public class Things_Given extends BaseActivity implements View.OnClickListener {
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
-
-    /**
-     * This method is used to check whether resident has given things to its visitor or not
-     * and also to daily service or not
-     *
-     * @return - return boolean value whether visitor or daily service has given his own mobile number or not
-     */
-    private boolean isThingsGiven() {
-        boolean check;
-        String mobileNumber = editMobileNumber.getText().toString().trim();
-        // TODO : To Change Mobile number here
-        check = mobileNumber.equals("7895185103");
-        return check;
-    }
 
     /**
      * This method is invoked when user will click on Verify things

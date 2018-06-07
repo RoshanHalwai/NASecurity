@@ -20,6 +20,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
+
     private EditText editMobileNumber;
     private View visitorValidationDialog;
     private AlertDialog dialog;
@@ -29,6 +30,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
      * ------------------------------------------------------------- */
+
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_visitors_and_daily_services_validation;
@@ -73,11 +75,13 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     /* ------------------------------------------------------------- *
      * Overriding OnClickListener Methods
      * ------------------------------------------------------------- */
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonVerifyVisitorOrDailyServices:
-                validationStatus = isValidVisitors();
+                String mobileNumber = editMobileNumber.getText().toString().trim();
+                validationStatus = isValidMobileNumber(mobileNumber);
                 openVisitorValidationDialog(validationStatus);
                 break;
             case R.id.buttonAllowVisitorsAndEIntercom:
@@ -95,25 +99,13 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
+
     private int getVerifyVisitorOrDailyServicesText() {
         if (validationType == R.string.visitors_validation) {
             return R.string.verify_visitor;
         } else {
             return R.string.verify_daily_services;
         }
-    }
-
-    /**
-     * This method is used to check whether visitor has given his own valid mobile number or not
-     *
-     * @return it will return boolean value whether number is valid or not
-     */
-    private boolean isValidVisitors() {
-        boolean check;
-        String mobileNumber = editMobileNumber.getText().toString().trim();
-        // TODO : To Change mobile number here
-        check = mobileNumber.equals("7895185103");
-        return check;
     }
 
     /**

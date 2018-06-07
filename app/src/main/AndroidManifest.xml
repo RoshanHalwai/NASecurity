@@ -30,6 +30,10 @@
         <activity
             android:name=".nammaapartmentsecurityhome.gatenotification.Things_Given"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.societymember.SocietyMember"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList" />
     </application>
 
 </manifest>

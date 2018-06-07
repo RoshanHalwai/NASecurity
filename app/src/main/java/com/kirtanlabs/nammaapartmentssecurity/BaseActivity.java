@@ -66,4 +66,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         setActivityTitle(getActivityTitle());
         setBackButtonListener();
     }
+
+    /* ------------------------------------------------------------- *
+     * Public Methods
+     * ------------------------------------------------------------- */
+
+    /**
+     * This method is used to check whether visitor or daily services has given his own valid mobile number or not
+     *
+     * @param mobileNumber - mobile number of Visitor or Daily services
+     * @return it will return boolean value whether number is valid or not
+     */
+    public boolean isValidMobileNumber(String mobileNumber) {
+        // TODO : To Change mobile number here
+        return mobileNumber.equals("7895185103");
+    }
 }
