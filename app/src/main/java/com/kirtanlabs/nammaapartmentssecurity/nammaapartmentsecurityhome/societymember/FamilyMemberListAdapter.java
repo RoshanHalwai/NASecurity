@@ -43,7 +43,6 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
 
     @Override
     public void onBindViewHolder(@NonNull FamilyMemberViewHolder holder, int position) {
-
         holder.textFamilyMemberNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
     }
 

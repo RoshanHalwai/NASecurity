@@ -33,7 +33,7 @@
         <activity
             android:name=".nammaapartmentsecurityhome.societymember.SocietyMember"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList"></activity>
+        <activity android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList" />
     </application>
 
 </manifest>

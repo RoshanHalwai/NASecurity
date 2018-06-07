@@ -78,9 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return it will return boolean value whether number is valid or not
      */
     public boolean isValidMobileNumber(String mobileNumber) {
-        boolean check;
         // TODO : To Change mobile number here
-        check = mobileNumber.equals("7895185103");
-        return check;
+        return mobileNumber.equals("7895185103");
     }
 }

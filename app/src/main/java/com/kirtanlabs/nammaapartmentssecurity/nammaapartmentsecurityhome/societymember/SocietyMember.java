@@ -20,7 +20,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
      * Private Members
      * ------------------------------------------------------------- */
 
-    private View errorDialog;
+    private View invalidFlatNumberDialog;
     private AlertDialog dialog;
     private EditText editFlatNumber;
 
@@ -69,7 +69,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
                     startActivity(new Intent(SocietyMember.this, FamilyMemberList.class));
                     finish();
                 } else {
-                    openErrorDialog();
+                    openInvalidFlatNumberDialog();
                 }
                 break;
             case R.id.buttonOk:
@@ -96,11 +96,14 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
         return check;
     }
 
-    private void openErrorDialog() {
-        errorDialog = View.inflate(this, R.layout.layout_things_given_dialog, null);
-        LinearLayout layoutValidationFailed = errorDialog.findViewById(R.id.layoutValidationFailed);
-        TextView textInvalidFlatNumber = errorDialog.findViewById(R.id.textNotGivenThings);
-        Button buttonOk = errorDialog.findViewById(R.id.buttonOk);
+    /**
+     * This method is invoked when Resident gives invalid flat number
+     */
+    private void openInvalidFlatNumberDialog() {
+        invalidFlatNumberDialog = View.inflate(this, R.layout.layout_things_given_dialog, null);
+        LinearLayout layoutValidationFailed = invalidFlatNumberDialog.findViewById(R.id.layoutValidationFailed);
+        TextView textInvalidFlatNumber = invalidFlatNumberDialog.findViewById(R.id.textNotGivenThings);
+        Button buttonOk = invalidFlatNumberDialog.findViewById(R.id.buttonOk);
 
         /*Setting fonts to the views*/
         textInvalidFlatNumber.setTypeface(Constants.setLatoBoldFont(this));
@@ -112,18 +115,19 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
         invalidType = invalidType.replace("Visitor", "Flat Number");
         textInvalidFlatNumber.setText(invalidType);
 
-        /*This method is used to create createErrorDialog*/
-        createErrorDialog();
+        /*This method is used to create createInvalidFlatNumberDialog*/
+        createInvalidFlatNumberDialog();
 
+        /*Setting onClickListener for view*/
         buttonOk.setOnClickListener(this);
     }
 
     /**
-     * This method is invoked to create a create Error dialog
+     * This method is invoked to create a Invalid Flat Number dialog
      */
-    private void createErrorDialog() {
+    private void createInvalidFlatNumberDialog() {
         AlertDialog.Builder alertInvalidFlatNumber = new AlertDialog.Builder(this);
-        alertInvalidFlatNumber.setView(errorDialog);
+        alertInvalidFlatNumber.setView(invalidFlatNumberDialog);
 
         dialog = alertInvalidFlatNumber.create();
         new Dialog(this);
