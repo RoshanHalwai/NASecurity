@@ -10,6 +10,7 @@ public class Constants {
      * ------------------------------------------------------------- */
     public static final String SCREEN_TITLE = "screen_title";
     public static final String ARRIVAL_TYPE = "arrival_type";
+    public static final String GIVEN_THINGS_TO = "given_things_to";
 
     /* ------------------------------------------------------------- *
      * Font Types

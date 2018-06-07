@@ -13,12 +13,15 @@ import android.widget.TextView;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 
 public class Expected_Arrivals extends BaseActivity implements View.OnClickListener {
+
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
+
     private View expectedArrivalsValidationDialog;
     private AlertDialog dialog;
     private EditText editCabNumberAndResidentMobileNumber;
@@ -28,6 +31,7 @@ public class Expected_Arrivals extends BaseActivity implements View.OnClickListe
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
      * ------------------------------------------------------------- */
+
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_expected_arrivals;
@@ -71,6 +75,7 @@ public class Expected_Arrivals extends BaseActivity implements View.OnClickListe
     /* ------------------------------------------------------------- *
      * Overriding OnClickListener Methods
      * ------------------------------------------------------------- */
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -82,7 +87,10 @@ public class Expected_Arrivals extends BaseActivity implements View.OnClickListe
             case R.id.buttonAllowArrivalsAndEIntercom:
                 dialog.cancel();
                 if (validationStatus) {
-                    finish();
+                    Intent intentExpectedArrivals = new Intent(Expected_Arrivals.this, NammaApartmentSecurityHome.class);
+                    intentExpectedArrivals.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intentExpectedArrivals.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intentExpectedArrivals);
                 } else {
                     Intent intentExpectedArrivals = new Intent(Expected_Arrivals.this, EIntercom.class);
                     intentExpectedArrivals.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

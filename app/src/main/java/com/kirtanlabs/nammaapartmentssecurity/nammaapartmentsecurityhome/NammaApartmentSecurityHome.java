@@ -15,6 +15,7 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenot
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation;
 
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
+
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Objects
      * ------------------------------------------------------------- */
@@ -50,6 +51,7 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
     /* ------------------------------------------------------------- *
      * Overriding OnItemClickListener
      * ------------------------------------------------------------- */
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {

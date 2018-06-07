@@ -16,6 +16,7 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Objects
      * ------------------------------------------------------------- */
+
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_gate_notification_home;
@@ -43,6 +44,7 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     /* ------------------------------------------------------------- *
      * Overriding OnItemClickListener
      * ------------------------------------------------------------- */
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
@@ -56,14 +58,23 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
                 intentPackageArrivals.putExtra(Constants.ARRIVAL_TYPE, R.string.expected_package_arrivals);
                 startActivity(intentPackageArrivals);
                 break;
-            default:
-                Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();
+            case 2:
+                Intent intentThingsGivenToGuest = new Intent(GateNotificationHome.this, Things_Given.class);
+                intentThingsGivenToGuest.putExtra(Constants.GIVEN_THINGS_TO, R.string.things_given_to_guest);
+                startActivity(intentThingsGivenToGuest);
+                break;
+            case 3:
+                Intent intentThingsGivenToDailyService = new Intent(GateNotificationHome.this, Things_Given.class);
+                intentThingsGivenToDailyService.putExtra(Constants.GIVEN_THINGS_TO, R.string.things_given_to_daily_services);
+                startActivity(intentThingsGivenToDailyService);
+                break;
         }
     }
 
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
+
     private GateNotificationHomeAdapter getAdapter() {
         int[] imageGateNotificationServices = {
                 R.drawable.taxi,

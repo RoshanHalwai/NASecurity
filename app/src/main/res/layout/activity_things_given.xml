@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".nammaapartmentsecurityhome.gatenotification.Things_Given">
+
+    <include layout="@layout/activity_base" />
+
+    <TextView
+        android:id="@+id/textMobileNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:text="@string/phone_number"
+        android:textColor="@color/nmBlack"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editMobileNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textMobileNumber"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:inputType="phone"
+        android:textColor="@color/nmBlack"
+        android:textSize="@dimen/edit_text_default_size"
+        tools:ignore="LabelFor,TextFields" />
+
+    <Button
+        android:id="@+id/buttonVerifyThings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editMobileNumber"
+        android:layout_margin="@dimen/button_margin"
+        android:background="@color/nmBlack"
+        android:text="@string/verify_things"
+        android:textAllCaps="true"
+        android:textColor="@color/nmLightYellow"
+        android:textSize="@dimen/button_default_size" />
+
+</RelativeLayout>

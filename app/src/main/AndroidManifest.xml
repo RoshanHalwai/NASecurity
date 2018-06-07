@@ -27,6 +27,9 @@
         <activity
             android:name=".nammaapartmentsecurityhome.gatenotification.Expected_Arrivals"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.gatenotification.Things_Given"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
