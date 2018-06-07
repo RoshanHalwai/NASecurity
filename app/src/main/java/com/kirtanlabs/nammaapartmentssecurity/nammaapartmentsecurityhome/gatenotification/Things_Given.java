@@ -17,9 +17,11 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaAp
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 
 public class Things_Given extends BaseActivity implements View.OnClickListener {
+
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
+
     private View givenThingsDialog;
     private AlertDialog dialog;
     private EditText editMobileNumber;
@@ -29,6 +31,7 @@ public class Things_Given extends BaseActivity implements View.OnClickListener {
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
      * ------------------------------------------------------------- */
+
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_things_given;
@@ -67,6 +70,7 @@ public class Things_Given extends BaseActivity implements View.OnClickListener {
     /* ------------------------------------------------------------- *
      * Overriding OnClickListener Methods
      * ------------------------------------------------------------- */
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -145,6 +149,7 @@ public class Things_Given extends BaseActivity implements View.OnClickListener {
                 textNotGivenThings.setText(notGivenThingsTo);
             }
         }
+
         /*This method is used to create createVerifyThingsDialog*/
         createVerifyThingsDialog();
 

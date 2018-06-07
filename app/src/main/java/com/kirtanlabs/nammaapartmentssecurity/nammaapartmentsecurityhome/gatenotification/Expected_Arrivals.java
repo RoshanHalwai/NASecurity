@@ -17,9 +17,11 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaAp
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 
 public class Expected_Arrivals extends BaseActivity implements View.OnClickListener {
+
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
+
     private View expectedArrivalsValidationDialog;
     private AlertDialog dialog;
     private EditText editCabNumberAndResidentMobileNumber;
@@ -29,6 +31,7 @@ public class Expected_Arrivals extends BaseActivity implements View.OnClickListe
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
      * ------------------------------------------------------------- */
+
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_expected_arrivals;
@@ -72,6 +75,7 @@ public class Expected_Arrivals extends BaseActivity implements View.OnClickListe
     /* ------------------------------------------------------------- *
      * Overriding OnClickListener Methods
      * ------------------------------------------------------------- */
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

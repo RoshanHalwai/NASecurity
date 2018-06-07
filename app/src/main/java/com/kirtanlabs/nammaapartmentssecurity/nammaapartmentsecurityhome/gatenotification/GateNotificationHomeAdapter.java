@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
 public class GateNotificationHomeAdapter extends BaseAdapter {
+
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
+
     private final Context context;
     private final int[] icons;
     private final String[] stringGateNotificationServices;
@@ -21,6 +23,7 @@ public class GateNotificationHomeAdapter extends BaseAdapter {
     /* ------------------------------------------------------------- *
      * Constructors
      * ------------------------------------------------------------- */
+
     GateNotificationHomeAdapter(Context context, int[] icons, String[] stringGateNotificationServices) {
         this.context = context;
         this.icons = icons;
@@ -30,6 +33,7 @@ public class GateNotificationHomeAdapter extends BaseAdapter {
     /* ------------------------------------------------------------- *
      * Overriding BaseAdapter Objects
      * ------------------------------------------------------------- */
+
     @Override
     public int getCount() {
         return stringGateNotificationServices.length;
@@ -53,6 +57,7 @@ public class GateNotificationHomeAdapter extends BaseAdapter {
             if (layoutInflater != null) {
                 listView = layoutInflater.inflate(R.layout.layout_gate_notification_services, parent, false);
             }
+
             /*Getting Id's for all the views*/
             ImageView imageGateNotificationService = listView.findViewById(R.id.imageGateNotificationService);
             TextView textGateNotification = listView.findViewById(R.id.textGateNotification);

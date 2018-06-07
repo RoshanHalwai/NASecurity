@@ -15,6 +15,7 @@ public class NammaApartmentSecurityHomeAdapter extends BaseAdapter {
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
+
     private final int[] icons;
     private final String[] stringGuardServices;
     private final Context context;

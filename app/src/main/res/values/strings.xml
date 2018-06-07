@@ -50,4 +50,5 @@
     <string name="resident_has_not_given_things">Resident has not given anything to Visitor</string>
     <string name="resident_has_given_things">Resident has given things to Visitor</string>
     <string name="ok">OK</string>
+
 </resources>

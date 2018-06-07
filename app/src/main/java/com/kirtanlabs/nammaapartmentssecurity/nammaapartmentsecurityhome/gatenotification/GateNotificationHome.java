@@ -16,6 +16,7 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Objects
      * ------------------------------------------------------------- */
+
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_gate_notification_home;
@@ -43,6 +44,7 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     /* ------------------------------------------------------------- *
      * Overriding OnItemClickListener
      * ------------------------------------------------------------- */
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
@@ -72,6 +74,7 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
+
     private GateNotificationHomeAdapter getAdapter() {
         int[] imageGateNotificationServices = {
                 R.drawable.taxi,
