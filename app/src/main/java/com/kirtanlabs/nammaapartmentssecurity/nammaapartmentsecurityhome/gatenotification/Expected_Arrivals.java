@@ -174,6 +174,11 @@ public class Expected_Arrivals extends BaseActivity implements View.OnClickListe
          * change some Views Title*/
         if (validationStatus) {
             layoutValidationSuccessful.setVisibility(View.VISIBLE);
+
+            String flatNumberTitle = getResources().getString(R.string.flat_number);
+            flatNumberTitle = flatNumberTitle + ":";
+            textFlatNumber.setText(flatNumberTitle);
+
             if (arrivalType == R.string.expected_package_arrivals) {
                 changeExpectedArrivalsDialogViewsTitle(textBookedBy, buttonAllowExpectedArrivalsAndEIntercom);
             }

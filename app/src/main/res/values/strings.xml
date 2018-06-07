@@ -39,7 +39,7 @@
     <string name="verify_cab">Verify Cab</string>
     <string name="verify_package_vendor">Verify Package Vendor</string>
     <string name="booked_by">Booked By:</string>
-    <string name="flat_number">Flat Number:</string>
+    <string name="flat_number">Flat Number</string>
     <string name="date_to_visit">Date To Visit:</string>
     <string name="time_to_visit">Time To Visit:</string>
     <string name="allow_cab_driver">Allow Cab Driver</string>
@@ -50,5 +50,10 @@
     <string name="resident_has_not_given_things">Resident has not given anything to Visitor</string>
     <string name="resident_has_given_things">Resident has given things to Visitor</string>
     <string name="ok">OK</string>
+
+    <!--Society Member-->
+    <string name="verify_resident">Verify Resident</string>
+    <string name="family_member_list">Family Member List</string>
+    <string name="name">Name:</string>
 
 </resources>
