@@ -1,4 +1,4 @@
-package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation;
+package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +11,14 @@ import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
-public class VisitorsAndDailyServicesValidation extends BaseActivity implements View.OnClickListener {
+public class ThingsGiven extends BaseActivity implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
 
     private EditText editMobileNumber;
-    private int validationType;
+    private int givenThingsTo;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -26,19 +26,19 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
 
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.activity_visitors_and_daily_services_validation;
+        return R.layout.activity_things_given;
     }
 
     @Override
     protected int getActivityTitle() {
-        /*We use a common class for Visitors Validation and Daily Services validation,
-         *we set the title based on the user click on Namma Apartments Security Home screen*/
-        if (getIntent().getIntExtra(Constants.SCREEN_TITLE, 0) == R.string.visitors_validation) {
-            validationType = R.string.visitors_validation;
+        /*We use a common class for Given Things to Guest and Given Things to Daily Services
+         *we set the title based on the user click on Gate Notification screen*/
+        if (getIntent().getIntExtra(Constants.GIVEN_THINGS_TO, 0) == R.string.things_given_to_guest) {
+            givenThingsTo = R.string.things_given_to_guest;
         } else {
-            validationType = R.string.daily_services_validation;
+            givenThingsTo = R.string.things_given_to_daily_services;
         }
-        return validationType;
+        return givenThingsTo;
     }
 
     @Override
@@ -47,22 +47,16 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
 
         /*Getting Id's for all the views*/
         TextView textMobileNumber = findViewById(R.id.textMobileNumber);
-        TextView textCountryCode = findViewById(R.id.textCountryCode);
         editMobileNumber = findViewById(R.id.editMobileNumber);
-        Button buttonVerifyVisitorOrDailyServices = findViewById(R.id.buttonVerifyVisitorOrDailyServices);
+        Button buttonVerifyThings = findViewById(R.id.buttonVerifyThings);
 
         /*Setting font for all the views*/
         textMobileNumber.setTypeface(Constants.setLatoBoldFont(this));
-        textCountryCode.setTypeface(Constants.setLatoBoldFont(this));
         editMobileNumber.setTypeface(Constants.setLatoRegularFont(this));
-        buttonVerifyVisitorOrDailyServices.setTypeface(Constants.setLatoLightFont(this));
-
-        /*Since we are using same layout for Visitors and Daily services Validation we need to
-         * set text for buttonVerifyVisitorOrDailyServices to either Verify Visitor or Verify Daily Services*/
-        buttonVerifyVisitorOrDailyServices.setText(getVerifyVisitorOrDailyServicesText());
+        buttonVerifyThings.setTypeface(Constants.setLatoLightFont(this));
 
         /*Setting onClickListener for view*/
-        buttonVerifyVisitorOrDailyServices.setOnClickListener(this);
+        buttonVerifyThings.setOnClickListener(this);
     }
 
     /* ------------------------------------------------------------- *
@@ -71,30 +65,22 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
 
     @Override
     public void onClick(View v) {
-        openVisitorValidationStatus();
+        openThingsGivenValidationStatus();
     }
 
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
 
-    private int getVerifyVisitorOrDailyServicesText() {
-        if (validationType == R.string.visitors_validation) {
-            return R.string.verify_visitor;
-        } else {
-            return R.string.verify_daily_services;
-        }
-    }
-
     /**
-     * This method is invoked when user will click on Verify Visitors or Verify Daily Services
+     * This method is invoked when user will click on Verify things
      */
-    private void openVisitorValidationStatus() {
+    private void openThingsGivenValidationStatus() {
         String mobileNumber = editMobileNumber.getText().toString().trim();
         boolean validationStatus = isValidMobileNumber(mobileNumber);
 
-        Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorOrDailyServiceValidationStatus.class);
-        intent.putExtra(Constants.SCREEN_TITLE, validationType);
+        Intent intent = new Intent(ThingsGiven.this, ThingsGivenValidationStatus.class);
+        intent.putExtra(Constants.SCREEN_TITLE, givenThingsTo);
         intent.putExtra(Constants.VALIDATION_STATUS, validationStatus);
         startActivity(intent);
         finish();

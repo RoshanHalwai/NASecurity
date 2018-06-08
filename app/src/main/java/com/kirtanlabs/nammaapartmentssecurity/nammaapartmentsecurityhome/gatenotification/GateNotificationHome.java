@@ -48,22 +48,22 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                Intent intentCabArrivals = new Intent(GateNotificationHome.this, Expected_Arrivals.class);
+                Intent intentCabArrivals = new Intent(GateNotificationHome.this, ExpectedArrivals.class);
                 intentCabArrivals.putExtra(Constants.ARRIVAL_TYPE, R.string.expected_cab_arrivals);
                 startActivity(intentCabArrivals);
                 break;
             case 1:
-                Intent intentPackageArrivals = new Intent(GateNotificationHome.this, Expected_Arrivals.class);
+                Intent intentPackageArrivals = new Intent(GateNotificationHome.this, ExpectedArrivals.class);
                 intentPackageArrivals.putExtra(Constants.ARRIVAL_TYPE, R.string.expected_package_arrivals);
                 startActivity(intentPackageArrivals);
                 break;
             case 2:
-                Intent intentThingsGivenToGuest = new Intent(GateNotificationHome.this, Things_Given.class);
+                Intent intentThingsGivenToGuest = new Intent(GateNotificationHome.this, ThingsGiven.class);
                 intentThingsGivenToGuest.putExtra(Constants.GIVEN_THINGS_TO, R.string.things_given_to_guest);
                 startActivity(intentThingsGivenToGuest);
                 break;
             case 3:
-                Intent intentThingsGivenToDailyService = new Intent(GateNotificationHome.this, Things_Given.class);
+                Intent intentThingsGivenToDailyService = new Intent(GateNotificationHome.this, ThingsGiven.class);
                 intentThingsGivenToDailyService.putExtra(Constants.GIVEN_THINGS_TO, R.string.things_given_to_daily_services);
                 startActivity(intentThingsGivenToDailyService);
                 break;
