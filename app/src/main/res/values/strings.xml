@@ -56,4 +56,12 @@
     <string name="family_member_list">Family Member List</string>
     <string name="name">Name:</string>
 
+    <!--Visitors And Daily Services Validation Status Activity-->
+    <string name="visitor_validation_status">Visitor Validation Status</string>
+    <string name="daily_service_validation_status">Daily Service Validation Status</string>
+
+    <!--Expected Arrivals Validation Status Activity-->
+    <string name="cab_driver_validation_status">Cab Driver Validation Status</string>
+    <string name="package_vendor_validation_status">Package Vendor Validation Status</string>
+
 </resources>
