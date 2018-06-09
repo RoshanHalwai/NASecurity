@@ -11,6 +11,7 @@ import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.emergency.Emergency;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification.GateNotificationHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.societymember.SocietyMember;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation;
@@ -75,8 +76,9 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
             case 4:
                 startActivity(new Intent(NammaApartmentSecurityHome.this, SocietyMember.class));
                 break;
-            default:
-                Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();
+            case 5:
+                startActivity(new Intent(NammaApartmentSecurityHome.this, Emergency.class));
+                break;
         }
     }
 

@@ -64,4 +64,9 @@
     <string name="cab_driver_validation_status">Cab Driver Validation Status</string>
     <string name="package_vendor_validation_status">Package Vendor Validation Status</string>
 
+    <!--Emergency Activity-->
+    <string name="emergency_type">Emergency Type:</string>
+    <string name="resident_name">Resident Name:</string>
+    <string name="image_emergency">Image to indicate type of Emergency</string>
+
 </resources>
