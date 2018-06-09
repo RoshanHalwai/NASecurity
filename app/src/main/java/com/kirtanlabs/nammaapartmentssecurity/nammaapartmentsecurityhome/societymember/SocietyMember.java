@@ -1,13 +1,10 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.societymember;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
@@ -20,8 +17,6 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
      * Private Members
      * ------------------------------------------------------------- */
 
-    private View invalidFlatNumberDialog;
-    private AlertDialog dialog;
     private EditText editFlatNumber;
 
     /* ------------------------------------------------------------- *
@@ -69,12 +64,10 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
                     startActivity(new Intent(SocietyMember.this, FamilyMemberList.class));
                     finish();
                 } else {
-                    openInvalidFlatNumberDialog();
+                    String invalidFlatNumber = getResources().getString(R.string.invalid_visitor);
+                    invalidFlatNumber = invalidFlatNumber.replace("Visitor", "Flat Number");
+                    openValidationStatusDialog(Constants.FAILED, invalidFlatNumber);
                 }
-                break;
-            case R.id.buttonOk:
-                dialog.cancel();
-                editFlatNumber.setText("");
                 break;
         }
     }
@@ -94,43 +87,5 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
         // TODO : To change Flat number here
         check = flatNumber.equalsIgnoreCase("c504");
         return check;
-    }
-
-    /**
-     * This method is invoked when Resident gives invalid flat number
-     */
-    private void openInvalidFlatNumberDialog() {
-        invalidFlatNumberDialog = View.inflate(this, R.layout.layout_things_given_dialog, null);
-        LinearLayout layoutValidationFailed = invalidFlatNumberDialog.findViewById(R.id.layoutValidationFailed);
-        TextView textInvalidFlatNumber = invalidFlatNumberDialog.findViewById(R.id.textNotGivenThings);
-        Button buttonOk = invalidFlatNumberDialog.findViewById(R.id.buttonOk);
-
-        /*Setting fonts to the views*/
-        textInvalidFlatNumber.setTypeface(Constants.setLatoBoldFont(this));
-        buttonOk.setTypeface(Constants.setLatoLightFont(this));
-
-        layoutValidationFailed.setVisibility(View.VISIBLE);
-
-        String invalidType = getResources().getString(R.string.invalid_visitor);
-        invalidType = invalidType.replace("Visitor", "Flat Number");
-        textInvalidFlatNumber.setText(invalidType);
-
-        /*This method is used to create createInvalidFlatNumberDialog*/
-        createInvalidFlatNumberDialog();
-
-        /*Setting onClickListener for view*/
-        buttonOk.setOnClickListener(this);
-    }
-
-    /**
-     * This method is invoked to create a Invalid Flat Number dialog
-     */
-    private void createInvalidFlatNumberDialog() {
-        AlertDialog.Builder alertInvalidFlatNumber = new AlertDialog.Builder(this);
-        alertInvalidFlatNumber.setView(invalidFlatNumberDialog);
-
-        dialog = alertInvalidFlatNumber.create();
-        new Dialog(this);
-        dialog.show();
     }
 }
