@@ -37,6 +37,7 @@
         <activity android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorOrDailyServiceValidationStatus" />
         <activity android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedArrivalsValidationStatus" />
         <activity android:name=".nammaapartmentsecurityhome.gatenotification.ThingsGivenValidationStatus" />
+        <activity android:name=".nammaapartmentsecurityhome.emergency.Emergency" />
     </application>
 
 </manifest>
