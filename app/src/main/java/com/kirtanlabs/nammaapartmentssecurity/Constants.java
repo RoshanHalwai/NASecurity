@@ -14,6 +14,14 @@ public class Constants {
     public static final String VALIDATION_STATUS = "validation_status";
 
     /* ------------------------------------------------------------- *
+     * Dialog Types
+     * ------------------------------------------------------------- */
+
+    public static final String SUCCESS = "success";
+    public static final String FAILED = "failed";
+    public static final String WARNING = "warning";
+
+    /* ------------------------------------------------------------- *
      * Font Types
      * ------------------------------------------------------------- */
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageSuccess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/image_success"
+        android:src="@drawable/success"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imageFailed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/image_failed"
+        android:src="@drawable/failed"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imageWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/image_failed"
+        android:src="@drawable/warning"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:padding="2dp"
+        android:text="@string/invalid_visitor"
+        android:textColor="@color/nmBlack"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/buttonEIntercom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@color/nmBlack"
+        android:text="@string/e_intercom"
+        android:textAllCaps="true"
+        android:textColor="@color/nmLightYellow"
+        android:textSize="@dimen/button_default_size" />
+
+</LinearLayout>
