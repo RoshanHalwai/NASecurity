@@ -104,6 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return it will return boolean value whether number is valid or not
      */
     protected boolean isValidMobileNumber(String mobileNumber) {
+        //TODO : To change mobile number here
         return mobileNumber.equals("7895185103");
     }
 
@@ -113,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param dialogType  - consists of type dialog box in to display
      * @param warningText - consists of message to display in dialog box
      */
-    protected void openValidationStatusDialog(final String dialogType, String warningText) {
+    protected void openValidationStatusDialog(final String dialogType, final String warningText) {
         validationDialog = View.inflate(this, R.layout.layout_validation_type_dialog, null);
 
         /*Getting Id's for all the views*/
