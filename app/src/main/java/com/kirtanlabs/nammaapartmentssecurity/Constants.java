@@ -22,6 +22,19 @@ public class Constants {
     public static final String WARNING = "warning";
 
     /* ------------------------------------------------------------- *
+     * Firebase objects
+     * ------------------------------------------------------------- */
+
+    public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
+    public static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
+    public static final String FIREBASE_CHILD_PRIVATE = "private";
+    public static final String FIREBASE_CHILD_VISITORS = "visitors";
+    public static final String FIREBASE_CHILD_USERS = "users";
+    public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
+    public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
+    public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
+
+    /* ------------------------------------------------------------- *
      * Font Types
      * ------------------------------------------------------------- */
 

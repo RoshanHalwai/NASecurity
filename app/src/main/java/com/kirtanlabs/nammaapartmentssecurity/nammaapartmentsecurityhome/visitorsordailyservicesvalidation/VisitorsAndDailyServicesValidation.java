@@ -7,6 +7,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
@@ -32,7 +36,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     @Override
     protected int getActivityTitle() {
         /*We use a common class for Visitors Validation and Daily Services validation,
-         *we set the title based on the user click on Namma Apartments Security Home screen*/
+         *we set the title based on the user click on NammaApartments Security Home screen*/
         if (getIntent().getIntExtra(Constants.SCREEN_TITLE, 0) == R.string.visitors_validation) {
             validationType = R.string.visitors_validation;
         } else {
@@ -71,7 +75,9 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
 
     @Override
     public void onClick(View v) {
-        openVisitorValidationStatus();
+        /*We need Progress Indicator in this screen*/
+        showProgressIndicator();
+        checkMobileNumberInFirebase(editMobileNumber.getText().toString().trim());
     }
 
     /* ------------------------------------------------------------- *
@@ -87,16 +93,44 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     }
 
     /**
-     * This method is invoked when user will click on Verify Visitors or Verify Daily Services
+     * This method is invoked when user will click on Verify Visitor Or DailyServices
+     *
+     * @param mobileNumber - that need to be checked whether it is present in Firebase or not
      */
-    private void openVisitorValidationStatus() {
-        String mobileNumber = editMobileNumber.getText().toString().trim();
-        boolean validationStatus = isValidMobileNumber(mobileNumber);
+    private void checkMobileNumberInFirebase(final String mobileNumber) {
+        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_VISITORS)
+                .child(Constants.FIREBASE_CHILD_PRIVATE)
+                .child(Constants.FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER)
+                .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorOrDailyServiceValidationStatus.class);
-        intent.putExtra(Constants.SCREEN_TITLE, validationType);
-        intent.putExtra(Constants.VALIDATION_STATUS, validationStatus);
-        startActivity(intent);
-        finish();
+                if (dataSnapshot.exists()) {
+                    String visitorUid = null;
+                    for (DataSnapshot visitorUidDataSnapshot : dataSnapshot.getChildren()) {
+                        visitorUid = visitorUidDataSnapshot.getKey();
+                    }
+                    Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
+                    intent.putExtra(Constants.SCREEN_TITLE, validationType);
+                    intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    if (validationType == R.string.visitors_validation) {
+                        openValidationStatusDialog(Constants.FAILED, getString(R.string.invalid_visitor));
+                    } else {
+                        String invalidDailyService = getString(R.string.invalid_visitor);
+                        invalidDailyService = invalidDailyService.replace("Visitor", "Daily Service");
+                        openValidationStatusDialog(Constants.FAILED, invalidDailyService);
+                    }
+                }
+                hideProgressIndicator();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

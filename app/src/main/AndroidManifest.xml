@@ -34,7 +34,7 @@
             android:name=".nammaapartmentsecurityhome.societymember.SocietyMember"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList" />
-        <activity android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorOrDailyServiceValidationStatus" />
+        <activity android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorAndDailyServiceList" />
         <activity android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedArrivalsValidationStatus" />
         <activity android:name=".nammaapartmentsecurityhome.gatenotification.ThingsGivenValidationStatus" />
         <activity android:name=".nammaapartmentsecurityhome.emergency.Emergency" />
