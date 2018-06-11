@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
+import com.wang.avi.AVLoadingIndicatorView;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -19,6 +20,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * ------------------------------------------------------------- */
     private ImageView backButton;
     private View validationDialog;
+    private AlertDialog dialog;
+    private AVLoadingIndicatorView progressIndicator;
 
     /* ------------------------------------------------------------- *
      * Abstract Methods
@@ -84,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void createValidationStatusDialog() {
         AlertDialog.Builder alertValidationDialog = new AlertDialog.Builder(this);
         alertValidationDialog.setView(validationDialog);
-        AlertDialog dialog = alertValidationDialog.create();
+        dialog = alertValidationDialog.create();
 
         new Dialog(this);
         dialog.show();
@@ -101,7 +104,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return it will return boolean value whether number is valid or not
      */
     protected boolean isValidMobileNumber(String mobileNumber) {
-        // TODO : To Change mobile number here
         return mobileNumber.equals("7895185103");
     }
 
@@ -111,7 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param dialogType  - consists of type dialog box in to display
      * @param warningText - consists of message to display in dialog box
      */
-    protected void openValidationStatusDialog(String dialogType, String warningText) {
+    protected void openValidationStatusDialog(final String dialogType, String warningText) {
         validationDialog = View.inflate(this, R.layout.layout_validation_type_dialog, null);
 
         /*Getting Id's for all the views*/
@@ -144,14 +146,30 @@ public abstract class BaseActivity extends AppCompatActivity {
         buttonEIntercom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.cancel();
                 Intent intent = new Intent(BaseActivity.this, EIntercom.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
             }
         });
 
         /*This method is used to create ValidationDialog */
         createValidationStatusDialog();
+    }
+
+    /* ------------------------------------------------------------- *
+     * Public Methods
+     * ------------------------------------------------------------- */
+
+    public void showProgressIndicator() {
+        progressIndicator = findViewById(R.id.animationWaitingToLoadData);
+        progressIndicator.setVisibility(View.VISIBLE);
+        progressIndicator.smoothToShow();
+    }
+
+    public void hideProgressIndicator() {
+        progressIndicator.smoothToHide();
     }
 }
