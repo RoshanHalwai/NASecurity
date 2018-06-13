@@ -20,28 +20,27 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaAp
 
 import java.util.List;
 
-public class ValidVisitorAndDailyServiceListAdapter extends
-        RecyclerView.Adapter<ValidVisitorAndDailyServiceListAdapter.ValidVisitorAndDailyServiceHolder> implements View.OnClickListener {
+public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceListAdapter.DailyServiceHolder> implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
-    private List<NammaApartmentVisitor> nammaApartmentValidVisitorList;
-    private int validationStatusOf;
-    private String fullName;
+    private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
+    private NammaApartmentDailyService nammaApartmentDailyService;
+    private String ownerUid;
     private String flatNumber;
-    private String inviterUid;
+    private String serviceType;
 
     /* ------------------------------------------------------------- *
      * Constructor
      * ------------------------------------------------------------- */
 
-    ValidVisitorAndDailyServiceListAdapter(Context mCtx, int validationStatusOf, List<NammaApartmentVisitor> nammaApartmentValidVisitorList) {
+    DailyServiceListAdapter(Context mCtx, List<NammaApartmentDailyService> nammaApartmentDailyServiceList, String serviceType) {
         this.mCtx = mCtx;
-        this.validationStatusOf = validationStatusOf;
-        this.nammaApartmentValidVisitorList = nammaApartmentValidVisitorList;
+        this.nammaApartmentDailyServiceList = nammaApartmentDailyServiceList;
+        this.serviceType = serviceType;
     }
 
     /* ------------------------------------------------------------- *
@@ -50,36 +49,31 @@ public class ValidVisitorAndDailyServiceListAdapter extends
 
     @NonNull
     @Override
-    public ValidVisitorAndDailyServiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DailyServiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.layout_visitor_and_daily_service, parent, false);
-        return new ValidVisitorAndDailyServiceHolder(view);
+        return new DailyServiceHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ValidVisitorAndDailyServiceHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DailyServiceHolder holder, int position) {
+        changeViewsTitle(holder.textVisitorOrDailyServiceName, holder.buttonAllowVisitorAndDailyService);
+        holder.textInvitedBy.setVisibility(View.GONE);
+        holder.textInvitedByValue.setVisibility(View.GONE);
 
-        if (validationStatusOf == R.string.daily_service_validation_status) {
-            changeViewsTitle(holder.textVisitorOrDailyServiceName, holder.buttonAllowVisitorAndDailyService);
-            holder.textInvitedBy.setVisibility(View.GONE);
-            holder.textInvitedByValue.setVisibility(View.GONE);
-        }
+        nammaApartmentDailyService = nammaApartmentDailyServiceList.get(position);
+        holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentDailyService.getFullName());
 
-        //Creating an instance of NammaApartmentVisitor class and retrieving the values from Firebase
-        NammaApartmentVisitor nammaApartmentValidVisitor = nammaApartmentValidVisitorList.get(position);
-        inviterUid = nammaApartmentValidVisitor.getInviterUID();
-        holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentValidVisitor.getFullName());
-
-        //To retrieve of inviter details from firebase
-        getInviterDetailsFromFireBase(holder.textFlatToVisitValue, holder.textInvitedByValue);
+        //To retrieve of owner details from firebase
+        getOwnerDetailsFromFireBase(holder.textFlatToVisitValue);
 
         holder.buttonAllowVisitorAndDailyService.setOnClickListener(this);
     }
 
     @Override
     public int getItemCount() {
-        return nammaApartmentValidVisitorList.size();
+        return nammaApartmentDailyServiceList.size();
     }
 
     /* ------------------------------------------------------------- *
@@ -99,7 +93,7 @@ public class ValidVisitorAndDailyServiceListAdapter extends
      * ------------------------------------------------------------- */
 
     /**
-     * We update the VisitorOrDailyServiceName Title and  Button AllowVisitorsAndEIntercom Text when in
+     * We update the VisitorOrDailyServiceName Title and  Button AllowVisitorsAndEIntercom Text in
      * Daily Services Validation Status screen
      *
      * @param textVisitorOrDailyServiceName     - to update title in Daily Services Validation Status Screen
@@ -116,34 +110,52 @@ public class ValidVisitorAndDailyServiceListAdapter extends
     }
 
     /**
-     * This method is used to retrieve details of inviter
+     * This method is used to retrieve details of owner
      *
-     * @param textFlatToVisitValue - to display inviter flat number in this view
-     * @param textInvitedByValue   - to display inviter name in this view
+     * @param textFlatToVisitValue - to display owner flat number in this view
      */
-    private void getInviterDetailsFromFireBase(final TextView textFlatToVisitValue, final TextView textInvitedByValue) {
-        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_USERS)
-                .child(Constants.FIREBASE_CHILD_PRIVATE).child(inviterUid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                fullName = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_FULL_NAME).getValue();
-                flatNumber = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_FLAT_NUMBER).getValue();
-                textFlatToVisitValue.setText(flatNumber);
-                textInvitedByValue.setText(fullName);
-            }
+    private void getOwnerDetailsFromFireBase(final TextView textFlatToVisitValue) {
+        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_DAILYSERVICES)
+                .child(Constants.FIREBASE_CHILD_ALL)
+                .child(Constants.FIREBASE_CHILD_PUBLIC)
+                .child(serviceType)
+                .child(nammaApartmentDailyService.getUid())
+                .child(Constants.FIREBASE_CHILD_OWNERS_UID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ownerUidDataSnapshot : dataSnapshot.getChildren()) {
+                            ownerUid = ownerUidDataSnapshot.getKey();
+                        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_USERS)
+                                .child(Constants.FIREBASE_CHILD_PRIVATE)
+                                .child(ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                flatNumber = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_FLAT_NUMBER).getValue();
+                                textFlatToVisitValue.setText(flatNumber);
+                            }
 
-            }
-        });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     /* ------------------------------------------------------------- *
-     * Validation Status View Holder class
+     * Daily Service View Holder class
      * ------------------------------------------------------------- */
 
-    class ValidVisitorAndDailyServiceHolder extends RecyclerView.ViewHolder {
+    class DailyServiceHolder extends RecyclerView.ViewHolder {
 
         /* ------------------------------------------------------------- *
          * Private Members
@@ -161,8 +173,9 @@ public class ValidVisitorAndDailyServiceListAdapter extends
          * Constructor
          * ------------------------------------------------------------- */
 
-        ValidVisitorAndDailyServiceHolder(View itemView) {
+        DailyServiceHolder(View itemView) {
             super(itemView);
+
             textVisitorOrDailyServiceName = itemView.findViewById(R.id.textVisitorOrDailyServiceName);
             textFlatToVisit = itemView.findViewById(R.id.textFlatToVisit);
             textInvitedBy = itemView.findViewById(R.id.textInvitedBy);
@@ -174,10 +187,8 @@ public class ValidVisitorAndDailyServiceListAdapter extends
             /*Setting fonts to the views*/
             textVisitorOrDailyServiceName.setTypeface(Constants.setLatoRegularFont(mCtx));
             textFlatToVisit.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textInvitedBy.setTypeface(Constants.setLatoRegularFont(mCtx));
             textVisitorOrDailyServiceNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textFlatToVisitValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textInvitedByValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             buttonAllowVisitorAndDailyService.setTypeface(Constants.setLatoLightFont(mCtx));
         }
     }

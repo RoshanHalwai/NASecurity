@@ -2,6 +2,10 @@ package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visito
 
 public class NammaApartmentVisitor {
 
+    /* ------------------------------------------------------------- *
+     * Private Members
+     * ------------------------------------------------------------- */
+
     private String dateAndTimeOfVisit;
     private String fullName;
     private String inviterUID;
@@ -9,6 +13,10 @@ public class NammaApartmentVisitor {
     private String profilePhoto;
     private String status;
     private String uid;
+
+    /* ------------------------------------------------------------- *
+     * Constructors
+     * ------------------------------------------------------------- */
 
     public NammaApartmentVisitor() {
     }
@@ -22,6 +30,10 @@ public class NammaApartmentVisitor {
         this.status = status;
         this.uid = uid;
     }
+
+    /* ------------------------------------------------------------- *
+     * Getters
+     * ------------------------------------------------------------- */
 
     public String getDateAndTimeOfVisit() {
         return dateAndTimeOfVisit;

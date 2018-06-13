@@ -8,31 +8,38 @@ public class Constants {
     /* ------------------------------------------------------------- *
      * Intent Keys
      * ------------------------------------------------------------- */
-    public static final String SCREEN_TITLE = "screen_title";
+
     public static final String ARRIVAL_TYPE = "arrival_type";
     public static final String GIVEN_THINGS_TO = "given_things_to";
+    public static final String SCREEN_TITLE = "screen_title";
     public static final String VALIDATION_STATUS = "validation_status";
 
     /* ------------------------------------------------------------- *
      * Dialog Types
      * ------------------------------------------------------------- */
 
-    public static final String SUCCESS = "success";
     public static final String FAILED = "failed";
+    public static final String SUCCESS = "success";
     public static final String WARNING = "warning";
 
     /* ------------------------------------------------------------- *
      * Firebase objects
      * ------------------------------------------------------------- */
 
+    public static final String FIREBASE_CHILD_ALL = "all";
+    public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
+    public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
+    public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
+    public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
+    public static final String FIREBASE_CHILD_OWNERS_UID = "ownersUID";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
     public static final String FIREBASE_CHILD_PRIVATE = "private";
-    public static final String FIREBASE_CHILD_VISITORS = "visitors";
+    public static final String FIREBASE_CHILD_PUBLIC = "public";
+    public static final String FIREBASE_CHILD_SERVICETYPE = "serviceType";
     public static final String FIREBASE_CHILD_USERS = "users";
+    public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
-    public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
-    public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
 
     /* ------------------------------------------------------------- *
      * Font Types

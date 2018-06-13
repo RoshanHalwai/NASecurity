@@ -99,7 +99,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:padding="2dp"
-                        android:text="Roshan Halwai"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
 
@@ -108,7 +107,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="2dp"
-                        android:text="C504"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
 
@@ -117,7 +115,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="2dp"
-                        android:text="Rohit Mishra"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
 
