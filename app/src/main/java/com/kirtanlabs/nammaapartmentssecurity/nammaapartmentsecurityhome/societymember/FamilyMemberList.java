@@ -74,7 +74,7 @@ public class FamilyMemberList extends BaseActivity {
         DatabaseReference familyMemberUid = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.FIREBASE_CHILD_FLATS)
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
-                .child(flatNumber.toUpperCase());
+                .child(flatNumber);
         familyMemberUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -85,7 +85,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
     private void checkFlatNumberInFirebase(final String flatNumber) {
         FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_FLATS)
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
-                .child(flatNumber.toUpperCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                .child(flatNumber).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 hideProgressIndicator();
