@@ -71,6 +71,6 @@
 
     <!--Validation-->
     <string name="number_10digit_validation">Please Enter a valid 10 digit mobile number</string>
-    <string name="flat_number_validation">Please Enter Flat number here</string>
+    <string name="field_cant_be_empty">Field can\'t be Empty</string>
 
 </resources>

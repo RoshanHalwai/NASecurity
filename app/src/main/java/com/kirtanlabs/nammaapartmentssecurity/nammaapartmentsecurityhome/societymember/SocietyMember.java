@@ -68,7 +68,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
             showProgressIndicator();
             checkFlatNumberInFirebase(editFlatNumber.getText().toString().trim());
         } else {
-            editFlatNumber.setError(getString(R.string.flat_number_validation));
+            editFlatNumber.setError(getString(R.string.field_cant_be_empty));
         }
 
     }
