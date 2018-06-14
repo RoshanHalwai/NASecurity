@@ -73,6 +73,7 @@ public class FamilyMemberList extends BaseActivity {
         String flatNumber = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
         DatabaseReference familyMemberUid = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.FIREBASE_CHILD_FLATS)
+                .child(Constants.FIREBASE_CHILD_PRIVATE)
                 .child(flatNumber.toUpperCase());
         familyMemberUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

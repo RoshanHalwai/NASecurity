@@ -75,9 +75,14 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
 
     @Override
     public void onClick(View v) {
-        /*We need Progress Indicator in this screen*/
-        showProgressIndicator();
-        checkMobileNumberInFirebase(editMobileNumber.getText().toString().trim());
+        String mobileNumber = editMobileNumber.getText().toString().trim();
+        if (isValidPhone(mobileNumber)) {
+            /*We need Progress Indicator in this screen*/
+            showProgressIndicator();
+            checkMobileNumberInFirebase(mobileNumber);
+        } else {
+            editMobileNumber.setError(getString(R.string.number_10digit_validation));
+        }
     }
 
     /* ------------------------------------------------------------- *

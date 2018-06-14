@@ -27,6 +27,7 @@
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
         android:inputType="phone"
+        android:maxLength="10"
         android:textColor="@color/nmBlack"
         android:textSize="@dimen/edit_text_default_size"
         tools:ignore="LabelFor,TextFields" />

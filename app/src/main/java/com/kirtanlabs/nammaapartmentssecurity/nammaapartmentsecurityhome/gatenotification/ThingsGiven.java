@@ -65,7 +65,13 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        openThingsGivenValidationStatus();
+        String mobileNumber = editMobileNumber.getText().toString().trim();
+        if (isValidPhone(mobileNumber)) {
+            openThingsGivenValidationStatus(mobileNumber);
+        } else {
+            editMobileNumber.setError(getText(R.string.number_10digit_validation));
+        }
+
     }
 
     /* ------------------------------------------------------------- *
@@ -74,11 +80,11 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
 
     /**
      * This method is invoked when user will click on Verify things
+     *
+     * @param mobileNumber -
      */
-    private void openThingsGivenValidationStatus() {
-        String mobileNumber = editMobileNumber.getText().toString().trim();
+    private void openThingsGivenValidationStatus(String mobileNumber) {
         boolean validationStatus = isValidMobileNumber(mobileNumber);
-
         Intent intent = new Intent(ThingsGiven.this, ThingsGivenValidationStatus.class);
         intent.putExtra(Constants.SCREEN_TITLE, givenThingsTo);
         intent.putExtra(Constants.VALIDATION_STATUS, validationStatus);

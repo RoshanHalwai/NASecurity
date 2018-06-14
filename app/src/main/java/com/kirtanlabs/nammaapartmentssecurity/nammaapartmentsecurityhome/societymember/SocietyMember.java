@@ -15,6 +15,8 @@ import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
+
 public class SocietyMember extends BaseActivity implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
@@ -61,9 +63,14 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        /*We need Progress Indicator in this screen*/
-        showProgressIndicator();
-        checkFlatNumberInFirebase(editFlatNumber.getText().toString().trim());
+        if (editFlatNumber.length() > EDIT_TEXT_MIN_LENGTH) {
+            /*We need Progress Indicator in this screen*/
+            showProgressIndicator();
+            checkFlatNumberInFirebase(editFlatNumber.getText().toString().trim());
+        } else {
+            editFlatNumber.setError(getString(R.string.flat_number_validation));
+        }
+
     }
 
     /* ------------------------------------------------------------- *
@@ -77,6 +84,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
      */
     private void checkFlatNumberInFirebase(final String flatNumber) {
         FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_FLATS)
+                .child(Constants.FIREBASE_CHILD_PRIVATE)
                 .child(flatNumber.toUpperCase()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
