@@ -20,16 +20,15 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaAp
 
 import java.util.List;
 
-public class ValidVisitorAndDailyServiceListAdapter extends
-        RecyclerView.Adapter<ValidVisitorAndDailyServiceListAdapter.ValidVisitorAndDailyServiceHolder> implements View.OnClickListener {
+public class VisitorListAdapter extends
+        RecyclerView.Adapter<VisitorListAdapter.VisitorHolder> implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
-    private List<NammaApartmentVisitor> nammaApartmentValidVisitorList;
-    private int validationStatusOf;
+    private List<NammaApartmentVisitor> nammaApartmentVisitorList;
     private String fullName;
     private String flatNumber;
     private String inviterUid;
@@ -38,10 +37,9 @@ public class ValidVisitorAndDailyServiceListAdapter extends
      * Constructor
      * ------------------------------------------------------------- */
 
-    ValidVisitorAndDailyServiceListAdapter(Context mCtx, int validationStatusOf, List<NammaApartmentVisitor> nammaApartmentValidVisitorList) {
+    VisitorListAdapter(Context mCtx, List<NammaApartmentVisitor> nammaApartmentVisitorList) {
         this.mCtx = mCtx;
-        this.validationStatusOf = validationStatusOf;
-        this.nammaApartmentValidVisitorList = nammaApartmentValidVisitorList;
+        this.nammaApartmentVisitorList = nammaApartmentVisitorList;
     }
 
     /* ------------------------------------------------------------- *
@@ -50,24 +48,17 @@ public class ValidVisitorAndDailyServiceListAdapter extends
 
     @NonNull
     @Override
-    public ValidVisitorAndDailyServiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VisitorHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.layout_visitor_and_daily_service, parent, false);
-        return new ValidVisitorAndDailyServiceHolder(view);
+        return new VisitorHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ValidVisitorAndDailyServiceHolder holder, int position) {
-
-        if (validationStatusOf == R.string.daily_service_validation_status) {
-            changeViewsTitle(holder.textVisitorOrDailyServiceName, holder.buttonAllowVisitorAndDailyService);
-            holder.textInvitedBy.setVisibility(View.GONE);
-            holder.textInvitedByValue.setVisibility(View.GONE);
-        }
-
+    public void onBindViewHolder(@NonNull VisitorHolder holder, int position) {
         //Creating an instance of NammaApartmentVisitor class and retrieving the values from Firebase
-        NammaApartmentVisitor nammaApartmentValidVisitor = nammaApartmentValidVisitorList.get(position);
+        NammaApartmentVisitor nammaApartmentValidVisitor = nammaApartmentVisitorList.get(position);
         inviterUid = nammaApartmentValidVisitor.getInviterUID();
         holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentValidVisitor.getFullName());
 
@@ -79,7 +70,7 @@ public class ValidVisitorAndDailyServiceListAdapter extends
 
     @Override
     public int getItemCount() {
-        return nammaApartmentValidVisitorList.size();
+        return nammaApartmentVisitorList.size();
     }
 
     /* ------------------------------------------------------------- *
@@ -97,23 +88,6 @@ public class ValidVisitorAndDailyServiceListAdapter extends
     /* ------------------------------------------------------------- *
      * Private Method
      * ------------------------------------------------------------- */
-
-    /**
-     * We update the VisitorOrDailyServiceName Title and  Button AllowVisitorsAndEIntercom Text when in
-     * Daily Services Validation Status screen
-     *
-     * @param textVisitorOrDailyServiceName     - to update title in Daily Services Validation Status Screen
-     * @param buttonAllowVisitorAndDailyService - to update text in Daily Services Validation Status Screen
-     */
-    private void changeViewsTitle(TextView textVisitorOrDailyServiceName, Button buttonAllowVisitorAndDailyService) {
-        String nameTitle = mCtx.getResources().getString(R.string.visitor_name);
-        nameTitle = nameTitle.substring(8);
-        textVisitorOrDailyServiceName.setText(nameTitle);
-
-        String allowTo = mCtx.getString(R.string.allow_visitor);
-        allowTo = allowTo.replace("Visitor", "Daily Service");
-        buttonAllowVisitorAndDailyService.setText(allowTo);
-    }
 
     /**
      * This method is used to retrieve details of inviter
@@ -143,7 +117,7 @@ public class ValidVisitorAndDailyServiceListAdapter extends
      * Validation Status View Holder class
      * ------------------------------------------------------------- */
 
-    class ValidVisitorAndDailyServiceHolder extends RecyclerView.ViewHolder {
+    class VisitorHolder extends RecyclerView.ViewHolder {
 
         /* ------------------------------------------------------------- *
          * Private Members
@@ -161,7 +135,7 @@ public class ValidVisitorAndDailyServiceListAdapter extends
          * Constructor
          * ------------------------------------------------------------- */
 
-        ValidVisitorAndDailyServiceHolder(View itemView) {
+        VisitorHolder(View itemView) {
             super(itemView);
             textVisitorOrDailyServiceName = itemView.findViewById(R.id.textVisitorOrDailyServiceName);
             textFlatToVisit = itemView.findViewById(R.id.textFlatToVisit);

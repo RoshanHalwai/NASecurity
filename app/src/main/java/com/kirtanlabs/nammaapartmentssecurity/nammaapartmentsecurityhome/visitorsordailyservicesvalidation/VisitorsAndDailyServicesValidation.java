@@ -98,39 +98,60 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
      * @param mobileNumber - that need to be checked whether it is present in Firebase or not
      */
     private void checkMobileNumberInFirebase(final String mobileNumber) {
-        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_VISITORS)
-                .child(Constants.FIREBASE_CHILD_PRIVATE)
-                .child(Constants.FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER)
-                .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.exists()) {
-                    String visitorUid = null;
-                    for (DataSnapshot visitorUidDataSnapshot : dataSnapshot.getChildren()) {
-                        visitorUid = visitorUidDataSnapshot.getKey();
-                    }
-                    Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
-                    intent.putExtra(Constants.SCREEN_TITLE, validationType);
-                    intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    if (validationType == R.string.visitors_validation) {
-                        openValidationStatusDialog(Constants.FAILED, getString(R.string.invalid_visitor));
+        if (validationType == R.string.visitors_validation) {
+            FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_VISITORS)
+                    .child(Constants.FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER)
+                    .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    hideProgressIndicator();
+                    if (dataSnapshot.exists()) {
+                        String visitorUid = null;
+                        for (DataSnapshot visitorUidDataSnapshot : dataSnapshot.getChildren()) {
+                            visitorUid = visitorUidDataSnapshot.getKey();
+                        }
+                        Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
+                        intent.putExtra(Constants.SCREEN_TITLE, validationType);
+                        intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
+                        startActivity(intent);
+                        finish();
                     } else {
-                        String invalidDailyService = getString(R.string.invalid_visitor);
-                        invalidDailyService = invalidDailyService.replace("Visitor", "Daily Service");
-                        openValidationStatusDialog(Constants.FAILED, invalidDailyService);
+                        openValidationStatusDialog(Constants.FAILED, getString(R.string.invalid_visitor));
                     }
                 }
-                hideProgressIndicator();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        } else {
+            FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_DAILYSERVICES)
+                    .child(Constants.FIREBASE_CHILD_ALL)
+                    .child(Constants.FIREBASE_CHILD_PRIVATE)
+                    .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    hideProgressIndicator();
+                    if (dataSnapshot.exists()) {
+                        String dailyServiceUid = (String) dataSnapshot.getValue();
+                        Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
+                        intent.putExtra(Constants.SCREEN_TITLE, validationType);
+                        intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID, dailyServiceUid);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        String invalidDailyServices = getString(R.string.invalid_visitor);
+                        invalidDailyServices = invalidDailyServices.replace("Visitor", "Daily Services");
+                        openValidationStatusDialog(Constants.FAILED, invalidDailyServices);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }
