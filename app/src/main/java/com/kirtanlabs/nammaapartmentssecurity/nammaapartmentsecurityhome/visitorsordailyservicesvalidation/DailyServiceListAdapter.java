@@ -31,16 +31,14 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     private NammaApartmentDailyService nammaApartmentDailyService;
     private String ownerUid;
     private String flatNumber;
-    private String serviceType;
 
     /* ------------------------------------------------------------- *
      * Constructor
      * ------------------------------------------------------------- */
 
-    DailyServiceListAdapter(Context mCtx, List<NammaApartmentDailyService> nammaApartmentDailyServiceList, String serviceType) {
+    DailyServiceListAdapter(Context mCtx, List<NammaApartmentDailyService> nammaApartmentDailyServiceList) {
         this.mCtx = mCtx;
         this.nammaApartmentDailyServiceList = nammaApartmentDailyServiceList;
-        this.serviceType = serviceType;
     }
 
     /* ------------------------------------------------------------- *
@@ -118,7 +116,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
         FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_DAILYSERVICES)
                 .child(Constants.FIREBASE_CHILD_ALL)
                 .child(Constants.FIREBASE_CHILD_PUBLIC)
-                .child(serviceType)
+                .child(nammaApartmentDailyService.getDailyServiceType())
                 .child(nammaApartmentDailyService.getUid())
                 .child(Constants.FIREBASE_CHILD_OWNERS_UID)
                 .addListenerForSingleValueEvent(new ValueEventListener() {

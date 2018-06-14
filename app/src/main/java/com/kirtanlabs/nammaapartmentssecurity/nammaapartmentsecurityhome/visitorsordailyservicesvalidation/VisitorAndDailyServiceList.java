@@ -69,7 +69,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
         nammaApartmentVisitorList = new ArrayList<>();
         nammaApartmentDailyServiceList = new ArrayList<>();
         visitorListAdapter = new VisitorListAdapter(this, nammaApartmentVisitorList);
-        dailyServiceListAdapter = new DailyServiceListAdapter(this, nammaApartmentDailyServiceList, serviceType);
+        dailyServiceListAdapter = new DailyServiceListAdapter(this, nammaApartmentDailyServiceList);
 
         /*We need Progress Indicator in this screen*/
         showProgressIndicator();
@@ -123,6 +123,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             NammaApartmentDailyService nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
+                            assert nammaApartmentDailyService != null;
                             nammaApartmentDailyService.setDailyServiceType(serviceType);
                             nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
                             //Setting adapter to recycler view
