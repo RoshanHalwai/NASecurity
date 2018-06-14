@@ -30,6 +30,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
+    public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
     public static final String FIREBASE_CHILD_OWNERS_UID = "ownersUID";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
