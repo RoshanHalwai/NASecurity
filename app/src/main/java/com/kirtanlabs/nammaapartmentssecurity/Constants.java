@@ -13,6 +13,7 @@ public class Constants {
     public static final String GIVEN_THINGS_TO = "given_things_to";
     public static final String SCREEN_TITLE = "screen_title";
     public static final String VALIDATION_STATUS = "validation_status";
+    public static final String EXPECTED_ARRIVAL_UID = "expected_arrival_uid";
 
     /* ------------------------------------------------------------- *
      * Dialog Types
@@ -27,6 +28,7 @@ public class Constants {
      * ------------------------------------------------------------- */
 
     public static final String FIREBASE_CHILD_ALL = "all";
+    public static final String FIREBASE_CHILD_CABS = "cabs";
     public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_FULL_NAME = "fullName";

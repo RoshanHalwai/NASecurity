@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
@@ -22,6 +26,7 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
 
     private EditText editCabNumberAndResidentMobileNumber;
     private int arrivalType;
+    private String cabDriverUid;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -75,18 +80,13 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (arrivalType == R.string.expected_cab_arrivals) {
-            if (editCabNumberAndResidentMobileNumber.length() > EDIT_TEXT_MIN_LENGTH) {
-                openExpectedArrivalsValidationStatus();
-            } else {
-                editCabNumberAndResidentMobileNumber.setError(getString(R.string.field_cant_be_empty));
-            }
+        /*We need Progress Indicator in this screen*/
+        showProgressIndicator();
+        String cabNumberOrResidentMobileNumber = editCabNumberAndResidentMobileNumber.getText().toString().trim();
+        if (editCabNumberAndResidentMobileNumber.length() > EDIT_TEXT_MIN_LENGTH) {
+            checkDetailsInFirebase(cabNumberOrResidentMobileNumber);
         } else {
-            if (isValidPhone(editCabNumberAndResidentMobileNumber.getText().toString())) {
-                openExpectedArrivalsValidationStatus();
-            } else {
-                editCabNumberAndResidentMobileNumber.setError(getString(R.string.number_10digit_validation));
-            }
+            editCabNumberAndResidentMobileNumber.setError(getString(R.string.field_cant_be_empty));
         }
     }
 
@@ -106,31 +106,33 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
     }
 
     /**
-     * This method is invoked when user will click on Verify Cab driver or Verify Package vendor
-     */
-    private void openExpectedArrivalsValidationStatus() {
-        boolean validationStatus = isValidCabDriverOrPackageVendor();
-        Intent intent = new Intent(ExpectedArrivals.this, ExpectedArrivalsValidationStatus.class);
-        intent.putExtra(Constants.SCREEN_TITLE, arrivalType);
-        intent.putExtra(Constants.VALIDATION_STATUS, validationStatus);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
      * This method is used to check whether User has booked this cab or not
      * and package vendor is valid or not
      *
-     * @return it will return boolean value whether cab number is valid or not and package vendor is valid or not
+     * @param cabNumberOrResidentMobileNumber - that need to check in firebase whether it is valid or not.
      */
-    private boolean isValidCabDriverOrPackageVendor() {
-        String cabNumberOrResidentMobileNumber = editCabNumberAndResidentMobileNumber.getText().toString().trim();
-        if (arrivalType == R.string.expected_cab_arrivals) {
-            // TODO : To Change Cab number here
-            return cabNumberOrResidentMobileNumber.equalsIgnoreCase("KA 04 G 1234");
-        } else {
-            // TODO : To Change Mobile number here
-            return cabNumberOrResidentMobileNumber.equals("7895185103");
-        }
+    private void checkDetailsInFirebase(String cabNumberOrResidentMobileNumber) {
+        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_CABS)
+                .child(Constants.FIREBASE_CHILD_PRIVATE)
+                .child(Constants.FIREBASE_CHILD_ALL)
+                .child(cabNumberOrResidentMobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                hideProgressIndicator();
+                if (dataSnapshot.exists()) {
+                    cabDriverUid = (String) dataSnapshot.getValue();
+                    Intent intentCabArrival = new Intent(ExpectedArrivals.this, ExpectedArrivalsList.class);
+                    intentCabArrival.putExtra(Constants.SCREEN_TITLE, arrivalType);
+                    intentCabArrival.putExtra(Constants.EXPECTED_ARRIVAL_UID, cabDriverUid);
+                    startActivity(intentCabArrival);
+                } else {
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 }
