@@ -5,13 +5,19 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import java.util.regex.Pattern;
+
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PHONE_NUMBER_MAX_LENGTH;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -172,5 +178,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void hideProgressIndicator() {
         progressIndicator.smoothToHide();
+    }
+
+    /**
+     * This method checks if user is entering proper phone number or not.
+     *
+     * @param phone consists of string value of mobile number.
+     * @return returns a boolean variable based on the context.
+     */
+    public boolean isValidPhone(String phone) {
+        return !Pattern.matches("[a-zA-Z]+", phone) && phone.length() == PHONE_NUMBER_MAX_LENGTH;
     }
 }

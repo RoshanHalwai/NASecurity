@@ -12,6 +12,10 @@ import android.widget.TextView;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberListAdapter.FamilyMemberViewHolder> {
 
     /* ------------------------------------------------------------- *
@@ -19,13 +23,15 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
+    private List<NammaApartmentFamilyMember> nammaApartmentFamilyMemberList;
 
     /* ------------------------------------------------------------- *
      * Constructor
      * ------------------------------------------------------------- */
 
-    FamilyMemberListAdapter(Context mCtx) {
+    FamilyMemberListAdapter(Context mCtx, List<NammaApartmentFamilyMember> nammaApartmentFamilyMembersList) {
         this.mCtx = mCtx;
+        this.nammaApartmentFamilyMemberList = nammaApartmentFamilyMembersList;
     }
 
     /* ------------------------------------------------------------- *
@@ -43,13 +49,14 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
 
     @Override
     public void onBindViewHolder(@NonNull FamilyMemberViewHolder holder, int position) {
-        holder.textFamilyMemberNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+        NammaApartmentFamilyMember nammaApartmentFamilyMember = nammaApartmentFamilyMemberList.get(position);
+
+        holder.textFamilyMemberNameValue.setText(nammaApartmentFamilyMember.getFullName());
     }
 
     @Override
     public int getItemCount() {
-        //TODO: To change the get item count here
-        return 3;
+        return nammaApartmentFamilyMemberList.size();
     }
 
     /* ------------------------------------------------------------- *
@@ -63,6 +70,7 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
          * ------------------------------------------------------------- */
 
         private TextView textFamilyMemberNameValue;
+        private CircleImageView familyMemberProfilePic;
 
         /* ------------------------------------------------------------- *
          * Constructor
@@ -70,7 +78,12 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
 
         FamilyMemberViewHolder(View itemView) {
             super(itemView);
+            /*Getting Id's for all the views*/
             textFamilyMemberNameValue = itemView.findViewById(R.id.textFamilyMemberNameValue);
+            familyMemberProfilePic = itemView.findViewById(R.id.familyMemberProfilePic);
+
+            /*Setting fonts to the views*/
+            textFamilyMemberNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
         }
     }
 }

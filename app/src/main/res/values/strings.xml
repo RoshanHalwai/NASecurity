@@ -69,4 +69,8 @@
     <string name="resident_name">Resident Name:</string>
     <string name="image_emergency">Image to indicate type of Emergency</string>
 
+    <!--Validation-->
+    <string name="number_10digit_validation">Please Enter a valid 10 digit mobile number</string>
+    <string name="field_cant_be_empty">Field can\'t be Empty</string>
+
 </resources>

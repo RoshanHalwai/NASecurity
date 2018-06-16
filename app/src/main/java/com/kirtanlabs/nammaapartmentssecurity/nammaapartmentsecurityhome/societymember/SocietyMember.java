@@ -7,9 +7,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 
 public class SocietyMember extends BaseActivity implements View.OnClickListener {
 
@@ -57,19 +63,14 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.buttonVerifySocietyMember:
-                if (isValidFlatNumber()) {
-                    startActivity(new Intent(SocietyMember.this, FamilyMemberList.class));
-                    finish();
-                } else {
-                    String invalidFlatNumber = getResources().getString(R.string.invalid_visitor);
-                    invalidFlatNumber = invalidFlatNumber.replace("Visitor", "Flat Number");
-                    openValidationStatusDialog(Constants.FAILED, invalidFlatNumber);
-                }
-                break;
+        if (editFlatNumber.length() > EDIT_TEXT_MIN_LENGTH) {
+            /*We need Progress Indicator in this screen*/
+            showProgressIndicator();
+            checkFlatNumberInFirebase(editFlatNumber.getText().toString().trim());
+        } else {
+            editFlatNumber.setError(getString(R.string.field_cant_be_empty));
         }
+
     }
 
     /* ------------------------------------------------------------- *
@@ -79,13 +80,30 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
     /**
      * This method is used to check whether person has given his own valid flat number or not
      *
-     * @return it will return boolean value whether flat number is valid or not
+     * @param flatNumber - that need to be checked whether it is present in Firebase or not
      */
-    private boolean isValidFlatNumber() {
-        boolean check;
-        String flatNumber = editFlatNumber.getText().toString().trim();
-        // TODO : To change Flat number here
-        check = flatNumber.equalsIgnoreCase("c504");
-        return check;
+    private void checkFlatNumberInFirebase(final String flatNumber) {
+        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_FLATS)
+                .child(Constants.FIREBASE_CHILD_PRIVATE)
+                .child(flatNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                hideProgressIndicator();
+                if (dataSnapshot.exists()) {
+                    Intent intent = new Intent(SocietyMember.this, FamilyMemberList.class);
+                    intent.putExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER, flatNumber);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    String invalidFlatNumber = getResources().getString(R.string.invalid_visitor);
+                    invalidFlatNumber = invalidFlatNumber.replace("Visitor", "Flat Number");
+                    openValidationStatusDialog(Constants.FAILED, invalidFlatNumber);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 }

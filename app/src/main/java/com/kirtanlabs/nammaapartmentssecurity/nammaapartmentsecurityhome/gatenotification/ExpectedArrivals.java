@@ -2,6 +2,7 @@ package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gateno
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 
 public class ExpectedArrivals extends BaseActivity implements View.OnClickListener {
 
@@ -57,8 +60,10 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
 
         /*Since we are using same layout for Expected Cab and Package Arrivals we need to
          *change some Views Text in Expected Package Arrivals*/
-        if (arrivalType == R.string.expected_package_arrivals)
+        if (arrivalType == R.string.expected_package_arrivals) {
             changeViewsText(textCabNumberAndResidentMobileNumber, buttonVerifyCabNumberAndPackageVendor);
+            editCabNumberAndResidentMobileNumber.setInputType(InputType.TYPE_CLASS_PHONE);
+        }
 
         /*Setting onClickListener for view*/
         buttonVerifyCabNumberAndPackageVendor.setOnClickListener(this);
@@ -70,7 +75,19 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        openExpectedArrivalsValidationStatus();
+        if (arrivalType == R.string.expected_cab_arrivals) {
+            if (editCabNumberAndResidentMobileNumber.length() > EDIT_TEXT_MIN_LENGTH) {
+                openExpectedArrivalsValidationStatus();
+            } else {
+                editCabNumberAndResidentMobileNumber.setError(getString(R.string.field_cant_be_empty));
+            }
+        } else {
+            if (isValidPhone(editCabNumberAndResidentMobileNumber.getText().toString())) {
+                openExpectedArrivalsValidationStatus();
+            } else {
+                editCabNumberAndResidentMobileNumber.setError(getString(R.string.number_10digit_validation));
+            }
+        }
     }
 
     /* ------------------------------------------------------------- *

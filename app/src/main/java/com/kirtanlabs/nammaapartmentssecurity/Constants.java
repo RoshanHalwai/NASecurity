@@ -30,6 +30,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
+    public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
     public static final String FIREBASE_CHILD_OWNERS_UID = "ownersUID";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
@@ -40,6 +41,13 @@ public class Constants {
     public static final String FIREBASE_CHILD_USERS = "users";
     public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
+
+    /* ------------------------------------------------------------- *
+     * Validation Keys
+     * ------------------------------------------------------------- */
+
+    public static final int PHONE_NUMBER_MAX_LENGTH = 10;
+    public static final int EDIT_TEXT_MIN_LENGTH = 0;
 
     /* ------------------------------------------------------------- *
      * Font Types
