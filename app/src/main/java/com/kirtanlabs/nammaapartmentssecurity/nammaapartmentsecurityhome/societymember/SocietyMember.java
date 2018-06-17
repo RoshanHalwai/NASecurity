@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
@@ -23,6 +24,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
      * Private Members
      * ------------------------------------------------------------- */
 
+    private EditText editBlockName;
     private EditText editFlatNumber;
 
     /* ------------------------------------------------------------- *
@@ -44,12 +46,16 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
 
         /*Getting Id's for all the views*/
+        TextView textBlockName = findViewById(R.id.textBlockName);
         TextView textFlatNumber = findViewById(R.id.textFlatNumber);
+        editBlockName = findViewById(R.id.editBlockName);
         editFlatNumber = findViewById(R.id.editFlatNumber);
         Button buttonVerifySocietyMember = findViewById(R.id.buttonVerifySocietyMember);
 
         /*Setting font for all the views*/
+        textBlockName.setTypeface(Constants.setLatoBoldFont(this));
         textFlatNumber.setTypeface(Constants.setLatoBoldFont(this));
+        editBlockName.setTypeface(Constants.setLatoRegularFont(this));
         editFlatNumber.setTypeface(Constants.setLatoRegularFont(this));
         buttonVerifySocietyMember.setTypeface(Constants.setLatoLightFont(this));
 
@@ -66,11 +72,10 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
         if (editFlatNumber.length() > EDIT_TEXT_MIN_LENGTH) {
             /*We need Progress Indicator in this screen*/
             showProgressIndicator();
-            checkFlatNumberInFirebase(editFlatNumber.getText().toString().trim());
+            checkFlatNumberInFirebase(editBlockName.getText().toString().trim(), editFlatNumber.getText().toString().trim());
         } else {
             editFlatNumber.setError(getString(R.string.field_cant_be_empty));
         }
-
     }
 
     /* ------------------------------------------------------------- *
@@ -80,29 +85,52 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener 
     /**
      * This method is used to check whether person has given his own valid flat number or not
      *
+     * @param blockName  - that need to be checked whether it is present in Firebase or not
      * @param flatNumber - that need to be checked whether it is present in Firebase or not
      */
-    private void checkFlatNumberInFirebase(final String flatNumber) {
-        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_FLATS)
+    private void checkFlatNumberInFirebase(final String blockName, final String flatNumber) {
+        final DatabaseReference blockNameReference = FirebaseDatabase.getInstance().getReference()
+                .child(Constants.FIREBASE_CHILD_USERDATA)
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
-                .child(flatNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+                .child(Constants.FIREBASE_CHILD_BANGALORE)
+                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
+                .child(blockName);
+        blockNameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 hideProgressIndicator();
                 if (dataSnapshot.exists()) {
-                    Intent intent = new Intent(SocietyMember.this, FamilyMemberList.class);
-                    intent.putExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER, flatNumber);
-                    startActivity(intent);
-                    finish();
+                    blockNameReference.child(flatNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                Intent intent = new Intent(SocietyMember.this, FamilyMemberList.class);
+                                intent.putExtra(Constants.FIREBASE_CHILD_BLOCKNAME, blockName);
+                                intent.putExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER, flatNumber);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                String invalidFlatNumber = getResources().getString(R.string.invalid_visitor);
+                                invalidFlatNumber = invalidFlatNumber.replace("Visitor", "Flat Number");
+                                openValidationStatusDialog(Constants.FAILED, invalidFlatNumber);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 } else {
-                    String invalidFlatNumber = getResources().getString(R.string.invalid_visitor);
-                    invalidFlatNumber = invalidFlatNumber.replace("Visitor", "Flat Number");
-                    openValidationStatusDialog(Constants.FAILED, invalidFlatNumber);
+                    String invalidBlockName = getResources().getString(R.string.invalid_visitor);
+                    invalidBlockName = invalidBlockName.replace("Visitor", "Block Name");
+                    openValidationStatusDialog(Constants.FAILED, invalidBlockName);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

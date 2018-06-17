@@ -19,12 +19,37 @@
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
     <TextView
+        android:id="@+id/textBlockName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/editBlockName"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:text="@string/block_name"
+        android:textAllCaps="true"
+        android:textColor="@color/nmBlack"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editBlockName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/textFlatNumber"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:inputType="textVisiblePassword"
+        android:textColor="@color/nmBlack"
+        android:textSize="@dimen/edit_text_default_size"
+        tools:ignore="LabelFor,TextFields" />
+
+    <TextView
         android:id="@+id/textFlatNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
+        android:layout_marginTop="10dp"
         android:text="@string/flat_number"
         android:textAllCaps="true"
         android:textColor="@color/nmBlack"

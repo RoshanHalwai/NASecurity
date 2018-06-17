@@ -28,6 +28,9 @@ public class Constants {
      * ------------------------------------------------------------- */
 
     public static final String FIREBASE_CHILD_ALL = "all";
+    public static final String FIREBASE_CHILD_BANGALORE = "Bangalore";
+    public static final String FIREBASE_CHILD_BLOCKNAME = "blockName";
+    public static final String FIREBASE_CHILD_BRIGADEGATEWAY = "Brigade Gateway";
     public static final String FIREBASE_CHILD_CABS = "cabs";
     public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
@@ -35,12 +38,15 @@ public class Constants {
     public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
     public static final String FIREBASE_CHILD_OWNERS_UID = "ownersUID";
+    public static final String FIREBASE_CHILD_FLATMEMBERS = "flatMembers";
+    public static final String FIREBASE_CHILD_PERSONALDETAILS = "personalDetails";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
     public static final String FIREBASE_CHILD_PRIVATE = "private";
     public static final String FIREBASE_CHILD_PUBLIC = "public";
     public static final String FIREBASE_CHILD_SERVICETYPE = "serviceType";
     public static final String FIREBASE_CHILD_USERS = "users";
+    public static final String FIREBASE_CHILD_USERDATA = "userData";
     public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
 

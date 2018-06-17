@@ -59,7 +59,7 @@ public class FamilyMemberList extends BaseActivity {
         showProgressIndicator();
 
         //To retrieve family member details from firebase
-        retrieveDataFromFireBase();
+        retrieveFamilyMembersDataFromFireBase();
     }
 
     /* ------------------------------------------------------------- *
@@ -69,12 +69,17 @@ public class FamilyMemberList extends BaseActivity {
     /**
      * This method is invoked to Retrieve details of Family member from FireBase
      */
-    private void retrieveDataFromFireBase() {
+    private void retrieveFamilyMembersDataFromFireBase() {
+        String blockName = getIntent().getStringExtra(Constants.FIREBASE_CHILD_BLOCKNAME);
         String flatNumber = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
         DatabaseReference familyMemberUid = FirebaseDatabase.getInstance().getReference()
-                .child(Constants.FIREBASE_CHILD_FLATS)
+                .child(Constants.FIREBASE_CHILD_USERDATA)
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
-                .child(flatNumber);
+                .child(Constants.FIREBASE_CHILD_BANGALORE)
+                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
+                .child(blockName)
+                .child(flatNumber)
+                .child(Constants.FIREBASE_CHILD_FLATMEMBERS);
         familyMemberUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -82,11 +87,11 @@ public class FamilyMemberList extends BaseActivity {
                 for (DataSnapshot familyMemberDataSnapshot : dataSnapshot.getChildren()) {
                     String familyMemberUid = familyMemberDataSnapshot.getKey();
 
-                    DatabaseReference familyMemberDetails = FirebaseDatabase.getInstance().getReference()
+                    FirebaseDatabase.getInstance().getReference()
                             .child(Constants.FIREBASE_CHILD_USERS)
-                            .child(Constants.FIREBASE_CHILD_PRIVATE);
-                    assert familyMemberUid != null;
-                    familyMemberDetails.child(familyMemberUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            .child(Constants.FIREBASE_CHILD_PRIVATE)
+                            .child(familyMemberUid)
+                            .child(Constants.FIREBASE_CHILD_PERSONALDETAILS).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             NammaApartmentFamilyMember nammaApartmentFamilyMember = dataSnapshot.getValue(NammaApartmentFamilyMember.class);
