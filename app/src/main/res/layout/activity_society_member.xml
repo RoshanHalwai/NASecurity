@@ -19,22 +19,47 @@
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
     <TextView
-        android:id="@+id/textFlatNumber"
+        android:id="@+id/textApartment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@id/editApartment"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
-        android:text="@string/flat_number"
+        android:text="@string/apartment"
         android:textAllCaps="true"
         android:textColor="@color/nmBlack"
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/editFlatNumber"
+        android:id="@+id/editApartment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textFlatNumber"
+        android:layout_above="@id/textFlat"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:inputType="textVisiblePassword"
+        android:textColor="@color/nmBlack"
+        android:textSize="@dimen/edit_text_default_size"
+        tools:ignore="LabelFor,TextFields" />
+
+    <TextView
+        android:id="@+id/textFlat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/editFlat"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:layout_marginTop="10dp"
+        android:text="@string/flat"
+        android:textAllCaps="true"
+        android:textColor="@color/nmBlack"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editFlat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttonVerifySocietyMember"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
         android:inputType="textVisiblePassword"
@@ -46,7 +71,7 @@
         android:id="@+id/buttonVerifySocietyMember"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editFlatNumber"
+        android:layout_centerInParent="true"
         android:layout_margin="@dimen/button_margin"
         android:background="@color/nmBlack"
         android:text="@string/verify_resident"

@@ -86,8 +86,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
         if (validationStatusOf == R.string.visitor_validation_status) {
             String visitorUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_VISITOR_UID);
 
-            FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_VISITORS)
-                    .child(Constants.FIREBASE_CHILD_PREAPPROVEDVISITORS)
+            Constants.PREAPPROVED_VISITORS_REFERENCE
                     .child(visitorUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

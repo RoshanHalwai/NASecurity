@@ -12,13 +12,15 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VisitorListAdapter extends
         RecyclerView.Adapter<VisitorListAdapter.VisitorHolder> implements View.OnClickListener {
@@ -96,12 +98,14 @@ public class VisitorListAdapter extends
      * @param textInvitedByValue   - to display inviter name in this view
      */
     private void getInviterDetailsFromFireBase(final TextView textFlatToVisitValue, final TextView textInvitedByValue) {
-        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_USERS)
-                .child(Constants.FIREBASE_CHILD_PRIVATE).child(inviterUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        Constants.PRIVATE_USERS_REFERENCE
+                .child(inviterUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                fullName = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_FULL_NAME).getValue();
-                flatNumber = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_FLAT_NUMBER).getValue();
+                NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
+                assert nammaApartmentUser != null;
+                fullName = nammaApartmentUser.getPersonalDetails().getFullName();
+                flatNumber = nammaApartmentUser.getFlatDetails().getFlatNumber();
                 textFlatToVisitValue.setText(flatNumber);
                 textInvitedByValue.setText(fullName);
             }
@@ -123,6 +127,7 @@ public class VisitorListAdapter extends
          * Private Members
          * ------------------------------------------------------------- */
 
+        CircleImageView VisitorAndDailyServiceProfilePic;
         TextView textVisitorOrDailyServiceName;
         TextView textFlatToVisit;
         TextView textInvitedBy;
@@ -137,6 +142,7 @@ public class VisitorListAdapter extends
 
         VisitorHolder(View itemView) {
             super(itemView);
+            VisitorAndDailyServiceProfilePic = itemView.findViewById(R.id.VisitorAndDailyServiceProfilePic);
             textVisitorOrDailyServiceName = itemView.findViewById(R.id.textVisitorOrDailyServiceName);
             textFlatToVisit = itemView.findViewById(R.id.textFlatToVisit);
             textInvitedBy = itemView.findViewById(R.id.textInvitedBy);

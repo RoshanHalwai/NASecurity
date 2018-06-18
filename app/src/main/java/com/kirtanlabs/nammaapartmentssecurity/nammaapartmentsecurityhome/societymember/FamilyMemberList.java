@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class FamilyMemberList extends BaseActivity {
      * Private Members
      * ------------------------------------------------------------- */
 
-    private List<NammaApartmentFamilyMember> nammaApartmentFamilyMembersList;
+    private List<NammaApartmentUser> nammaApartmentFamilyMembersList;
     private FamilyMemberListAdapter adapter;
 
     /* ------------------------------------------------------------- *
@@ -50,7 +51,7 @@ public class FamilyMemberList extends BaseActivity {
 
         //Creating recycler view adapter
         nammaApartmentFamilyMembersList = new ArrayList<>();
-        adapter = new FamilyMemberListAdapter(this, nammaApartmentFamilyMembersList);
+        adapter = new FamilyMemberListAdapter(this,nammaApartmentFamilyMembersList);
 
         //Setting adapter to recycler view
         recyclerView.setAdapter(adapter);
@@ -59,7 +60,7 @@ public class FamilyMemberList extends BaseActivity {
         showProgressIndicator();
 
         //To retrieve family member details from firebase
-        retrieveDataFromFireBase();
+        retrieveFamilyMembersDataFromFireBase();
     }
 
     /* ------------------------------------------------------------- *
@@ -69,12 +70,17 @@ public class FamilyMemberList extends BaseActivity {
     /**
      * This method is invoked to Retrieve details of Family member from FireBase
      */
-    private void retrieveDataFromFireBase() {
-        String flatNumber = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
+    private void retrieveFamilyMembersDataFromFireBase() {
+        String apartment = getIntent().getStringExtra(Constants.FIREBASE_CHILD_APARTMENTS);
+        String flat = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
         DatabaseReference familyMemberUid = FirebaseDatabase.getInstance().getReference()
-                .child(Constants.FIREBASE_CHILD_FLATS)
+                .child(Constants.FIREBASE_CHILD_USERDATA)
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
-                .child(flatNumber);
+                .child(Constants.FIREBASE_CHILD_BANGALORE)
+                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
+                .child(apartment)
+                .child(flat)
+                .child(Constants.FIREBASE_CHILD_FLATMEMBERS);
         familyMemberUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -82,23 +88,20 @@ public class FamilyMemberList extends BaseActivity {
                 for (DataSnapshot familyMemberDataSnapshot : dataSnapshot.getChildren()) {
                     String familyMemberUid = familyMemberDataSnapshot.getKey();
 
-                    DatabaseReference familyMemberDetails = FirebaseDatabase.getInstance().getReference()
-                            .child(Constants.FIREBASE_CHILD_USERS)
-                            .child(Constants.FIREBASE_CHILD_PRIVATE);
-                    assert familyMemberUid != null;
-                    familyMemberDetails.child(familyMemberUid).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            NammaApartmentFamilyMember nammaApartmentFamilyMember = dataSnapshot.getValue(NammaApartmentFamilyMember.class);
-                            nammaApartmentFamilyMembersList.add(0, nammaApartmentFamilyMember);
-                            adapter.notifyDataSetChanged();
-                        }
+                    Constants.PRIVATE_USERS_REFERENCE.child(familyMemberUid)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    NammaApartmentUser nammaApartmentFamilyMember = dataSnapshot.getValue(NammaApartmentUser.class);
+                                    nammaApartmentFamilyMembersList.add(0, nammaApartmentFamilyMember);
+                                    adapter.notifyDataSetChanged();
+                                }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                                }
+                            });
                 }
             }
 
