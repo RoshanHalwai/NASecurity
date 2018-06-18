@@ -104,17 +104,13 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
      */
     private void checkMobileNumberInFirebase(final String mobileNumber) {
         if (validationType == R.string.visitors_validation) {
-            FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_VISITORS)
-                    .child(Constants.FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER)
+            Constants.PREAPPROVED_VISITORS_MOBILE_REFERENCE
                     .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     hideProgressIndicator();
                     if (dataSnapshot.exists()) {
-                        String visitorUid = null;
-                        for (DataSnapshot visitorUidDataSnapshot : dataSnapshot.getChildren()) {
-                            visitorUid = visitorUidDataSnapshot.getKey();
-                        }
+                        String visitorUid = (String) dataSnapshot.getValue();
                         Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
                         intent.putExtra(Constants.SCREEN_TITLE, validationType);
                         intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
