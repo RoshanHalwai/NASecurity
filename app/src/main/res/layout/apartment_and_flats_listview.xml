@@ -4,15 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- Edit Text for Search -->
-    <EditText
-        android:id="@+id/inputSearch"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="Search"
-        android:inputType="textVisiblePassword" />
-
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"

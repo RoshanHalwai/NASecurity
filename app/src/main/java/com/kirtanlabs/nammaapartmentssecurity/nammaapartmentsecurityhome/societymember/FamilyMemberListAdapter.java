@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
 
@@ -23,13 +24,13 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
-    private List<NammaApartmentFamilyMember> nammaApartmentFamilyMemberList;
+    private List<NammaApartmentUser> nammaApartmentFamilyMemberList;
 
     /* ------------------------------------------------------------- *
      * Constructor
      * ------------------------------------------------------------- */
 
-    FamilyMemberListAdapter(Context mCtx, List<NammaApartmentFamilyMember> nammaApartmentFamilyMembersList) {
+    FamilyMemberListAdapter(Context mCtx, List<NammaApartmentUser> nammaApartmentFamilyMembersList) {
         this.mCtx = mCtx;
         this.nammaApartmentFamilyMemberList = nammaApartmentFamilyMembersList;
     }
@@ -49,9 +50,9 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
 
     @Override
     public void onBindViewHolder(@NonNull FamilyMemberViewHolder holder, int position) {
-        NammaApartmentFamilyMember nammaApartmentFamilyMember = nammaApartmentFamilyMemberList.get(position);
+        NammaApartmentUser nammaApartmentFamilyMember = nammaApartmentFamilyMemberList.get(position);
 
-        holder.textFamilyMemberNameValue.setText(nammaApartmentFamilyMember.getFullName());
+        holder.textFamilyMemberNameValue.setText(nammaApartmentFamilyMember.getPersonalDetails().getFullName());
     }
 
     @Override

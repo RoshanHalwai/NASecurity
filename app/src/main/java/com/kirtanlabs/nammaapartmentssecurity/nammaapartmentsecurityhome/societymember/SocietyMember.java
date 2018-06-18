@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -78,10 +76,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
         buttonVerifySocietyMember.setTypeface(Constants.setLatoLightFont(this));
 
         /*Allow users to search for Apartment and Flat*/
-        initializeListWithSearchView();
-
-        /*Show only Apartment during start of activity*/
-        hideViews(R.id.editApartment);
+        initializeList();
 
         /*We don't want the keyboard to be displayed when user clicks edit views*/
         editApartment.setInputType(InputType.TYPE_NULL);
@@ -133,13 +128,11 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
      * Private Methods
      * ------------------------------------------------------------- */
 
-    private void initializeListWithSearchView() {
+    private void initializeList() {
         dialog = new Dialog(SocietyMember.this);
-        dialog.setContentView(R.layout.blocks_and_flats_listview);
+        dialog.setContentView(R.layout.apartment_and_flats_listview);
 
-        EditText inputSearch = dialog.findViewById(R.id.inputSearch);
         listView = dialog.findViewById(R.id.list);
-        inputSearch.setTypeface(Constants.setLatoItalicFont(SocietyMember.this));
 
         /*Setting font for all the items in the list view*/
         adapter = new ArrayAdapter<String>(this,
@@ -159,31 +152,14 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String itemValue = (String) listView.getItemAtPosition(position);
             int viewId = Objects.requireNonNull(getCurrentFocus()).getId();
-            showViews(viewId);
             dialog.cancel();
             ((EditText) findViewById(viewId)).setText(itemValue);
         });
 
-        /*Attaching listeners to Search Field*/
-        inputSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                SocietyMember.this.adapter.getFilter().filter(cs);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                                          int arg3) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-            }
-        });
     }
 
     /**
-     * Hides unwanted views and updates list
+     * Updates list according to views
      *
      * @param viewId of edit text views
      */
@@ -191,7 +167,6 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
         itemsInList.clear();
         switch (viewId) {
             case R.id.editApartment:
-                hideViews(R.id.editApartment);
                 updateItemsInList(Constants.CITIES_REFERENCE
                         .child(Constants.FIREBASE_CHILD_BANGALORE)
                         .child(Constants.FIREBASE_CHILD_SOCIETIES)
@@ -199,7 +174,6 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
                         .child(Constants.FIREBASE_CHILD_APARTMENTS));
                 break;
             case R.id.editFlat:
-                hideViews(R.id.editFlat);
                 updateItemsInList(Constants.CITIES_REFERENCE
                         .child(Constants.FIREBASE_CHILD_BANGALORE)
                         .child(Constants.FIREBASE_CHILD_SOCIETIES)
@@ -233,39 +207,6 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
 
             }
         });
-    }
-
-    /**
-     * Hides view which are not required
-     *
-     * @param viewId from which other views need to be hidden
-     */
-    private void hideViews(int viewId) {
-        switch (viewId) {
-            case R.id.editApartment:
-            case R.id.textFlat:
-                findViewById(R.id.textFlat).setVisibility(View.INVISIBLE);
-                findViewById(R.id.editFlat).setVisibility(View.INVISIBLE);
-            case R.id.editFlat:
-                findViewById(R.id.buttonVerifySocietyMember).setVisibility(View.INVISIBLE);
-        }
-    }
-
-    /**
-     * Shows view which are required
-     *
-     * @param viewId from which other views need to be shown
-     */
-    private void showViews(int viewId) {
-        switch (viewId) {
-            case R.id.editApartment:
-            case R.id.textFlat:
-                findViewById(R.id.textFlat).setVisibility(View.VISIBLE);
-                findViewById(R.id.editFlat).setVisibility(View.VISIBLE);
-                break;
-            case R.id.editFlat:
-                findViewById(R.id.buttonVerifySocietyMember).setVisibility(View.VISIBLE);
-        }
     }
 
     /**

@@ -1,6 +1,7 @@
-package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.societymember;
+package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo;
 
-public class NammaApartmentFamilyMember {
+
+public class UserPersonalDetails {
 
     /* ------------------------------------------------------------- *
      * Private Members
@@ -15,10 +16,9 @@ public class NammaApartmentFamilyMember {
      * Constructors
      * ------------------------------------------------------------- */
 
-    public NammaApartmentFamilyMember() {
-    }
+    public UserPersonalDetails() {}
 
-    public NammaApartmentFamilyMember(String email, String fullName, String phoneNumber, String profilePhoto) {
+    public UserPersonalDetails(String email, String fullName, String phoneNumber, String profilePhoto) {
         this.email = email;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
@@ -29,10 +29,6 @@ public class NammaApartmentFamilyMember {
      * Getters
      * ------------------------------------------------------------- */
 
-    public String getEmail() {
-        return email;
-    }
-
     public String getFullName() {
         return fullName;
     }
@@ -41,7 +37,12 @@ public class NammaApartmentFamilyMember {
         return phoneNumber;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public String getProfilePhoto() {
         return profilePhoto;
     }
+
 }
