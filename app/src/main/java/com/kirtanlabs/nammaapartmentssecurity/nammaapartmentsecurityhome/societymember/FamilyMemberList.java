@@ -70,15 +70,15 @@ public class FamilyMemberList extends BaseActivity {
      * This method is invoked to Retrieve details of Family member from FireBase
      */
     private void retrieveFamilyMembersDataFromFireBase() {
-        String blockName = getIntent().getStringExtra(Constants.FIREBASE_CHILD_BLOCKNAME);
-        String flatNumber = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
+        String apartment = getIntent().getStringExtra(Constants.FIREBASE_CHILD_APARTMENTS);
+        String flat = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
         DatabaseReference familyMemberUid = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.FIREBASE_CHILD_USERDATA)
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
                 .child(Constants.FIREBASE_CHILD_BANGALORE)
                 .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
-                .child(blockName)
-                .child(flatNumber)
+                .child(apartment)
+                .child(flat)
                 .child(Constants.FIREBASE_CHILD_FLATMEMBERS);
         familyMemberUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -87,10 +87,7 @@ public class FamilyMemberList extends BaseActivity {
                 for (DataSnapshot familyMemberDataSnapshot : dataSnapshot.getChildren()) {
                     String familyMemberUid = familyMemberDataSnapshot.getKey();
 
-                    FirebaseDatabase.getInstance().getReference()
-                            .child(Constants.FIREBASE_CHILD_USERS)
-                            .child(Constants.FIREBASE_CHILD_PRIVATE)
-                            .child(familyMemberUid)
+                    Constants.PRIVATE_USERS_REFERENCE.child(familyMemberUid)
                             .child(Constants.FIREBASE_CHILD_PERSONALDETAILS).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

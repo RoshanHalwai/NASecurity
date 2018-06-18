@@ -55,7 +55,8 @@
     <string name="verify_resident">Verify Resident</string>
     <string name="family_member_list">Family Member List</string>
     <string name="name">Name:</string>
-    <string name="block_name">Block Name</string>
+    <string name="apartment">Apartment</string>
+    <string name="flat">Flat</string>
 
     <!--Visitors And Daily Services Validation Status Activity-->
     <string name="visitor_validation_status">Visitor Validation Status</string>
