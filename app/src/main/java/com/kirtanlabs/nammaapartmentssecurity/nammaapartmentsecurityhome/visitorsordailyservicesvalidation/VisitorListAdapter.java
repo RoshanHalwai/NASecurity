@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -20,7 +21,6 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpoj
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VisitorListAdapter extends
         RecyclerView.Adapter<VisitorListAdapter.VisitorHolder> implements View.OnClickListener {
@@ -63,6 +63,8 @@ public class VisitorListAdapter extends
         NammaApartmentVisitor nammaApartmentValidVisitor = nammaApartmentVisitorList.get(position);
         inviterUid = nammaApartmentValidVisitor.getInviterUID();
         holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentValidVisitor.getFullName());
+        Glide.with(mCtx.getApplicationContext()).load(nammaApartmentValidVisitor.getProfilePhoto())
+                .into(holder.VisitorAndDailyServiceProfilePic);
 
         //To retrieve of inviter details from firebase
         getInviterDetailsFromFireBase(holder.textFlatToVisitValue, holder.textInvitedByValue);
@@ -127,14 +129,14 @@ public class VisitorListAdapter extends
          * Private Members
          * ------------------------------------------------------------- */
 
-        CircleImageView VisitorAndDailyServiceProfilePic;
-        TextView textVisitorOrDailyServiceName;
-        TextView textFlatToVisit;
-        TextView textInvitedBy;
-        TextView textVisitorOrDailyServiceNameValue;
-        TextView textFlatToVisitValue;
-        TextView textInvitedByValue;
-        Button buttonAllowVisitorAndDailyService;
+        private TextView textVisitorOrDailyServiceName;
+        private TextView textFlatToVisit;
+        private TextView textInvitedBy;
+        private TextView textVisitorOrDailyServiceNameValue;
+        private TextView textFlatToVisitValue;
+        private TextView textInvitedByValue;
+        private Button buttonAllowVisitorAndDailyService;
+        private final de.hdodenhof.circleimageview.CircleImageView VisitorAndDailyServiceProfilePic;
 
         /* ------------------------------------------------------------- *
          * Constructor

@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberListAdapter.FamilyMemberViewHolder> {
 
@@ -53,6 +53,7 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
         NammaApartmentUser nammaApartmentFamilyMember = nammaApartmentFamilyMemberList.get(position);
 
         holder.textFamilyMemberNameValue.setText(nammaApartmentFamilyMember.getPersonalDetails().getFullName());
+        Glide.with(mCtx.getApplicationContext()).load(nammaApartmentFamilyMember.getPersonalDetails().getProfilePhoto()).into(holder.familyMemberProfilePic);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
          * ------------------------------------------------------------- */
 
         private TextView textFamilyMemberNameValue;
-        private CircleImageView familyMemberProfilePic;
+        private final de.hdodenhof.circleimageview.CircleImageView familyMemberProfilePic;
 
         /* ------------------------------------------------------------- *
          * Constructor

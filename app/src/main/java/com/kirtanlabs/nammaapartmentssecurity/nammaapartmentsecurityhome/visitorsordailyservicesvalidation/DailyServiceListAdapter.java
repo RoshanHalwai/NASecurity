@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -61,6 +62,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
         nammaApartmentDailyService = nammaApartmentDailyServiceList.get(position);
         holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentDailyService.getFullName());
+        Glide.with(mCtx.getApplicationContext()).load(nammaApartmentDailyService.getProfilePhoto()).into(holder.VisitorAndDailyServiceProfilePic);
 
         //To retrieve of owner details from firebase
         getOwnerDetailsFromFireBase(holder.textFlatToVisitValue);
@@ -155,13 +157,14 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
          * Private Members
          * ------------------------------------------------------------- */
 
-        TextView textVisitorOrDailyServiceName;
-        TextView textFlatToVisit;
-        TextView textInvitedBy;
-        TextView textVisitorOrDailyServiceNameValue;
-        TextView textFlatToVisitValue;
-        TextView textInvitedByValue;
-        Button buttonAllowVisitorAndDailyService;
+        private TextView textVisitorOrDailyServiceName;
+        private TextView textFlatToVisit;
+        private TextView textInvitedBy;
+        private TextView textVisitorOrDailyServiceNameValue;
+        private TextView textFlatToVisitValue;
+        private TextView textInvitedByValue;
+        private Button buttonAllowVisitorAndDailyService;
+        private final de.hdodenhof.circleimageview.CircleImageView VisitorAndDailyServiceProfilePic;
 
         /* ------------------------------------------------------------- *
          * Constructor
@@ -170,6 +173,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
         DailyServiceHolder(View itemView) {
             super(itemView);
 
+            VisitorAndDailyServiceProfilePic = itemView.findViewById(R.id.VisitorAndDailyServiceProfilePic);
             textVisitorOrDailyServiceName = itemView.findViewById(R.id.textVisitorOrDailyServiceName);
             textFlatToVisit = itemView.findViewById(R.id.textFlatToVisit);
             textInvitedBy = itemView.findViewById(R.id.textInvitedBy);
