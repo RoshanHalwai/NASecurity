@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
 
@@ -30,7 +30,6 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private NammaApartmentDailyService nammaApartmentDailyService;
     private String ownerUid;
-    private String flatNumber;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -113,9 +112,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
      * @param textFlatToVisitValue - to display owner flat number in this view
      */
     private void getOwnerDetailsFromFireBase(final TextView textFlatToVisitValue) {
-        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_DAILYSERVICES)
-                .child(Constants.FIREBASE_CHILD_ALL)
-                .child(Constants.FIREBASE_CHILD_PUBLIC)
+        Constants.PUBLIC_DAILYSERVICES_REFERENCE
                 .child(nammaApartmentDailyService.getDailyServiceType())
                 .child(nammaApartmentDailyService.getUid())
                 .child(Constants.FIREBASE_CHILD_OWNERS_UID)
@@ -125,14 +122,13 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
                         for (DataSnapshot ownerUidDataSnapshot : dataSnapshot.getChildren()) {
                             ownerUid = ownerUidDataSnapshot.getKey();
                         }
-
-                        FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_USERS)
-                                .child(Constants.FIREBASE_CHILD_PRIVATE)
+                        Constants.PRIVATE_USERS_REFERENCE
                                 .child(ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                flatNumber = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_FLAT_NUMBER).getValue();
-                                textFlatToVisitValue.setText(flatNumber);
+                                NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
+                                assert nammaApartmentUser != null;
+                                textFlatToVisitValue.setText(nammaApartmentUser.getFlatDetails().getFlatNumber());
                             }
 
                             @Override

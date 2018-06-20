@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
@@ -127,9 +126,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                 }
             });
         } else {
-            FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_DAILYSERVICES)
-                    .child(Constants.FIREBASE_CHILD_ALL)
-                    .child(Constants.FIREBASE_CHILD_PRIVATE)
+            Constants.PRIVATE_DAILYSERVICES_REFERENCE
                     .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

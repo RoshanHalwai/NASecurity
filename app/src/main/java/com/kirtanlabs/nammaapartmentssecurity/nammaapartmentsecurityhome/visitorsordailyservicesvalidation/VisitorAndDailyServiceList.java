@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
@@ -104,19 +103,15 @@ public class VisitorAndDailyServiceList extends BaseActivity {
             });
         } else {
             dailyServiceUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID);
-            DatabaseReference serviceTypeReference = FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_DAILYSERVICES)
-                    .child(Constants.FIREBASE_CHILD_ALL)
-                    .child(Constants.FIREBASE_CHILD_PUBLIC)
-                    .child(Constants.FIREBASE_CHILD_SERVICETYPE);
+            DatabaseReference serviceTypeReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
+                    .child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE);
             serviceTypeReference.child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot serviceTypeDataSnapshot : dataSnapshot.getChildren()) {
-                        serviceType = serviceTypeDataSnapshot.getKey();
-                    }
-                    DatabaseReference dailyServiceDataReference = FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_CHILD_DAILYSERVICES)
-                            .child(Constants.FIREBASE_CHILD_ALL)
-                            .child(Constants.FIREBASE_CHILD_PUBLIC)
+                    serviceType = (String) dataSnapshot.getValue();
+
+                    assert serviceType != null;
+                    DatabaseReference dailyServiceDataReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                             .child(serviceType);
                     dailyServiceDataReference.child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
