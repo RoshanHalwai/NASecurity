@@ -25,6 +25,10 @@
     <string name="image_success">Image to indicate for successful visitor validation</string>
     <string name="image_failed">Image to indicate for failed visitor validation</string>
     <string name="invalid_visitor">Invalid Visitor</string>
+    <string name="not_entered">Not Entered</string>
+    <string name="entered">Entered</string>
+    <string name="left">Left</string>
+    <string name="visitor_has_left_society">Visitor has Left the Society</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_cab_arrivals">Expected Cab Arrivals</string>

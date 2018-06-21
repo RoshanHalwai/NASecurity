@@ -52,6 +52,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_PUBLIC = "public";
     public static final String FIREBASE_CHILD_DAILYSERVICETYPE = "dailyServiceType";
     public static final String FIREBASE_CHILD_SOCIETIES = "societies";
+    public static final String FIREBASE_CHILD_STATUS = "status";
     public static final String FIREBASE_CHILD_USERS = "users";
     public static final String FIREBASE_CHILD_USERDATA = "userData";
     public static final String FIREBASE_CHILD_VISITORS = "visitors";

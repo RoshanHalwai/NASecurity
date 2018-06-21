@@ -55,6 +55,9 @@ public class VisitorAndDailyServiceList extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*We need Progress Indicator in this screen*/
+        showProgressIndicator();
+
         /* Since we wouldn't want the users to go back to previous screen,
          * hence hiding the back button from the Title Bar*/
         hideBackButton();
@@ -69,9 +72,6 @@ public class VisitorAndDailyServiceList extends BaseActivity {
         nammaApartmentDailyServiceList = new ArrayList<>();
         visitorListAdapter = new VisitorListAdapter(this, nammaApartmentVisitorList);
         dailyServiceListAdapter = new DailyServiceListAdapter(this, nammaApartmentDailyServiceList);
-
-        /*We need Progress Indicator in this screen*/
-        showProgressIndicator();
 
         //To retrieve visitor and daily service details from firebase
         retrieveDataFromFireBase();
@@ -89,6 +89,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                     .child(visitorUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    hideProgressIndicator();
                     NammaApartmentVisitor nammaApartmentValidVisitor = dataSnapshot.getValue(NammaApartmentVisitor.class);
                     nammaApartmentVisitorList.add(0, nammaApartmentValidVisitor);
                     //Setting adapter to recycler view
@@ -98,7 +99,6 @@ public class VisitorAndDailyServiceList extends BaseActivity {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
         } else {
@@ -137,8 +137,6 @@ public class VisitorAndDailyServiceList extends BaseActivity {
 
                 }
             });
-
         }
-        hideProgressIndicator();
     }
 }
