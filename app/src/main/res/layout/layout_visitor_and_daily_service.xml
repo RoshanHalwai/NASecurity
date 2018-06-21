@@ -20,14 +20,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/imageSuccess"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:contentDescription="@string/image_success"
-                    android:src="@drawable/success" />
-
                 <com.wang.avi.AVLoadingIndicatorView
                     android:id="@+id/animationWaitingForCustomers"
                     android:layout_width="wrap_content"
@@ -75,6 +67,15 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/textApartment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:text="@string/apartment"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp" />
+
+                    <TextView
                         android:id="@+id/textFlatToVisit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -108,6 +109,14 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:padding="2dp"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textApartmentValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:padding="2dp"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />

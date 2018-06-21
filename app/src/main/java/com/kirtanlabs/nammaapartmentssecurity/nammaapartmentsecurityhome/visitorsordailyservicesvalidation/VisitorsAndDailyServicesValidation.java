@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
@@ -22,6 +23,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
 
     private EditText editMobileNumber;
     private int validationType;
+    private String visitorUid;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -109,12 +111,8 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     hideProgressIndicator();
                     if (dataSnapshot.exists()) {
-                        String visitorUid = (String) dataSnapshot.getValue();
-                        Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
-                        intent.putExtra(Constants.SCREEN_TITLE, validationType);
-                        intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
-                        startActivity(intent);
-                        finish();
+                        visitorUid = (String) dataSnapshot.getValue();
+                        checkVisitorStatus();
                     } else {
                         openValidationStatusDialog(Constants.FAILED, getString(R.string.invalid_visitor));
                     }
@@ -151,5 +149,35 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                 }
             });
         }
+    }
+
+    /**
+     * This method is invoked to check status of visitor whether it is Not Entered, Entered or Left.
+     */
+    private void checkVisitorStatus() {
+        DatabaseReference visitorStatusReference = Constants.PREAPPROVED_VISITORS_REFERENCE
+                .child(visitorUid)
+                .child(Constants.FIREBASE_CHILD_STATUS);
+        visitorStatusReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String visitorStatus = (String) dataSnapshot.getValue();
+                assert visitorStatus != null;
+                if (visitorStatus.equals(getString(R.string.left))) {
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.visitor_has_left_society));
+                } else {
+                    Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
+                    intent.putExtra(Constants.SCREEN_TITLE, validationType);
+                    intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
