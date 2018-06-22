@@ -36,12 +36,14 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
      * Private Members
      * ------------------------------------------------------------- */
 
+    private TextView textFlat;
+    private Button buttonVerifySocietyMember;
+    private EditText editApartment;
+    private EditText editFlat;
     private Dialog dialog;
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private List<String> itemsInList = new ArrayList<>();
-    private EditText editApartment;
-    private EditText editFlat;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -63,10 +65,10 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
 
         /*Getting Id's for all the views*/
         TextView textApartment = findViewById(R.id.textApartment);
-        TextView textFlat = findViewById(R.id.textFlat);
+        textFlat = findViewById(R.id.textFlat);
         editApartment = findViewById(R.id.editApartment);
         editFlat = findViewById(R.id.editFlat);
-        Button buttonVerifySocietyMember = findViewById(R.id.buttonVerifySocietyMember);
+        buttonVerifySocietyMember = findViewById(R.id.buttonVerifySocietyMember);
 
         /*Setting font for all the views*/
         textApartment.setTypeface(Constants.setLatoBoldFont(this));
@@ -82,7 +84,11 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
         editApartment.setInputType(InputType.TYPE_NULL);
         editFlat.setInputType(InputType.TYPE_NULL);
 
+        /*Show only Apartment during start of activity*/
+        hideViews();
+
         /*Attaching listeners to Views*/
+        editApartment.requestFocus();
         editApartment.setOnFocusChangeListener(this);
         editFlat.setOnFocusChangeListener(this);
 
@@ -108,7 +114,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
                 if (editFlat.length() > EDIT_TEXT_MIN_LENGTH) {
                     /*We need Progress Indicator in this screen*/
                     showProgressIndicator();
-                    checkFlatNumberInFirebase(editApartment.getText().toString().trim(), editFlat.getText().toString().trim());
+                    checkFlatMembersInFirebase(editApartment.getText().toString().trim(), editFlat.getText().toString().trim());
                 } else {
                     editFlat.setError(getString(R.string.field_cant_be_empty));
                 }
@@ -131,7 +137,6 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
     private void initializeList() {
         dialog = new Dialog(SocietyMember.this);
         dialog.setContentView(R.layout.apartment_and_flats_listview);
-
         listView = dialog.findViewById(R.id.list);
 
         /*Setting font for all the items in the list view*/
@@ -152,6 +157,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String itemValue = (String) listView.getItemAtPosition(position);
             int viewId = Objects.requireNonNull(getCurrentFocus()).getId();
+            showViews(viewId);
             dialog.cancel();
             ((EditText) findViewById(viewId)).setText(itemValue);
         });
@@ -167,6 +173,7 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
         itemsInList.clear();
         switch (viewId) {
             case R.id.editApartment:
+                hideViews();
                 updateItemsInList(Constants.CITIES_REFERENCE
                         .child(Constants.FIREBASE_CHILD_BANGALORE)
                         .child(Constants.FIREBASE_CHILD_SOCIETIES)
@@ -210,44 +217,58 @@ public class SocietyMember extends BaseActivity implements View.OnClickListener,
     }
 
     /**
+     * Hides view which are not required
+     */
+    private void hideViews() {
+        textFlat.setVisibility(View.INVISIBLE);
+        editFlat.setVisibility(View.INVISIBLE);
+        buttonVerifySocietyMember.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Shows view which are required
+     *
+     * @param viewId from which other views need to be shown
+     */
+    private void showViews(int viewId) {
+        switch (viewId) {
+            case R.id.editApartment:
+                textFlat.setVisibility(View.VISIBLE);
+                editFlat.setVisibility(View.VISIBLE);
+                editFlat.getText().clear();
+                break;
+            case R.id.editFlat:
+                buttonVerifySocietyMember.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    /**
      * This method is used to check whether person has given his own valid apartment & flat or not
      *
      * @param apartment - that need to be checked whether it is present in Firebase or not
      * @param flat      - that need to be checked whether it is present in Firebase or not
      */
-    private void checkFlatNumberInFirebase(final String apartment, final String flat) {
+    private void checkFlatMembersInFirebase(final String apartment, final String flat) {
         final DatabaseReference apartmentReference = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.FIREBASE_CHILD_USERDATA)
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
                 .child(Constants.FIREBASE_CHILD_BANGALORE)
                 .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
-                .child(apartment);
+                .child(apartment)
+                .child(flat);
         apartmentReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 hideProgressIndicator();
-                if (dataSnapshot.exists()) {
-                    apartmentReference.child(flat).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                Intent intent = new Intent(SocietyMember.this, FamilyMemberList.class);
-                                intent.putExtra(Constants.FIREBASE_CHILD_APARTMENTS, apartment);
-                                intent.putExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER, flat);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                String invalidFlatNumber = getResources().getString(R.string.invalid_visitor);
-                                invalidFlatNumber = invalidFlatNumber.replace("Visitor", "Flat");
-                                openValidationStatusDialog(Constants.FAILED, invalidFlatNumber);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                if (dataSnapshot.hasChildren()) {
+                    Intent intent = new Intent(SocietyMember.this, FamilyMemberList.class);
+                    intent.putExtra(Constants.FIREBASE_CHILD_APARTMENTS, apartment);
+                    intent.putExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER, flat);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.no_member_in_this_flat));
                 }
             }
 
