@@ -28,7 +28,6 @@ public class VisitorAndDailyServiceList extends BaseActivity {
     private DailyServiceListAdapter dailyServiceListAdapter;
     private int validationStatusOf;
     private String serviceType;
-    private String dailyServiceUid;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -102,39 +101,41 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                 }
             });
         } else {
-            dailyServiceUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID);
-            DatabaseReference serviceTypeReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
-                    .child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE);
-            serviceTypeReference.child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            serviceType = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICETYPE);
+            String dailyServiceUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID);
+            DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
+                    .child(serviceType)
+                    .child(dailyServiceUid);
+            dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    serviceType = (String) dataSnapshot.getValue();
+                public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
+                    hideProgressIndicator();
 
-                    assert serviceType != null;
-                    DatabaseReference dailyServiceDataReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
-                            .child(serviceType);
-                    dailyServiceDataReference.child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            NammaApartmentDailyService nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
-                            assert nammaApartmentDailyService != null;
-                            nammaApartmentDailyService.setDailyServiceType(serviceType);
-                            nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
-                            //Setting adapter to recycler view
-                            recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
-                            dailyServiceListAdapter.notifyDataSetChanged();
-                        }
+                    dailyServiceReference.child(Constants.FIREBASE_CHILD_OWNERS_UID)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot ownersUidDataSnapshot : dataSnapshot.getChildren()) {
+                                        NammaApartmentDailyService nammaApartmentDailyService = dailyServiceDataSnapshot.getValue(NammaApartmentDailyService.class);
+                                        assert nammaApartmentDailyService != null;
+                                        nammaApartmentDailyService.setOwnersUID(ownersUidDataSnapshot.getKey());
+                                        nammaApartmentDailyService.setDailyServiceType(serviceType);
+                                        nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
+                                        //Setting adapter to recycler view
+                                        recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
+                                        dailyServiceListAdapter.notifyDataSetChanged();
+                                    }
+                                }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                                }
+                            });
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
         }

@@ -24,6 +24,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     private EditText editMobileNumber;
     private int validationType;
     private String visitorUid;
+    private String dailyServiceUid;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -130,12 +131,8 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     hideProgressIndicator();
                     if (dataSnapshot.exists()) {
-                        String dailyServiceUid = (String) dataSnapshot.getValue();
-                        Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
-                        intent.putExtra(Constants.SCREEN_TITLE, validationType);
-                        intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID, dailyServiceUid);
-                        startActivity(intent);
-                        finish();
+                        dailyServiceUid = (String) dataSnapshot.getValue();
+                        checkDailyServiceStatus();
                     } else {
                         String invalidDailyServices = getString(R.string.invalid_visitor);
                         invalidDailyServices = invalidDailyServices.replace("Visitor", "Daily Services");
@@ -177,6 +174,53 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    /**
+     * This method is invoked to check status of daily service whether it is Not Entered, Entered or Left.
+     */
+    private void checkDailyServiceStatus() {
+        Constants.PUBLIC_DAILYSERVICES_REFERENCE
+                .child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE)
+                .child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String serviceType = (String) dataSnapshot.getValue();
+
+                assert serviceType != null;
+                Constants.PUBLIC_DAILYSERVICES_REFERENCE
+                        .child(serviceType)
+                        .child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String dailyServiceStatus = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
+
+                        assert dailyServiceStatus != null;
+                        if (dailyServiceStatus.equals(getString(R.string.left))) {
+                            String alreadyLeft = getString(R.string.visitor_has_left_society);
+                            alreadyLeft = alreadyLeft.replace("Visitor", "Daily Service");
+                            openValidationStatusDialog(Constants.FAILED, alreadyLeft);
+                        } else {
+                            Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
+                            intent.putExtra(Constants.SCREEN_TITLE, validationType);
+                            intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICETYPE, serviceType);
+                            intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID, dailyServiceUid);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
