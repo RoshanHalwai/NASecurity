@@ -61,6 +61,7 @@
     <string name="name">Name:</string>
     <string name="apartment">Apartment</string>
     <string name="flat">Flat</string>
+    <string name="no_member_in_this_flat">There are no members in this flat</string>
 
     <!--Visitors And Daily Services Validation Status Activity-->
     <string name="visitor_validation_status">Visitor Validation Status</string>

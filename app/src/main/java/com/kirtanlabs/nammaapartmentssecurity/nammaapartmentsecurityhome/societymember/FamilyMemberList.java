@@ -51,7 +51,7 @@ public class FamilyMemberList extends BaseActivity {
 
         //Creating recycler view adapter
         nammaApartmentFamilyMembersList = new ArrayList<>();
-        adapter = new FamilyMemberListAdapter(this,nammaApartmentFamilyMembersList);
+        adapter = new FamilyMemberListAdapter(this, nammaApartmentFamilyMembersList);
 
         //Setting adapter to recycler view
         recyclerView.setAdapter(adapter);
@@ -88,7 +88,8 @@ public class FamilyMemberList extends BaseActivity {
                 for (DataSnapshot familyMemberDataSnapshot : dataSnapshot.getChildren()) {
                     String familyMemberUid = familyMemberDataSnapshot.getKey();
 
-                    Constants.PRIVATE_USERS_REFERENCE.child(familyMemberUid)
+                    Constants.PRIVATE_USERS_REFERENCE
+                            .child(familyMemberUid)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -99,7 +100,6 @@ public class FamilyMemberList extends BaseActivity {
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-
                                 }
                             });
                 }
