@@ -28,7 +28,8 @@
     <string name="not_entered">Not Entered</string>
     <string name="entered">Entered</string>
     <string name="left">Left</string>
-    <string name="visitor_has_left_society">Visitor has Left the Society</string>
+    <string name="visitor_has_left_society">Visitor has already Left the Society</string>
+    <string name="service_type">Type:</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_cab_arrivals">Expected Cab Arrivals</string>
