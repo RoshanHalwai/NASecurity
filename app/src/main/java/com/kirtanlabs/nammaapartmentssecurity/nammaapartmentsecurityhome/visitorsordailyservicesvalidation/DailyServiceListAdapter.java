@@ -62,13 +62,18 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
         String titleApartment = mCtx.getString(R.string.apartment) + ":";
         holder.textApartment.setText(titleApartment);
 
+        /*We use a common layout for Visitor and Daily Service List screen,so
+         *we change titles of some views in Daily Service List*/
         changeViewsTitle(holder.textVisitorOrDailyServiceName, holder.buttonAllowVisitorAndDailyService);
         holder.textInvitedBy.setVisibility(View.GONE);
         holder.textInvitedByValue.setVisibility(View.GONE);
+        holder.textServiceType.setVisibility(View.VISIBLE);
+        holder.textServiceTypeValue.setVisibility(View.VISIBLE);
 
-        //Creating an instance of NammaApartmentVisitor class and retrieving the values from Firebase
+        //Creating an instance of NammaApartmentDailyService class and retrieving the values from Firebase
         nammaApartmentDailyService = nammaApartmentDailyServiceList.get(position);
         holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentDailyService.getFullName());
+        holder.textServiceTypeValue.setText(nammaApartmentDailyService.getDailyServiceType());
         Glide.with(mCtx.getApplicationContext()).load(nammaApartmentDailyService.getProfilePhoto()).into(holder.VisitorAndDailyServiceProfilePic);
 
         //To retrieve of owner details from firebase
@@ -106,7 +111,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
      * @param textVisitorOrDailyServiceName     - to update title in Daily Services Validation Status Screen
      * @param buttonAllowVisitorAndDailyService - to update text in Daily Services Validation Status Screen
      */
-    private void changeViewsTitle(TextView textVisitorOrDailyServiceName, Button buttonAllowVisitorAndDailyService) {
+    private void changeViewsTitle(final TextView textVisitorOrDailyServiceName, final Button buttonAllowVisitorAndDailyService) {
         String nameTitle = mCtx.getResources().getString(R.string.visitor_name);
         nameTitle = nameTitle.substring(8);
         textVisitorOrDailyServiceName.setText(nameTitle);
@@ -124,7 +129,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
      */
     private void getOwnerDetailsFromFireBase(final TextView textFlatToVisitValue, final TextView textApartmentValue) {
         Constants.PRIVATE_USERS_REFERENCE
-                .child(nammaApartmentDailyService.getOwnersUID())
+                .child(nammaApartmentDailyService.getOwnerUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -150,16 +155,16 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
         String dailyServiceStatus = nammaApartmentDailyService.getStatus();
         if (dailyServiceStatus.equals(mCtx.getString(R.string.not_entered))) {
             dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS).setValue(mCtx.getString(R.string.entered));
-            updateDailyServiceInTime();
+            updateDailyServiceTimeInFirebase();
         } else if (dailyServiceStatus.equals(mCtx.getString(R.string.entered))) {
             dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS).setValue(mCtx.getString(R.string.left));
         }
     }
 
     /**
-     * This method is invoked to change timeOfVisit of daily service when he/she enters into the society.
+     * This method is invoked to change timeOfVisit of daily service in Firebase.
      */
-    private void updateDailyServiceInTime() {
+    private void updateDailyServiceTimeInFirebase() {
         Calendar calendar = Calendar.getInstance();
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = calendar.get(Calendar.MINUTE);
@@ -178,10 +183,12 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
          * ------------------------------------------------------------- */
 
         private TextView textVisitorOrDailyServiceName;
+        private TextView textServiceType;
         private TextView textApartment;
         private TextView textFlatToVisit;
         private TextView textInvitedBy;
         private TextView textVisitorOrDailyServiceNameValue;
+        private TextView textServiceTypeValue;
         private TextView textApartmentValue;
         private TextView textFlatToVisitValue;
         private TextView textInvitedByValue;
@@ -196,11 +203,13 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
             super(itemView);
 
             VisitorAndDailyServiceProfilePic = itemView.findViewById(R.id.VisitorAndDailyServiceProfilePic);
+            textServiceType = itemView.findViewById(R.id.textServiceType);
             textApartment = itemView.findViewById(R.id.textApartment);
             textVisitorOrDailyServiceName = itemView.findViewById(R.id.textVisitorOrDailyServiceName);
             textFlatToVisit = itemView.findViewById(R.id.textFlatToVisit);
             textInvitedBy = itemView.findViewById(R.id.textInvitedBy);
             textVisitorOrDailyServiceNameValue = itemView.findViewById(R.id.textVisitorOrDailyServiceNameValue);
+            textServiceTypeValue = itemView.findViewById(R.id.textServiceTypeValue);
             textApartmentValue = itemView.findViewById(R.id.textApartmentValue);
             textFlatToVisitValue = itemView.findViewById(R.id.textFlatToVisitValue);
             textInvitedByValue = itemView.findViewById(R.id.textInvitedByValue);
@@ -208,9 +217,11 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
             /*Setting fonts to the views*/
             textVisitorOrDailyServiceName.setTypeface(Constants.setLatoRegularFont(mCtx));
+            textServiceType.setTypeface(Constants.setLatoRegularFont(mCtx));
             textApartment.setTypeface(Constants.setLatoRegularFont(mCtx));
             textFlatToVisit.setTypeface(Constants.setLatoRegularFont(mCtx));
             textVisitorOrDailyServiceNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+            textServiceTypeValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textApartmentValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textFlatToVisitValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             buttonAllowVisitorAndDailyService.setTypeface(Constants.setLatoLightFont(mCtx));

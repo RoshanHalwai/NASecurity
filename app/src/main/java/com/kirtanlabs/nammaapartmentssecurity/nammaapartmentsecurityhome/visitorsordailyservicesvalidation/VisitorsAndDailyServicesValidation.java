@@ -25,6 +25,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     private int validationType;
     private String visitorUid;
     private String dailyServiceUid;
+    private String serviceType;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -132,7 +133,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                     hideProgressIndicator();
                     if (dataSnapshot.exists()) {
                         dailyServiceUid = (String) dataSnapshot.getValue();
-                        checkDailyServiceStatus();
+                        checkDailyServiceStatusInFirebase();
                     } else {
                         String invalidDailyServices = getString(R.string.invalid_visitor);
                         invalidDailyServices = invalidDailyServices.replace("Visitor", "Daily Services");
@@ -163,11 +164,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                 if (visitorStatus.equals(getString(R.string.left))) {
                     openValidationStatusDialog(Constants.FAILED, getString(R.string.visitor_has_left_society));
                 } else {
-                    Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
-                    intent.putExtra(Constants.SCREEN_TITLE, validationType);
-                    intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
-                    startActivity(intent);
-                    finish();
+                    openVisitorOrDailyServiceList();
                 }
             }
 
@@ -179,16 +176,15 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
     }
 
     /**
-     * This method is invoked to check status of daily service whether it is Not Entered, Entered or Left.
+     * This method is invoked to check status of daily service whether it is Not Entered, Entered or Left in Firebase.
      */
-    private void checkDailyServiceStatus() {
+    private void checkDailyServiceStatusInFirebase() {
         Constants.PUBLIC_DAILYSERVICES_REFERENCE
                 .child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE)
                 .child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String serviceType = (String) dataSnapshot.getValue();
-
+                serviceType = (String) dataSnapshot.getValue();
                 assert serviceType != null;
                 Constants.PUBLIC_DAILYSERVICES_REFERENCE
                         .child(serviceType)
@@ -196,19 +192,13 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String dailyServiceStatus = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
-
                         assert dailyServiceStatus != null;
                         if (dailyServiceStatus.equals(getString(R.string.left))) {
                             String alreadyLeft = getString(R.string.visitor_has_left_society);
                             alreadyLeft = alreadyLeft.replace("Visitor", "Daily Service");
                             openValidationStatusDialog(Constants.FAILED, alreadyLeft);
                         } else {
-                            Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
-                            intent.putExtra(Constants.SCREEN_TITLE, validationType);
-                            intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICETYPE, serviceType);
-                            intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID, dailyServiceUid);
-                            startActivity(intent);
-                            finish();
+                            openVisitorOrDailyServiceList();
                         }
                     }
 
@@ -223,5 +213,21 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    /**
+     * This method is invoked to open Visitor or Daily Service List Screen
+     */
+    private void openVisitorOrDailyServiceList() {
+        Intent intent = new Intent(VisitorsAndDailyServicesValidation.this, VisitorAndDailyServiceList.class);
+        intent.putExtra(Constants.SCREEN_TITLE, validationType);
+        if (validationType == R.string.visitors_validation) {
+            intent.putExtra(Constants.FIREBASE_CHILD_VISITOR_UID, visitorUid);
+        } else {
+            intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICETYPE, serviceType);
+            intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID, dailyServiceUid);
+        }
+        startActivity(intent);
+        finish();
     }
 }

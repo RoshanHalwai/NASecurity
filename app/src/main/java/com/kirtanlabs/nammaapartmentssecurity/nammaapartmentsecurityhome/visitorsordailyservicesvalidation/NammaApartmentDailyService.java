@@ -15,7 +15,7 @@ public class NammaApartmentDailyService {
     private String timeOfVisit;
     private String uid;
     private String dailyServiceType;
-    private String ownersUID;
+    private String ownerUid;
 
     /* ------------------------------------------------------------- *
      * Constructors
@@ -75,15 +75,19 @@ public class NammaApartmentDailyService {
         return dailyServiceType;
     }
 
-    public String getOwnersUID() {
-        return ownersUID;
+    public String getOwnerUid() {
+        return ownerUid;
     }
 
-    public void setOwnersUID(String ownersUID) {
-        this.ownersUID = ownersUID;
-    }
+    /* ------------------------------------------------------------- *
+     * Setters
+     * ------------------------------------------------------------- */
 
     public void setDailyServiceType(String dailyServiceType) {
         this.dailyServiceType = dailyServiceType;
+    }
+
+    public void setOwnerUid(String ownerUid) {
+        this.ownerUid = ownerUid;
     }
 }

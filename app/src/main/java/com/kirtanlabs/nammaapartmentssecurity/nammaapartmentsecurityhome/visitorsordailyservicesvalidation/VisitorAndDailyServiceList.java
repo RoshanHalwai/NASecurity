@@ -26,6 +26,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
     private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private VisitorListAdapter visitorListAdapter;
     private DailyServiceListAdapter dailyServiceListAdapter;
+    private NammaApartmentDailyService nammaApartmentDailyService;
     private int validationStatusOf;
     private String serviceType;
 
@@ -110,28 +111,26 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                 @Override
                 public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
                     hideProgressIndicator();
+                    dailyServiceReference.
+                            child(Constants.FIREBASE_CHILD_OWNERS_UID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ownersUidDataSnapshot : dataSnapshot.getChildren()) {
+                                nammaApartmentDailyService = dailyServiceDataSnapshot.getValue(NammaApartmentDailyService.class);
+                                assert nammaApartmentDailyService != null;
+                                nammaApartmentDailyService.setDailyServiceType(serviceType);
+                                nammaApartmentDailyService.setOwnerUid(ownersUidDataSnapshot.getKey());
+                                nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
+                            }
+                            //Setting adapter to recycler view
+                            recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
+                            dailyServiceListAdapter.notifyDataSetChanged();
+                        }
 
-                    dailyServiceReference.child(Constants.FIREBASE_CHILD_OWNERS_UID)
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot ownersUidDataSnapshot : dataSnapshot.getChildren()) {
-                                        NammaApartmentDailyService nammaApartmentDailyService = dailyServiceDataSnapshot.getValue(NammaApartmentDailyService.class);
-                                        assert nammaApartmentDailyService != null;
-                                        nammaApartmentDailyService.setOwnersUID(ownersUidDataSnapshot.getKey());
-                                        nammaApartmentDailyService.setDailyServiceType(serviceType);
-                                        nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
-                                        //Setting adapter to recycler view
-                                        recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
-                                        dailyServiceListAdapter.notifyDataSetChanged();
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
                 }
 
                 @Override

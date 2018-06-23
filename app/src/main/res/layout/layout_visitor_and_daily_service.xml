@@ -67,6 +67,16 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/textServiceType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:text="@string/service_type"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp"
+                        android:visibility="gone" />
+
+                    <TextView
                         android:id="@+id/textApartment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -112,6 +122,15 @@
                         android:padding="2dp"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textServiceTypeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/textApartmentValue"
