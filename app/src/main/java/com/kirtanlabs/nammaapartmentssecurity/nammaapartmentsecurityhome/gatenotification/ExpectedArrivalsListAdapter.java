@@ -21,10 +21,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
-import java.text.DateFormatSymbols;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedArrivalsListAdapter.ExpectedArrivalsHolder> implements View.OnClickListener {
 
@@ -36,6 +33,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
     private final BaseActivity baseActivity;
     private NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals;
     private List<NammaApartmentExpectedArrivals> nammaApartmentExpectedArrivalsList;
+    private DatabaseReference expectedArrivalsReference;
     private int validationStatusOf;
 
     /* ------------------------------------------------------------- *
@@ -119,33 +117,31 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
      * @param buttonAllowExpectedArrivals - to update text in Package Vendor Validation
      */
     private void changeViewsText(final TextView textBookedBy, final Button buttonAllowExpectedArrivals) {
-        String orderedByTitle = mCtx.getString(R.string.booked_by);
-        orderedByTitle = orderedByTitle.replace("Booked", "Ordered");
+        String orderedByTitle = mCtx.getString(R.string.ordered_by);
         textBookedBy.setText(orderedByTitle);
 
-        String allowTo = mCtx.getString(R.string.allow_cab_driver);
-        allowTo = allowTo.replace("Cab Driver", "Package Vendor");
+        String allowTo = mCtx.getString(R.string.allow_package_vendor);
         buttonAllowExpectedArrivals.setText(allowTo);
     }
 
     private void getOwnerDetailsFromFireBase(final TextView textBookedByValue, final TextView textFlatNumberValue, TextView textApartmentValue) {
-        Constants.PRIVATE_USERS_REFERENCE
-                .child(nammaApartmentExpectedArrivals.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
-                        assert nammaApartmentUser != null;
-                        textBookedByValue.setText(nammaApartmentUser.getPersonalDetails().getFullName());
-                        textApartmentValue.setText(nammaApartmentUser.getFlatDetails().getApartmentName());
-                        textFlatNumberValue.setText(nammaApartmentUser.getFlatDetails().getFlatNumber());
-                    }
+        DatabaseReference ownerReference = Constants.PRIVATE_USERS_REFERENCE
+                .child(nammaApartmentExpectedArrivals.getUid());
+        ownerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
+                assert nammaApartmentUser != null;
+                textBookedByValue.setText(nammaApartmentUser.getPersonalDetails().getFullName());
+                textApartmentValue.setText(nammaApartmentUser.getFlatDetails().getApartmentName());
+                textFlatNumberValue.setText(nammaApartmentUser.getFlatDetails().getFlatNumber());
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+            }
+        });
     }
 
     /**
@@ -153,9 +149,9 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
      */
     private void changeExpectedArrivalStatusInFirebase() {
         String status = nammaApartmentExpectedArrivals.getStatus();
-        DatabaseReference expectedArrivalsStatusReference = Constants.PUBLIC_CABS_REFERENCE
-                .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid()).child(Constants.FIREBASE_CHILD_STATUS);
-        baseActivity.changeStatus(status, expectedArrivalsStatusReference);
+        expectedArrivalsReference = Constants.PUBLIC_CABS_REFERENCE
+                .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
+        baseActivity.changeStatus(status, expectedArrivalsReference.child(Constants.FIREBASE_CHILD_STATUS));
 
         if (status.equals(mCtx.getString(R.string.not_entered))) {
             changeDateAndTime();
@@ -166,13 +162,10 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
      * This method is used to change in time of Expected Arrival
      */
     private void changeDateAndTime() {
-        Calendar calendar = Calendar.getInstance();
-        String currentTime = String.format(Locale.getDefault(), "%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
-        String currentDate = new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)].substring(0, 3) + " " + calendar.get(Calendar.DAY_OF_MONTH) + ", " + calendar.get(Calendar.YEAR);
+        String currentTime = baseActivity.getCurrentTime();
+        String currentDate = baseActivity.getCurrentDate();
         String concatenatedDateAndTime = currentDate + "\t\t" + " " + currentTime;
-        Constants.PUBLIC_CABS_REFERENCE
-                .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid())
-                .child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).setValue(concatenatedDateAndTime);
+        expectedArrivalsReference.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).setValue(concatenatedDateAndTime);
     }
 
     /* ------------------------------------------------------------- *

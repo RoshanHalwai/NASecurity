@@ -21,9 +21,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceListAdapter.DailyServiceHolder> implements View.OnClickListener {
 
@@ -119,8 +117,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
         nameTitle = nameTitle.substring(8);
         textVisitorOrDailyServiceName.setText(nameTitle);
 
-        String allowTo = mCtx.getString(R.string.allow_visitor);
-        allowTo = allowTo.replace("Visitor", "Daily Service");
+        String allowTo = mCtx.getString(R.string.allow_daily_service);
         buttonAllowVisitorAndDailyService.setText(allowTo);
     }
 
@@ -167,10 +164,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
      * This method is invoked to change timeOfVisit of daily service in Firebase.
      */
     private void updateDailyServiceTimeInFirebase() {
-        Calendar calendar = Calendar.getInstance();
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currentMinute = calendar.get(Calendar.MINUTE);
-        String currentTime = String.format(Locale.getDefault(), "%02d:%02d", currentHour, currentMinute);
+        String currentTime = baseActivity.getCurrentTime();
         dailyServiceReference.child(Constants.FIREBASE_CHILD_TIMEOFVISIT).setValue(currentTime);
     }
 

@@ -11,13 +11,12 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
-
-import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
@@ -116,8 +115,9 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
      * @param cabNumberOrResidentMobileNumber - that need to check in firebase whether it is valid or not.
      */
     private void checkDetailsInFirebase(String cabNumberOrResidentMobileNumber) {
-        Constants.ALL_CABS_REFERENCE
-                .child(cabNumberOrResidentMobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference cabNumberReference = Constants.ALL_CABS_REFERENCE
+                .child(cabNumberOrResidentMobileNumber);
+        cabNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 hideProgressIndicator();
@@ -141,46 +141,46 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
      * @param cabDriverUid - to check arrival time of Expected Arrival.
      */
     private void isExpectedArrivalReachedOnTime(String cabDriverUid) {
-        Constants.PUBLIC_CABS_REFERENCE.child(cabDriverUid)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String status = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
-                        String validFor = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_VALIDFOR).getValue();
-                        String expectedDateAndTime = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).getValue();
-                        String[] separatedDateAndTime = TextUtils.split(expectedDateAndTime, "\t\t ");
-                        String expectedDate = separatedDateAndTime[0];
-                        String expectedTime = separatedDateAndTime[1];
+        DatabaseReference cabReference = Constants.PUBLIC_CABS_REFERENCE.child(cabDriverUid);
+        cabReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String status = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
+                String validFor = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_VALIDFOR).getValue();
+                String expectedDateAndTime = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).getValue();
+                String[] separatedDateAndTime = TextUtils.split(expectedDateAndTime, "\t\t ");
+                String expectedDate = separatedDateAndTime[0];
+                String expectedTime = separatedDateAndTime[1];
 
-                        String[] validHours = TextUtils.split(validFor, " ");
-                        int hoursValidFor = Integer.parseInt(validHours[0]);
-                        String[] expectedHoursAndMinutes = TextUtils.split(expectedTime, ":");
-                        int expectedHour = Integer.parseInt(expectedHoursAndMinutes[0]);
-                        int totalValidHours = expectedHour + hoursValidFor;
+                String[] validHours = TextUtils.split(validFor, " ");
+                int hoursValidFor = Integer.parseInt(validHours[0]);
+                String[] expectedHoursAndMinutes = TextUtils.split(expectedTime, ":");
+                int expectedHour = Integer.parseInt(expectedHoursAndMinutes[0]);
+                int expectedMinutes = Integer.parseInt(expectedHoursAndMinutes[1]);
+                int totalValidHours = expectedHour + hoursValidFor;
 
-                        Calendar calendar = Calendar.getInstance();
-                        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                        int currentMinute = calendar.get(Calendar.MINUTE);
-                        String currentDate = new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)].substring(0, 3) + " " + calendar.get(Calendar.DAY_OF_MONTH) + ", " + calendar.get(Calendar.YEAR);
+                Calendar calendar = Calendar.getInstance();
+                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = calendar.get(Calendar.MINUTE);
 
-                        assert status != null;
-                        if (status.equals(getString(R.string.left))) {
-                            openValidationStatusDialog(Constants.FAILED, getString(R.string.cab_left_society));
-                        } else {
-                            if (expectedDate.equals(currentDate) && currentHour < totalValidHours) {
-                                openExpectedArrivalList();
-                            } else if (expectedDate.equals(currentDate) && currentHour == totalValidHours && currentMinute <= Integer.parseInt(expectedHoursAndMinutes[1])) {
-                                openExpectedArrivalList();
-                            } else {
-                                openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
-                            }
-                        }
+                String currentDate = getCurrentDate();
+
+                assert status != null;
+                if (status.equals(getString(R.string.left))) {
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.cab_left_society));
+                } else {
+                    if (expectedDate.equals(currentDate) && (currentHour < totalValidHours || (currentHour == totalValidHours && currentMinute <= expectedMinutes))) {
+                        openExpectedArrivalList();
+                    } else {
+                        openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
                     }
+                }
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
