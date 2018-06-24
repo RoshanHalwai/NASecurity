@@ -26,9 +26,9 @@ public class VisitorAndDailyServiceList extends BaseActivity {
     private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private VisitorListAdapter visitorListAdapter;
     private DailyServiceListAdapter dailyServiceListAdapter;
+    private NammaApartmentDailyService nammaApartmentDailyService;
     private int validationStatusOf;
     private String serviceType;
-    private String dailyServiceUid;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -102,24 +102,26 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                 }
             });
         } else {
-            dailyServiceUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID);
-            DatabaseReference serviceTypeReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
-                    .child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE);
-            serviceTypeReference.child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            serviceType = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICETYPE);
+            String dailyServiceUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID);
+            DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
+                    .child(serviceType)
+                    .child(dailyServiceUid);
+            dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    serviceType = (String) dataSnapshot.getValue();
-
-                    assert serviceType != null;
-                    DatabaseReference dailyServiceDataReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
-                            .child(serviceType);
-                    dailyServiceDataReference.child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
+                    hideProgressIndicator();
+                    dailyServiceReference.
+                            child(Constants.FIREBASE_CHILD_OWNERS_UID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            NammaApartmentDailyService nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
-                            assert nammaApartmentDailyService != null;
-                            nammaApartmentDailyService.setDailyServiceType(serviceType);
-                            nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
+                            for (DataSnapshot ownersUidDataSnapshot : dataSnapshot.getChildren()) {
+                                nammaApartmentDailyService = dailyServiceDataSnapshot.getValue(NammaApartmentDailyService.class);
+                                assert nammaApartmentDailyService != null;
+                                nammaApartmentDailyService.setDailyServiceType(serviceType);
+                                nammaApartmentDailyService.setOwnerUid(ownersUidDataSnapshot.getKey());
+                                nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
+                            }
                             //Setting adapter to recycler view
                             recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
                             dailyServiceListAdapter.notifyDataSetChanged();
@@ -127,14 +129,12 @@ public class VisitorAndDailyServiceList extends BaseActivity {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
                         }
                     });
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
         }
