@@ -50,6 +50,15 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/textApartment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:text="@string/apartment"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp" />
+
+                    <TextView
                         android:id="@+id/textFlatNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -92,6 +101,14 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:padding="2dp"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textApartmentValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:padding="2dp"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />

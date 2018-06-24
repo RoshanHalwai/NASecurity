@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
@@ -31,6 +32,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
+    private final BaseActivity baseActivity;
     private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private NammaApartmentDailyService nammaApartmentDailyService;
     private DatabaseReference dailyServiceReference;
@@ -41,6 +43,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
     DailyServiceListAdapter(Context mCtx, List<NammaApartmentDailyService> nammaApartmentDailyServiceList) {
         this.mCtx = mCtx;
+        this.baseActivity = (BaseActivity) mCtx;
         this.nammaApartmentDailyServiceList = nammaApartmentDailyServiceList;
     }
 
@@ -153,11 +156,10 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
                 .child(nammaApartmentDailyService.getDailyServiceType())
                 .child(nammaApartmentDailyService.getUid());
         String dailyServiceStatus = nammaApartmentDailyService.getStatus();
+        baseActivity.changeStatus(dailyServiceStatus, dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS));
+
         if (dailyServiceStatus.equals(mCtx.getString(R.string.not_entered))) {
-            dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS).setValue(mCtx.getString(R.string.entered));
             updateDailyServiceTimeInFirebase();
-        } else if (dailyServiceStatus.equals(mCtx.getString(R.string.entered))) {
-            dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS).setValue(mCtx.getString(R.string.left));
         }
     }
 
