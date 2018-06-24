@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
@@ -25,6 +24,7 @@ public class ExpectedArrivalsList extends BaseActivity {
     private ExpectedArrivalsListAdapter adapter;
     private List<NammaApartmentExpectedArrivals> nammaApartmentExpectedArrivalsList;
     private int validationStatusOf;
+    private String expectedArrivalUid;
 
     /*----------------------------------------------------
      *  Overriding BaseActivity Objects
@@ -62,7 +62,7 @@ public class ExpectedArrivalsList extends BaseActivity {
 
         //Creating recycler view adapter
         nammaApartmentExpectedArrivalsList = new ArrayList<>();
-        adapter = new ExpectedArrivalsListAdapter(this, nammaApartmentExpectedArrivalsList);
+        adapter = new ExpectedArrivalsListAdapter(this, nammaApartmentExpectedArrivalsList, validationStatusOf);
 
         //Setting adapter to recycler view
         recyclerViewExpectedArrivalsList.setAdapter(adapter);
@@ -71,34 +71,32 @@ public class ExpectedArrivalsList extends BaseActivity {
         showProgressIndicator();
 
         //To retrieve Cab driver and Package Vendor details from firebase
-        retrieveDataFromFireBase();
+        retrieveExpectedArrivalDataFromFireBase();
     }
 
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
 
-    private void retrieveDataFromFireBase() {
-        if (validationStatusOf == R.string.cab_driver_validation_status) {
-            String cabDriverUid = getIntent().getStringExtra(Constants.EXPECTED_ARRIVAL_UID);
+    private void retrieveExpectedArrivalDataFromFireBase() {
+        expectedArrivalUid = getIntent().getStringExtra(Constants.EXPECTED_ARRIVAL_UID);
 
-            DatabaseReference cabDriverReference = FirebaseDatabase.getInstance().getReference()
-                    .child(Constants.FIREBASE_CHILD_CABS)
-                    .child(Constants.FIREBASE_CHILD_PUBLIC)
-                    .child(cabDriverUid);
-            cabDriverReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    hideProgressIndicator();
-                    NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = dataSnapshot.getValue(NammaApartmentExpectedArrivals.class);
-                    nammaApartmentExpectedArrivalsList.add(0, nammaApartmentExpectedArrivals);
-                    adapter.notifyDataSetChanged();
-                }
+        DatabaseReference expectedArrivalReference = Constants.PUBLIC_CABS_REFERENCE
+                .child(expectedArrivalUid);
+        expectedArrivalReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                hideProgressIndicator();
+                NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = dataSnapshot.getValue(NammaApartmentExpectedArrivals.class);
+                assert nammaApartmentExpectedArrivals != null;
+                nammaApartmentExpectedArrivals.setExpectedArrivalUid(expectedArrivalUid);
+                nammaApartmentExpectedArrivalsList.add(0, nammaApartmentExpectedArrivals);
+                adapter.notifyDataSetChanged();
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 }

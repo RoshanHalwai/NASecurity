@@ -39,6 +39,7 @@ public class Constants {
     private static final String FIREBASE_CHILD_CLIENTS = "clients";
     public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
+    public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL = "dateAndTimeOfArrival";
     private static final String FIREBASE_CHILD_DELIVERIES = "deliveries";
     public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
     public static final String FIREBASE_CHILD_FLATS = "flats";
@@ -56,6 +57,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_TIMEOFVISIT = "timeOfVisit";
     public static final String FIREBASE_CHILD_USERS = "users";
     public static final String FIREBASE_CHILD_USERDATA = "userData";
+    public static final String FIREBASE_CHILD_VALIDFOR = "validFor";
     public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
 
@@ -74,7 +76,8 @@ public class Constants {
     private static final DatabaseReference PRIVATE_CLIENTS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CLIENTS).child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference CITIES_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_CITIES);
     public static final DatabaseReference PRIVATE_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
-    public static final DatabaseReference PRIVATE_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
+    private static final DatabaseReference PRIVATE_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
+    public static final DatabaseReference ALL_CABS_REFERENCE = PRIVATE_CABS_REFERENCE.child(FIREBASE_CHILD_ALL);
     public static final DatabaseReference PRIVATE_DELIVERY_REFERENCE = DELIVERIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_ALL);
     private static final DatabaseReference ALL_DAILYSERVICES_REFERENCE = DAILYSERVICES_REFERENCE.child(FIREBASE_CHILD_ALL);

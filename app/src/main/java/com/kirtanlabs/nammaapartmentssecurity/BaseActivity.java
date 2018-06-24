@@ -5,16 +5,18 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PHONE_NUMBER_MAX_LENGTH;
@@ -27,6 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ImageView backButton;
     private View validationDialog;
     private AlertDialog dialog;
+    private Calendar calendar;
     private AVLoadingIndicatorView progressIndicator;
 
     /* ------------------------------------------------------------- *
@@ -188,5 +191,44 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public boolean isValidPhone(String phone) {
         return !Pattern.matches("[a-zA-Z]+", phone) && phone.length() == PHONE_NUMBER_MAX_LENGTH;
+    }
+
+    /**
+     * This method is invoked to change status of Visitors, Daily Service and Expected Arrivals
+     *
+     * @param status          - current status of Visitors, Daily Services and Expected Arrivals
+     * @param statusReference - Database Reference of Visitors, Daily Services and Expected Arrivals
+     */
+    public void changeStatus(final String status, final DatabaseReference statusReference) {
+        if (status.equals(getString(R.string.not_entered))) {
+            statusReference.setValue(getString(R.string.entered));
+        } else if (status.equals(getString(R.string.entered))) {
+            statusReference.setValue(getString(R.string.left));
+        }
+    }
+
+    /**
+     *  This method is invoked to get Current date
+     * @return - current date
+     */
+    public String getCurrentDate() {
+        calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        return new DateFormatSymbols().getMonths()[currentMonth].substring(0, 3) + " " + currentDay + ", " + currentYear;
+    }
+
+    /**
+     *  This method is invoked to get Current time
+     * @return - current time
+     */
+    public String getCurrentTime() {
+        calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+
+        return String.format(Locale.getDefault(), "%02d:%02d", currentHour, currentMinute);
     }
 }

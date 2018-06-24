@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
@@ -31,6 +32,7 @@ public class VisitorListAdapter extends
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
+    private final BaseActivity baseActivity;
     private List<NammaApartmentVisitor> nammaApartmentVisitorList;
     private NammaApartmentVisitor nammaApartmentVisitor;
     private String fullName;
@@ -44,6 +46,7 @@ public class VisitorListAdapter extends
 
     VisitorListAdapter(Context mCtx, List<NammaApartmentVisitor> nammaApartmentVisitorList) {
         this.mCtx = mCtx;
+        baseActivity = (BaseActivity) mCtx;
         this.nammaApartmentVisitorList = nammaApartmentVisitorList;
     }
 
@@ -89,7 +92,7 @@ public class VisitorListAdapter extends
 
     @Override
     public void onClick(View v) {
-        changeVisitorStatus();
+        changeVisitorStatusInFirebase();
         Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -132,16 +135,12 @@ public class VisitorListAdapter extends
     /**
      * This method is invoked to change status of visitor
      */
-    private void changeVisitorStatus() {
+    private void changeVisitorStatusInFirebase() {
+        String visitorStatus = nammaApartmentVisitor.getStatus();
         DatabaseReference visitorStatusReference = Constants.PREAPPROVED_VISITORS_REFERENCE
                 .child(nammaApartmentVisitor.getUid())
                 .child(Constants.FIREBASE_CHILD_STATUS);
-        String visitorStatus = nammaApartmentVisitor.getStatus();
-        if (visitorStatus.equals(mCtx.getString(R.string.not_entered))) {
-            visitorStatusReference.setValue(mCtx.getString(R.string.entered));
-        } else if (visitorStatus.equals(mCtx.getString(R.string.entered))) {
-            visitorStatusReference.setValue(mCtx.getString(R.string.left));
-        }
+        baseActivity.changeStatus(visitorStatus, visitorStatusReference);
     }
 
     /* ------------------------------------------------------------- *
