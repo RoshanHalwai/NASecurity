@@ -2,7 +2,6 @@ package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gateno
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -57,12 +56,16 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
 
         /*Getting Id's for all the views*/
+        TextView textApartment = findViewById(R.id.textApartment);
         TextView textCabNumberAndResidentMobileNumber = findViewById(R.id.textCabNumberAndResidentMobileNumber);
+        EditText editApartment = findViewById(R.id.editApartment);
         editCabNumberAndResidentMobileNumber = findViewById(R.id.editCabNumberAndResidentMobileNumber);
         Button buttonVerifyCabNumberAndPackageVendor = findViewById(R.id.buttonVerifyCabNumberAndPackageVendor);
 
         /*Setting font for all the views*/
         textCabNumberAndResidentMobileNumber.setTypeface(Constants.setLatoBoldFont(this));
+        textApartment.setTypeface(Constants.setLatoBoldFont(this));
+        editApartment.setTypeface(Constants.setLatoRegularFont(this));
         editCabNumberAndResidentMobileNumber.setTypeface(Constants.setLatoRegularFont(this));
         buttonVerifyCabNumberAndPackageVendor.setTypeface(Constants.setLatoLightFont(this));
 
@@ -70,7 +73,8 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
          *change some Views Text in Expected Package Arrivals*/
         if (arrivalType == R.string.expected_package_arrivals) {
             changeViewsText(textCabNumberAndResidentMobileNumber, buttonVerifyCabNumberAndPackageVendor);
-            editCabNumberAndResidentMobileNumber.setInputType(InputType.TYPE_CLASS_PHONE);
+            textApartment.setVisibility(View.VISIBLE);
+            editApartment.setVisibility(View.VISIBLE);
         }
 
         /*Setting onClickListener for view*/

@@ -19,6 +19,32 @@
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
     <TextView
+        android:id="@+id/textApartment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/editApartment"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/apartment"
+        android:textAllCaps="true"
+        android:textColor="@color/nmBlack"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/editApartment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/textCabNumberAndResidentMobileNumber"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:inputType="textCapCharacters|textVisiblePassword"
+        android:textColor="@color/nmBlack"
+        android:textSize="@dimen/edit_text_default_size"
+        android:visibility="gone"
+        tools:ignore="LabelFor,TextFields" />
+
+    <TextView
         android:id="@+id/textCabNumberAndResidentMobileNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
