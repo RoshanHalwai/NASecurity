@@ -107,17 +107,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      * ------------------------------------------------------------- */
 
     /**
-     * This method is used to check whether visitor or daily services has given his own valid mobile number or not
-     *
-     * @param mobileNumber - mobile number of Visitor or Daily services
-     * @return it will return boolean value whether number is valid or not
-     */
-    protected boolean isValidMobileNumber(String mobileNumber) {
-        //TODO : To change mobile number here
-        return mobileNumber.equals("7895185103");
-    }
-
-    /**
      * This method is used to open dialog box according to validation status
      *
      * @param dialogType  - consists of type dialog box in to display
@@ -208,7 +197,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     *  This method is invoked to get Current date
+     * This method is invoked to get Current date
+     *
      * @return - current date
      */
     public String getCurrentDate() {
@@ -221,7 +211,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     *  This method is invoked to get Current time
+     * This method is invoked to get Current time
+     *
      * @return - current time
      */
     public String getCurrentTime() {

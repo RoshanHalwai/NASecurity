@@ -28,7 +28,7 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/resident_has_given_things"
+            android:text="@string/resident_has_given_things_to_visitor"
             android:textColor="@color/nmBlack"
             android:textSize="18sp" />
 
@@ -57,7 +57,7 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/resident_has_not_given_things"
+            android:text="@string/resident_has_not_given_things_to_visitor"
             android:textColor="@color/nmBlack"
             android:textSize="18sp" />
     </LinearLayout>
