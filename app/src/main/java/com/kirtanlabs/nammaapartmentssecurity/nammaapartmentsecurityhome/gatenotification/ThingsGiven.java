@@ -87,11 +87,15 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
      * ------------------------------------------------------------- */
 
     /**
-     * This method is invoked to check whether Resident has given things to visitor or daily service or not.
+     * This method is invoked to check whether Resident has given things to visitor / daily service or not.
      */
     private void checkIsThingsGivenInFireBase() {
+        // Database Reference of Visitor and Daily Service Mobile number
         DatabaseReference mobileNumberReference;
+
         if (givenThingsTo == R.string.things_given_to_guest) {
+
+            // Retrieving Visitors UID (mapped with Mobile number) from preApprovedVisitorsMobileNumber in Firebase.
             mobileNumberReference = Constants.PREAPPROVED_VISITORS_MOBILE_REFERENCE.child(mobileNumber);
             mobileNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -127,6 +131,7 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
                 }
             });
         } else {
+            // Retrieving Daily Service UID (mapped with Mobile number) from dailyServices->all->private in Firebase.
             mobileNumberReference = Constants.PRIVATE_DAILYSERVICES_REFERENCE.child(mobileNumber);
             mobileNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -135,6 +140,7 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
                     if (dataSnapshot.exists()) {
                         visitorOrDailyServiceUid = (String) dataSnapshot.getValue();
 
+                        // Getting the Daily Service Type and its corresponding details
                         DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE;
                         assert visitorOrDailyServiceUid != null;
                         dailyServiceReference.child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE)
