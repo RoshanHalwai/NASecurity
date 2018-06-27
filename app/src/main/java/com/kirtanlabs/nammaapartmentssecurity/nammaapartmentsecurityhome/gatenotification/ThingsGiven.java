@@ -7,6 +7,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
@@ -19,6 +23,9 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
 
     private EditText editMobileNumber;
     private int givenThingsTo;
+    private String mobileNumber;
+    private String serviceType;
+    private String visitorOrDailyServiceUid;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -65,13 +72,14 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String mobileNumber = editMobileNumber.getText().toString().trim();
+        mobileNumber = editMobileNumber.getText().toString().trim();
         if (isValidPhone(mobileNumber)) {
-            openThingsGivenValidationStatus(mobileNumber);
+            /*We need Progress Indicator in this screen*/
+            showProgressIndicator();
+            checkIsThingsGivenInFireBase();
         } else {
             editMobileNumber.setError(getText(R.string.number_10digit_validation));
         }
-
     }
 
     /* ------------------------------------------------------------- *
@@ -79,15 +87,114 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
      * ------------------------------------------------------------- */
 
     /**
-     * This method is invoked when user will click on Verify things
-     *
-     * @param mobileNumber -
+     * This method is invoked to check whether Resident has given things to visitor / daily service or not.
      */
-    private void openThingsGivenValidationStatus(String mobileNumber) {
-        boolean validationStatus = isValidMobileNumber(mobileNumber);
-        Intent intent = new Intent(ThingsGiven.this, ThingsGivenValidationStatus.class);
+    private void checkIsThingsGivenInFireBase() {
+        // Database Reference of Visitor and Daily Service Mobile number
+        DatabaseReference mobileNumberReference;
+
+        if (givenThingsTo == R.string.things_given_to_guest) {
+
+            // Retrieving Visitors UID (mapped with Mobile number) from preApprovedVisitorsMobileNumber in Firebase.
+            mobileNumberReference = Constants.PREAPPROVED_VISITORS_MOBILE_REFERENCE.child(mobileNumber);
+            mobileNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    hideProgressIndicator();
+                    if (dataSnapshot.exists()) {
+                        visitorOrDailyServiceUid = (String) dataSnapshot.getValue();
+                        assert visitorOrDailyServiceUid != null;
+                        DatabaseReference visitorReference = Constants.PREAPPROVED_VISITORS_REFERENCE
+                                .child(visitorOrDailyServiceUid)
+                                .child(Constants.FIREBASE_CHILD_HANDED_THINGS);
+                        visitorReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    residentHasGivenThings();
+                                } else {
+                                    openValidationStatusDialog(Constants.FAILED, getString(R.string.resident_has_not_given_things_to_visitor));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+                    } else {
+                        openValidationStatusDialog(Constants.FAILED, getString(R.string.invalid_visitor));
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        } else {
+            // Retrieving Daily Service UID (mapped with Mobile number) from dailyServices->all->private in Firebase.
+            mobileNumberReference = Constants.PRIVATE_DAILYSERVICES_REFERENCE.child(mobileNumber);
+            mobileNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    hideProgressIndicator();
+                    if (dataSnapshot.exists()) {
+                        visitorOrDailyServiceUid = (String) dataSnapshot.getValue();
+
+                        // Getting the Daily Service Type and its corresponding details
+                        DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE;
+                        assert visitorOrDailyServiceUid != null;
+                        dailyServiceReference.child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE)
+                                .child(visitorOrDailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                serviceType = (String) dataSnapshot.getValue();
+
+                                assert serviceType != null;
+                                dailyServiceReference.child(serviceType)
+                                        .child(visitorOrDailyServiceUid)
+                                        .child(Constants.FIREBASE_CHILD_HANDED_THINGS)
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.exists()) {
+                                                    residentHasGivenThings();
+                                                } else {
+                                                    openValidationStatusDialog(Constants.FAILED, getString(R.string.resident_has_not_given_things_to_daily_service));
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                            }
+                                        });
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+                    } else {
+                        openValidationStatusDialog(Constants.FAILED, getString(R.string.invalid_daily_service));
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+    }
+
+    /**
+     * This method is invoked when visitor has given something to visitor or daily service.
+     */
+    private void residentHasGivenThings() {
+        Intent intent = new Intent(ThingsGiven.this, ResidentHasGivenThings.class);
         intent.putExtra(Constants.SCREEN_TITLE, givenThingsTo);
-        intent.putExtra(Constants.VALIDATION_STATUS, validationStatus);
+        intent.putExtra(Constants.GUEST_UID, visitorOrDailyServiceUid);
+        if (givenThingsTo == R.string.things_given_to_daily_services) {
+            intent.putExtra(Constants.SERVICE_TYPE, serviceType);
+        }
         startActivity(intent);
         finish();
     }

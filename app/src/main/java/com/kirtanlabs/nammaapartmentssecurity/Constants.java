@@ -17,6 +17,8 @@ public class Constants {
     public static final String SCREEN_TITLE = "screen_title";
     public static final String VALIDATION_STATUS = "validation_status";
     public static final String EXPECTED_ARRIVAL_UID = "expected_arrival_uid";
+    public static final String GUEST_UID = "guest_uid";
+    public static final String SERVICE_TYPE = "service_type";
 
     /* ------------------------------------------------------------- *
      * Dialog Types
@@ -44,6 +46,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
     public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
+    public static final String FIREBASE_CHILD_HANDED_THINGS = "handedThings";
     public static final String FIREBASE_CHILD_OWNERS_UID = "ownersUID";
     public static final String FIREBASE_CHILD_FLATMEMBERS = "flatMembers";
     public static final String FIREBASE_CHILD_PERSONALDETAILS = "personalDetails";

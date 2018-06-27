@@ -25,6 +25,7 @@
     <string name="image_success">Image to indicate for successful visitor validation</string>
     <string name="image_failed">Image to indicate for failed visitor validation</string>
     <string name="invalid_visitor">Invalid Visitor</string>
+    <string name="invalid_daily_service">Invalid Daily Service</string>
     <string name="not_entered">Not Entered</string>
     <string name="entered">Entered</string>
     <string name="left">Left</string>
@@ -56,8 +57,10 @@
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>
-    <string name="resident_has_not_given_things">Resident has not given anything to Visitor</string>
-    <string name="resident_has_given_things">Resident has given things to Visitor</string>
+    <string name="resident_has_not_given_things_to_visitor">Resident has not given anything to Visitor</string>
+    <string name="resident_has_given_things_to_visitor">Resident has given things to Visitor</string>
+    <string name="resident_has_given_things_to_daily_service">Resident has given things to Daily Service</string>
+    <string name="resident_has_not_given_things_to_daily_service">Resident has not given anything to Daily Service</string>
     <string name="ok">OK</string>
 
     <!--Society Member-->
