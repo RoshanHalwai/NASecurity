@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".nammaapartmentsecurityhome.societymember.SocietyMember">
+    tools:context=".nammaapartmentsecurityhome.societymember.SocietyMemberAndExpectedPackageArrival">
 
     <include layout="@layout/activity_base" />
 
@@ -60,7 +60,7 @@
         android:id="@+id/editFlat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/buttonVerifySocietyMember"
+        android:layout_above="@id/buttonVerifyResidentAndPackageVendor"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
         android:inputType="textVisiblePassword"
@@ -69,7 +69,7 @@
         tools:ignore="LabelFor,TextFields" />
 
     <Button
-        android:id="@+id/buttonVerifySocietyMember"
+        android:id="@+id/buttonVerifyResidentAndPackageVendor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
