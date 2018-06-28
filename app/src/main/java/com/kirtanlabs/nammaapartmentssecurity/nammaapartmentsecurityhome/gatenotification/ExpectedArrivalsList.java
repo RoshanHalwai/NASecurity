@@ -24,7 +24,7 @@ public class ExpectedArrivalsList extends BaseActivity {
     private ExpectedArrivalsListAdapter adapter;
     private List<NammaApartmentExpectedArrivals> nammaApartmentExpectedArrivalsList;
     private int validationStatusOf;
-    private String expectedArrivalUid;
+    private int index = 0;
 
     /*----------------------------------------------------
      *  Overriding BaseActivity Objects
@@ -79,24 +79,88 @@ public class ExpectedArrivalsList extends BaseActivity {
      * ------------------------------------------------------------- */
 
     private void retrieveExpectedArrivalDataFromFireBase() {
-        expectedArrivalUid = getIntent().getStringExtra(Constants.EXPECTED_ARRIVAL_UID);
+        if (validationStatusOf == R.string.cab_driver_validation_status) {
+            String cabDriverUid = getIntent().getStringExtra(Constants.EXPECTED_ARRIVAL_UID);
 
-        DatabaseReference expectedArrivalReference = Constants.PUBLIC_CABS_REFERENCE
-                .child(expectedArrivalUid);
-        expectedArrivalReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                hideProgressIndicator();
-                NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = dataSnapshot.getValue(NammaApartmentExpectedArrivals.class);
-                assert nammaApartmentExpectedArrivals != null;
-                nammaApartmentExpectedArrivals.setExpectedArrivalUid(expectedArrivalUid);
-                nammaApartmentExpectedArrivalsList.add(0, nammaApartmentExpectedArrivals);
-                adapter.notifyDataSetChanged();
-            }
+            // Retrieving all Details of Cab driver from(Cab->Public->CabDriverUid) in Firebase.
+            DatabaseReference expectedArrivalReference = Constants.PUBLIC_CABS_REFERENCE
+                    .child(cabDriverUid);
+            expectedArrivalReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    hideProgressIndicator();
+                    NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = dataSnapshot.getValue(NammaApartmentExpectedArrivals.class);
+                    assert nammaApartmentExpectedArrivals != null;
+                    nammaApartmentExpectedArrivals.setExpectedArrivalUid(cabDriverUid);
+                    nammaApartmentExpectedArrivalsList.add(index++, nammaApartmentExpectedArrivals);
+                    adapter.notifyDataSetChanged();
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        } else {
+            String apartment = getIntent().getStringExtra(Constants.FIREBASE_CHILD_APARTMENTS);
+            String flat = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
+
+            // Retrieving UID of Package Vendor from (userData->private->apartment->flat) in firebase.
+            DatabaseReference packageVendorReference = Constants.PRIVATE_USER_DATA_REFERENCE
+                    .child(Constants.FIREBASE_CHILD_BANGALORE)
+                    .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
+                    .child(apartment)
+                    .child(flat);
+            packageVendorReference.child(Constants.FIREBASE_CHILD_FLATMEMBERS).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ownerUidDataSnapshot : dataSnapshot.getChildren()) {
+                        String ownerUid = ownerUidDataSnapshot.getKey();
+
+                        // Getting Package Vendor UID from (UserData->private->apartment->flat->deliveries) in firebase.
+                        packageVendorReference.child(Constants.FIREBASE_CHILD_DELIVERIES)
+                                .child(ownerUid)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot packageVendorUidDataSnapshot : dataSnapshot.getChildren()) {
+                                            String packageVendorUid = packageVendorUidDataSnapshot.getKey();
+
+                                            // Retrieving all Details of Package Vendor from (deliveries->public->PackageVendorUid) in firebase.
+                                            DatabaseReference packageVendorReference = Constants.PUBLIC_DELIVERIES_REFERENCE
+                                                    .child(packageVendorUid);
+                                            packageVendorReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    hideProgressIndicator();
+                                                    String status = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
+                                                    assert status != null;
+                                                    if (!status.equals(getString(R.string.left))) {
+                                                        NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = dataSnapshot.getValue(NammaApartmentExpectedArrivals.class);
+                                                        assert nammaApartmentExpectedArrivals != null;
+                                                        nammaApartmentExpectedArrivals.setExpectedArrivalUid(packageVendorUid);
+                                                        nammaApartmentExpectedArrivalsList.add(index++, nammaApartmentExpectedArrivals);
+                                                        adapter.notifyDataSetChanged();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
     }
 }
