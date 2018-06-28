@@ -10,6 +10,7 @@
     <dimen name="button_left_margin">20dp</dimen>
     <dimen name="button_right_margin">20dp</dimen>
     <dimen name="button_margin">20dp</dimen>
+    <dimen name="button_top_margin">20dp</dimen>
 
     <!--Views-->
     <dimen name="text_view_default_size">16sp</dimen>
