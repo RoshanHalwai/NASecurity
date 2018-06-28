@@ -8,4 +8,114 @@
 
     <include layout="@layout/activity_base" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/familyMemberProfilePic"
+                android:layout_width="120dp"
+                android:layout_marginTop="5dp"
+                android:focusable="true"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/add_member"/>
+
+            <TextView
+                android:id="@+id/textErrorProfilePic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/upload_image"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/name"
+                android:textColor="@color/nmBlack"
+                android:textSize="@dimen/text_view_default_size" />
+
+            <EditText
+                android:id="@+id/editFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:inputType="textCapWords|textNoSuggestions"
+                android:textColor="@color/nmBlack"
+                android:textSize="@dimen/edit_text_default_size"
+                tools:ignore="LabelFor" />
+
+            <TextView
+                android:id="@+id/textMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/mobile_number"
+                android:textColor="@color/nmBlack"
+                android:textSize="@dimen/text_view_default_size" />
+
+            <LinearLayout
+                android:id="@+id/layoutMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/textCountryCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:text="@string/_91"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="@dimen/text_view_default_size" />
+
+                <EditText
+                    android:id="@+id/editMobileNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="20sp"
+                    tools:ignore="LabelFor" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonSendNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/nmBlack"
+                android:text="@string/send_notification"
+                android:layout_marginTop="20dp"
+                android:textAllCaps="false"
+                android:textColor="@color/nmLightYellow"
+                android:textSize="@dimen/button_default_size" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </LinearLayout>
