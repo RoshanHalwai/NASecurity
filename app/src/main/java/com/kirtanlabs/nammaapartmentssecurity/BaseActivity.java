@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -205,6 +207,34 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else if (status.equals(getString(R.string.entered))) {
             statusReference.setValue(getString(R.string.left));
         }
+    }
+
+    /**
+     * This method gets invoked when user is trying to enter improper format of entering name.
+     *
+     * @param name contains that particular editText of name
+     * @throws NumberFormatException because if user tries to enter number in place of name.
+     */
+    protected boolean isValidPersonName(String name) throws NumberFormatException {
+        boolean check;
+        check = !Pattern.matches("[a-zA-Z ]+", name);
+        return check;
+    }
+
+    /**
+     * This method checks if all the editTexts are filled or not.
+     *
+     * @param fields consists of array of EditTexts.
+     * @return consists of boolean variable based on the context.
+     */
+    protected boolean isAllFieldsFilled(EditText[] fields) {
+        for (EditText currentField : fields) {
+            if (TextUtils.isEmpty(currentField.getText().toString())) {
+                currentField.requestFocus();
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
