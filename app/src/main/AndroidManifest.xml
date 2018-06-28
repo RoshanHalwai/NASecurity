@@ -25,13 +25,13 @@
         <activity android:name=".nammaapartmentsecurityhome.eintercom.EIntercom" />
         <activity android:name=".nammaapartmentsecurityhome.gatenotification.GateNotificationHome" />
         <activity
-            android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedArrivals"
+            android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedCabArrival"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".nammaapartmentsecurityhome.gatenotification.ThingsGiven"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".nammaapartmentsecurityhome.societymember.SocietyMember"
+            android:name=".nammaapartmentsecurityhome.societymember.SocietyMemberAndExpectedPackageArrival"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList" />
         <activity android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorAndDailyServiceList" />

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".nammaapartmentsecurityhome.societymember.SocietyMember">
+    tools:context=".nammaapartmentsecurityhome.gatenotification.ExpectedCabArrival">
 
     <include layout="@layout/activity_base" />
 
@@ -12,8 +12,7 @@
         android:id="@+id/animationWaitingToLoadData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editApartment"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:visibility="invisible"
         app:indicatorColor="@color/nmBlack"
@@ -24,60 +23,60 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/editApartment"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:text="@string/apartment"
         android:textAllCaps="true"
         android:textColor="@color/nmBlack"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/editApartment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/textFlat"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:inputType="textVisiblePassword"
+        android:layout_above="@id/textCabNumber"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:inputType="textCapCharacters|textVisiblePassword"
         android:textColor="@color/nmBlack"
         android:textSize="@dimen/edit_text_default_size"
+        android:visibility="gone"
         tools:ignore="LabelFor,TextFields" />
 
     <TextView
-        android:id="@+id/textFlat"
+        android:id="@+id/textCabNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/editFlat"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:layout_marginTop="10dp"
-        android:text="@string/flat"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/cab_number"
         android:textAllCaps="true"
         android:textColor="@color/nmBlack"
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/editFlat"
+        android:id="@+id/editCabNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/buttonVerifySocietyMember"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:inputType="textVisiblePassword"
+        android:layout_below="@+id/textCabNumber"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:inputType="textCapCharacters|textVisiblePassword"
         android:textColor="@color/nmBlack"
         android:textSize="@dimen/edit_text_default_size"
         tools:ignore="LabelFor,TextFields" />
 
     <Button
-        android:id="@+id/buttonVerifySocietyMember"
+        android:id="@+id/buttonVerifyCabNumberAndPackageVendor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/button_margin"
+        android:layout_below="@+id/editCabNumber"
+        android:layout_margin="20dp"
         android:background="@color/nmBlack"
-        android:text="@string/verify_resident"
+        android:text="@string/verify_cab"
         android:textAllCaps="true"
         android:textColor="@color/nmLightYellow"
         android:textSize="@dimen/button_default_size" />
-
 </RelativeLayout>

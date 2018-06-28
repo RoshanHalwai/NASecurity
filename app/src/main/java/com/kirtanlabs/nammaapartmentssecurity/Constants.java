@@ -36,13 +36,14 @@ public class Constants {
     public static final String FIREBASE_CHILD_APARTMENTS = "apartments";
     public static final String FIREBASE_CHILD_BANGALORE = "Bangalore";
     public static final String FIREBASE_CHILD_BRIGADEGATEWAY = "Brigade Gateway";
+    public static final String FIREBASE_CHILD_SALARPURIA_CAMBRIDGE = "Salarpuria Cambridge";
     public static final String FIREBASE_CHILD_CABS = "cabs";
     private static final String FIREBASE_CHILD_CITIES = "cities";
     private static final String FIREBASE_CHILD_CLIENTS = "clients";
     public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL = "dateAndTimeOfArrival";
-    private static final String FIREBASE_CHILD_DELIVERIES = "deliveries";
+    public static final String FIREBASE_CHILD_DELIVERIES = "deliveries";
     public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
     public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
@@ -90,6 +91,8 @@ public class Constants {
     public static final DatabaseReference PUBLIC_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
     public static final DatabaseReference PREAPPROVED_VISITORS_REFERENCE = VISITORS_REFERENCE.child(FIREBASE_CHILD_PREAPPROVEDVISITORS);
     public static final DatabaseReference PREAPPROVED_VISITORS_MOBILE_REFERENCE = VISITORS_REFERENCE.child(FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER);
+    private static final DatabaseReference USER_DATA_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_USERDATA);
+    public static final DatabaseReference PRIVATE_USER_DATA_REFERENCE = USER_DATA_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
 
     /* ------------------------------------------------------------- *
      * Validation Keys

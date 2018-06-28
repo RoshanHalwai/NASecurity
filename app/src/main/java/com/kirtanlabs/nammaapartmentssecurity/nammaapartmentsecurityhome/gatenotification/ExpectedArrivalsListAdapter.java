@@ -23,7 +23,7 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpoj
 
 import java.util.List;
 
-public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedArrivalsListAdapter.ExpectedArrivalsHolder> implements View.OnClickListener {
+public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedArrivalsListAdapter.ExpectedArrivalsHolder> {
 
     /* ------------------------------------------------------------- *
      * Private Members
@@ -35,6 +35,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
     private List<NammaApartmentExpectedArrivals> nammaApartmentExpectedArrivalsList;
     private DatabaseReference expectedArrivalsReference;
     private int validationStatusOf;
+    private String status;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -67,14 +68,25 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         String flatNumberTitle = mCtx.getString(R.string.flat_number) + ":";
         holder.textFlatNumber.setText(flatNumberTitle);
 
-        /*Since we are using same layout for Cab Driver and Package Vendor Validation we need to
-         *change some Views Text in Package Vendor Validation*/
-        if (validationStatusOf == R.string.package_vendor_validation_status) {
-            changeViewsText(holder.textBookedBy, holder.buttonAllowExpectedArrivals);
-        }
-
         //Creating an instance of NammaApartmentExpectedArrivals class and retrieving the values from Firebase
         nammaApartmentExpectedArrivals = nammaApartmentExpectedArrivalsList.get(position);
+
+        /*Since we are using same layout for Cab Driver and Package Vendor Validation we need to
+         *change some Views Text and make some views Visible and Invisible in Package Vendor Validation*/
+        String expectedArrivalLeft;
+        if (validationStatusOf == R.string.package_vendor_validation_status) {
+            changeViewsText(holder.textBookedBy, holder.buttonAllowExpectedArrivals);
+            holder.textPackageVendor.setVisibility(View.VISIBLE);
+            holder.textPackageVendorValue.setVisibility(View.VISIBLE);
+            holder.textApartment.setVisibility(View.GONE);
+            holder.textApartmentValue.setVisibility(View.GONE);
+            holder.textFlatNumber.setVisibility(View.GONE);
+            holder.textFlatNumberValue.setVisibility(View.GONE);
+            holder.textPackageVendorValue.setText(nammaApartmentExpectedArrivals.getReference());
+            expectedArrivalLeft = mCtx.getString(R.string.package_vendor_left);
+        } else {
+            expectedArrivalLeft = mCtx.getString(R.string.cab_driver_left);
+        }
 
         //To retrieve Owners details from firebase
         getOwnerDetailsFromFireBase(holder.textBookedByValue, holder.textFlatNumberValue, holder.textApartmentValue);
@@ -84,26 +96,16 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         holder.textDateToVisitValue.setText(separatedDateAndTime[0]);
         holder.textTimeToVisitValue.setText(separatedDateAndTime[1]);
 
-        /*Setting onClickListener for view*/
-        holder.buttonAllowExpectedArrivals.setOnClickListener(this);
+        //If status of Expected Arrival is Entered that we have to change button text.
+        status = nammaApartmentExpectedArrivals.getStatus();
+        if (status.equals(mCtx.getString(R.string.entered))) {
+            holder.buttonAllowExpectedArrivals.setText(expectedArrivalLeft);
+        }
     }
 
     @Override
     public int getItemCount() {
         return nammaApartmentExpectedArrivalsList.size();
-    }
-
-    /* ------------------------------------------------------------- *
-     * Overriding OnClick Listeners
-     * ------------------------------------------------------------- */
-
-    @Override
-    public void onClick(View v) {
-        changeExpectedArrivalStatusInFirebase();
-        Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        mCtx.startActivity(intent);
     }
 
     /* ------------------------------------------------------------- *
@@ -139,50 +141,27 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-    }
-
-    /**
-     * This method is invoked to change status of Expected Arrivals
-     */
-    private void changeExpectedArrivalStatusInFirebase() {
-        String status = nammaApartmentExpectedArrivals.getStatus();
-        expectedArrivalsReference = Constants.PUBLIC_CABS_REFERENCE
-                .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
-        baseActivity.changeStatus(status, expectedArrivalsReference.child(Constants.FIREBASE_CHILD_STATUS));
-
-        if (status.equals(mCtx.getString(R.string.not_entered))) {
-            changeDateAndTime();
-        }
-    }
-
-    /**
-     * This method is used to change in time of Expected Arrival
-     */
-    private void changeDateAndTime() {
-        String currentTime = baseActivity.getCurrentTime();
-        String currentDate = baseActivity.getCurrentDate();
-        String concatenatedDateAndTime = currentDate + "\t\t" + " " + currentTime;
-        expectedArrivalsReference.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).setValue(concatenatedDateAndTime);
     }
 
     /* ------------------------------------------------------------- *
      * Expected Cab Arrivals View Holder class
      * ------------------------------------------------------------- */
 
-    class ExpectedArrivalsHolder extends RecyclerView.ViewHolder {
+    class ExpectedArrivalsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         /* ------------------------------------------------------------- *
          * Private Members
          * ------------------------------------------------------------- */
 
+        private TextView textPackageVendor;
         private TextView textBookedBy;
         private TextView textApartment;
         private TextView textFlatNumber;
         private TextView textDateToVisit;
         private TextView textTimeToVisit;
+        private TextView textPackageVendorValue;
         private TextView textBookedByValue;
         private TextView textApartmentValue;
         private TextView textFlatNumberValue;
@@ -198,11 +177,13 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             super(itemView);
 
             /*Getting Id's for all the views*/
+            textPackageVendor = itemView.findViewById(R.id.textPackageVendor);
             textBookedBy = itemView.findViewById(R.id.textBookedBy);
             textApartment = itemView.findViewById(R.id.textApartment);
             textFlatNumber = itemView.findViewById(R.id.textFlatNumber);
             textDateToVisit = itemView.findViewById(R.id.textDateToVisit);
             textTimeToVisit = itemView.findViewById(R.id.textTimeToVisit);
+            textPackageVendorValue = itemView.findViewById(R.id.textPackageVendorValue);
             textBookedByValue = itemView.findViewById(R.id.textBookedByValue);
             textApartmentValue = itemView.findViewById(R.id.textApartmentValue);
             textFlatNumberValue = itemView.findViewById(R.id.textFlatNumberValue);
@@ -211,17 +192,72 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             buttonAllowExpectedArrivals = itemView.findViewById(R.id.buttonAllowArrivals);
 
             /*Setting fonts to the views*/
+            textPackageVendor.setTypeface(Constants.setLatoRegularFont(mCtx));
             textBookedBy.setTypeface(Constants.setLatoRegularFont(mCtx));
             textApartment.setTypeface(Constants.setLatoRegularFont(mCtx));
             textFlatNumber.setTypeface(Constants.setLatoRegularFont(mCtx));
             textDateToVisit.setTypeface(Constants.setLatoRegularFont(mCtx));
             textTimeToVisit.setTypeface(Constants.setLatoRegularFont(mCtx));
+            textPackageVendorValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textBookedByValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textApartmentValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textFlatNumberValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textDateToVisitValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textTimeToVisitValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             buttonAllowExpectedArrivals.setTypeface(Constants.setLatoLightFont(mCtx));
+
+            /*Setting onClickListener for view*/
+            buttonAllowExpectedArrivals.setOnClickListener(this);
+        }
+
+        /* ------------------------------------------------------------- *
+         * Overriding OnClick Listeners
+         * ------------------------------------------------------------- */
+
+        @Override
+        public void onClick(View v) {
+            int position = getLayoutPosition();
+            changeExpectedArrivalStatusInFirebase(position);
+            Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            mCtx.startActivity(intent);
+        }
+
+        /* ------------------------------------------------------------- *
+         * Private Method
+         * ------------------------------------------------------------- */
+
+        /**
+         * This method is invoked to change status of Expected Arrivals
+         *
+         * @param position of card view for which status has been changed
+         */
+        private void changeExpectedArrivalStatusInFirebase(int position) {
+            NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = nammaApartmentExpectedArrivalsList.get(position);
+            status = nammaApartmentExpectedArrivals.getStatus();
+            if (validationStatusOf == R.string.cab_driver_validation_status) {
+                expectedArrivalsReference = Constants.PUBLIC_CABS_REFERENCE
+                        .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
+            } else {
+                expectedArrivalsReference = Constants.PUBLIC_DELIVERIES_REFERENCE
+                        .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
+            }
+            baseActivity.changeStatus(status, expectedArrivalsReference.child(Constants.FIREBASE_CHILD_STATUS));
+
+            if (status.equals(mCtx.getString(R.string.not_entered))) {
+                changeDateAndTime();
+            }
+        }
+
+        /**
+         * This method is used to change in time of Expected Arrival
+         */
+        private void changeDateAndTime() {
+            String currentTime = baseActivity.getCurrentTime();
+            String currentDate = baseActivity.getCurrentDate();
+            String concatenatedDateAndTime = currentDate + "\t\t" + " " + currentTime;
+            expectedArrivalsReference.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).setValue(concatenatedDateAndTime);
         }
     }
 }

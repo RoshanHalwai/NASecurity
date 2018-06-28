@@ -9,6 +9,7 @@ import android.widget.ListView;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.societymember.SocietyMemberAndExpectedPackageArrival;
 
 public class GateNotificationHome extends BaseActivity implements AdapterView.OnItemClickListener {
 
@@ -48,14 +49,12 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                Intent intentCabArrivals = new Intent(GateNotificationHome.this, ExpectedArrivals.class);
-                intentCabArrivals.putExtra(Constants.ARRIVAL_TYPE, R.string.expected_cab_arrivals);
-                startActivity(intentCabArrivals);
+                startActivity(new Intent(GateNotificationHome.this, ExpectedCabArrival.class));
                 break;
             case 1:
-                Intent intentPackageArrivals = new Intent(GateNotificationHome.this, ExpectedArrivals.class);
-                intentPackageArrivals.putExtra(Constants.ARRIVAL_TYPE, R.string.expected_package_arrivals);
-                startActivity(intentPackageArrivals);
+                Intent intent = new Intent(GateNotificationHome.this, SocietyMemberAndExpectedPackageArrival.class);
+                intent.putExtra(Constants.SCREEN_TITLE, R.string.expected_package_arrivals);
+                startActivity(intent);
                 break;
             case 2:
                 Intent intentThingsGivenToGuest = new Intent(GateNotificationHome.this, ThingsGiven.class);

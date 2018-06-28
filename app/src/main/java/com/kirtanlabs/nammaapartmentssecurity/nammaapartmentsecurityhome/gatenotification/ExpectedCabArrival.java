@@ -20,14 +20,13 @@ import java.util.Calendar;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 
-public class ExpectedArrivals extends BaseActivity implements View.OnClickListener {
+public class ExpectedCabArrival extends BaseActivity implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
 
-    private EditText editCabNumberAndResidentMobileNumber;
-    private int arrivalType;
+    private EditText editCabNumber;
     private String cabDriverUid;
 
     /* ------------------------------------------------------------- *
@@ -36,19 +35,12 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
 
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.activity_expected_arrivals;
+        return R.layout.activity_expected_cab_arrivals;
     }
 
     @Override
     protected int getActivityTitle() {
-        /*We use a common class for Expected Cab and Package Arrivals
-         *we set the title based on the user click on Gate Notification screen*/
-        if (getIntent().getIntExtra(Constants.ARRIVAL_TYPE, 0) == R.string.expected_cab_arrivals) {
-            arrivalType = R.string.expected_cab_arrivals;
-        } else {
-            arrivalType = R.string.expected_package_arrivals;
-        }
-        return arrivalType;
+        return R.string.expected_cab_arrivals;
     }
 
     @Override
@@ -56,26 +48,14 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
 
         /*Getting Id's for all the views*/
-        TextView textApartment = findViewById(R.id.textApartment);
-        TextView textCabNumberAndResidentMobileNumber = findViewById(R.id.textCabNumberAndResidentMobileNumber);
-        EditText editApartment = findViewById(R.id.editApartment);
-        editCabNumberAndResidentMobileNumber = findViewById(R.id.editCabNumberAndResidentMobileNumber);
+        TextView textCabNumber = findViewById(R.id.textCabNumber);
+        editCabNumber = findViewById(R.id.editCabNumber);
         Button buttonVerifyCabNumberAndPackageVendor = findViewById(R.id.buttonVerifyCabNumberAndPackageVendor);
 
         /*Setting font for all the views*/
-        textCabNumberAndResidentMobileNumber.setTypeface(Constants.setLatoBoldFont(this));
-        textApartment.setTypeface(Constants.setLatoBoldFont(this));
-        editApartment.setTypeface(Constants.setLatoRegularFont(this));
-        editCabNumberAndResidentMobileNumber.setTypeface(Constants.setLatoRegularFont(this));
+        textCabNumber.setTypeface(Constants.setLatoBoldFont(this));
+        editCabNumber.setTypeface(Constants.setLatoRegularFont(this));
         buttonVerifyCabNumberAndPackageVendor.setTypeface(Constants.setLatoLightFont(this));
-
-        /*Since we are using same layout for Expected Cab and Package Arrivals we need to
-         *change some Views Text in Expected Package Arrivals*/
-        if (arrivalType == R.string.expected_package_arrivals) {
-            changeViewsText(textCabNumberAndResidentMobileNumber, buttonVerifyCabNumberAndPackageVendor);
-            textApartment.setVisibility(View.VISIBLE);
-            editApartment.setVisibility(View.VISIBLE);
-        }
 
         /*Setting onClickListener for view*/
         buttonVerifyCabNumberAndPackageVendor.setOnClickListener(this);
@@ -87,13 +67,13 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        String cabNumberOrResidentMobileNumber = editCabNumberAndResidentMobileNumber.getText().toString().trim();
-        if (editCabNumberAndResidentMobileNumber.length() > EDIT_TEXT_MIN_LENGTH) {
+        String cabNumber = editCabNumber.getText().toString().trim();
+        if (editCabNumber.length() > EDIT_TEXT_MIN_LENGTH) {
             /*We need Progress Indicator in this screen*/
             showProgressIndicator();
-            checkDetailsInFirebase(cabNumberOrResidentMobileNumber);
+            checkDetailsInFirebase(cabNumber);
         } else {
-            editCabNumberAndResidentMobileNumber.setError(getString(R.string.field_cant_be_empty));
+            editCabNumber.setError(getString(R.string.field_cant_be_empty));
         }
     }
 
@@ -102,25 +82,14 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
      * ------------------------------------------------------------- */
 
     /**
-     * We update the TextView textCabNumberAndResidentMobileNumber and Button buttonVerifyCabNumber Text in Expected Package Arrivals
-     *
-     * @param textCabNumberAndResidentMobileNumber - to update text in Expected Package Arrivals Screen
-     * @param buttonVerifyCabNumber                - to update text in Expected Package Arrivals Screen
-     */
-    private void changeViewsText(TextView textCabNumberAndResidentMobileNumber, Button buttonVerifyCabNumber) {
-        textCabNumberAndResidentMobileNumber.setText(getResources().getString(R.string.resident_mobile_number));
-        buttonVerifyCabNumber.setText(getResources().getString(R.string.verify_package_vendor));
-    }
-
-    /**
      * This method is used to check whether User has booked this cab or not
-     * and package vendor is valid or not
      *
-     * @param cabNumberOrResidentMobileNumber - that need to check in firebase whether it is valid or not.
+     * @param cabNumber - that need to check in firebase whether it is valid or not.
      */
-    private void checkDetailsInFirebase(String cabNumberOrResidentMobileNumber) {
+    private void checkDetailsInFirebase(String cabNumber) {
+        // Getting Cab Driver UID (Mapped with Cab Number) in Firebase.
         DatabaseReference cabNumberReference = Constants.ALL_CABS_REFERENCE
-                .child(cabNumberOrResidentMobileNumber);
+                .child(cabNumber);
         cabNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -145,6 +114,7 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
      * @param cabDriverUid - to check arrival time of Expected Arrival.
      */
     private void isExpectedArrivalReachedOnTime(String cabDriverUid) {
+        // Retrieving Cab Driver details from (Cab->Public->CabDriverUID) in Firebase
         DatabaseReference cabReference = Constants.PUBLIC_CABS_REFERENCE.child(cabDriverUid);
         cabReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -191,8 +161,8 @@ public class ExpectedArrivals extends BaseActivity implements View.OnClickListen
      * This method is used to open Expected Arrivals List Activity.
      */
     private void openExpectedArrivalList() {
-        Intent intentCabArrival = new Intent(ExpectedArrivals.this, ExpectedArrivalsList.class);
-        intentCabArrival.putExtra(Constants.SCREEN_TITLE, arrivalType);
+        Intent intentCabArrival = new Intent(ExpectedCabArrival.this, ExpectedArrivalsList.class);
+        intentCabArrival.putExtra(Constants.SCREEN_TITLE, R.string.expected_cab_arrivals);
         intentCabArrival.putExtra(Constants.EXPECTED_ARRIVAL_UID, cabDriverUid);
         startActivity(intentCabArrival);
     }

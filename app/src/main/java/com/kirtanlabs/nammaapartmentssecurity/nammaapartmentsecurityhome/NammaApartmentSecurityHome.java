@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
@@ -13,7 +12,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.emergency.Emergency;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification.GateNotificationHome;
-import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.societymember.SocietyMember;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.societymember.SocietyMemberAndExpectedPackageArrival;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation;
 
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -74,7 +73,9 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
                 startActivity(new Intent(NammaApartmentSecurityHome.this, GateNotificationHome.class));
                 break;
             case 4:
-                startActivity(new Intent(NammaApartmentSecurityHome.this, SocietyMember.class));
+                Intent intent = new Intent(NammaApartmentSecurityHome.this, SocietyMemberAndExpectedPackageArrival.class);
+                intent.putExtra(Constants.SCREEN_TITLE, R.string.society_member);
+                startActivity(intent);
                 break;
             case 5:
                 startActivity(new Intent(NammaApartmentSecurityHome.this, Emergency.class));

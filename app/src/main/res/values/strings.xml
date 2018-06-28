@@ -54,6 +54,8 @@
     <string name="cab_left_society">Cab has already Left the Society</string>
     <string name="ordered_by">Ordered By:</string>
     <string name="allow_package_vendor">Allow Package Vendor</string>
+    <string name="dont_allow_package_vendor">Don\'t allow Package Vendor to enter into Society</string>
+    <string name="package_vendor_left_society">Cab has already Left the Society</string>
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>
@@ -70,6 +72,7 @@
     <string name="apartment">Apartment</string>
     <string name="flat">Flat</string>
     <string name="no_member_in_this_flat">There are no members in this flat</string>
+    <string name="not_ordered_any_packages">Members of this flat has not ordered any package</string>
 
     <!--Visitors And Daily Services Validation Status Activity-->
     <string name="visitor_validation_status">Visitor Validation Status</string>
@@ -78,6 +81,9 @@
     <!--Expected Arrivals Validation Status Activity-->
     <string name="cab_driver_validation_status">Cab Driver Validation Status</string>
     <string name="package_vendor_validation_status">Package Vendor Validation Status</string>
+    <string name="vendor">Vendor:</string>
+    <string name="package_vendor_left">Package vendor Left</string>
+    <string name="cab_driver_left">cab Driver Left</string>
 
     <!--Emergency Activity-->
     <string name="emergency_type">Emergency Type:</string>
