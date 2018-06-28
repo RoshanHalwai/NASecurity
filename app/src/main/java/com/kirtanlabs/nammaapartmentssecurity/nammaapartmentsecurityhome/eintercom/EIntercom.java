@@ -137,7 +137,7 @@ public class EIntercom extends BaseActivity {
         //This condition checks for if user has filled all the fields and also validates name and mobile number
         //and displays proper error messages.
         if (fieldsFilled) {
-            if (isValidPersonName(fullName)) {
+            if (!isValidPersonName(fullName)) {
                 editFullName.setError(getString(R.string.accept_alphabets));
             }
             if (!isValidPhone(mobileNumber)) {
