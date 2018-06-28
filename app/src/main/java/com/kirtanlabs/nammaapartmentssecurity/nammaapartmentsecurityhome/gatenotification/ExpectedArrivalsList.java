@@ -82,7 +82,7 @@ public class ExpectedArrivalsList extends BaseActivity {
         if (validationStatusOf == R.string.cab_driver_validation_status) {
             String cabDriverUid = getIntent().getStringExtra(Constants.EXPECTED_ARRIVAL_UID);
 
-            // Retrieving all Details of Cab driver (Cab->Public->CabDriverUid) from Firebase.
+            // Retrieving all Details of Cab driver from(Cab->Public->CabDriverUid) in Firebase.
             DatabaseReference expectedArrivalReference = Constants.PUBLIC_CABS_REFERENCE
                     .child(cabDriverUid);
             expectedArrivalReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,7 +104,7 @@ public class ExpectedArrivalsList extends BaseActivity {
             String apartment = getIntent().getStringExtra(Constants.FIREBASE_CHILD_APARTMENTS);
             String flat = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
 
-            // Retrieving UID of Package Vendor from (userData->private->apartment->flat) firebase.
+            // Retrieving UID of Package Vendor from (userData->private->apartment->flat) in firebase.
             DatabaseReference packageVendorReference = Constants.PRIVATE_USER_DATA_REFERENCE
                     .child(Constants.FIREBASE_CHILD_BANGALORE)
                     .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
