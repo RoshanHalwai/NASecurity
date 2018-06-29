@@ -81,12 +81,17 @@ public class VisitorAndDailyServiceList extends BaseActivity {
      * Private Methods
      * ------------------------------------------------------------- */
 
+    /**
+     * This method invoked to retrieve data of Visitors and Daily service from firebase.
+     */
     private void retrieveDataFromFireBase() {
         if (validationStatusOf == R.string.visitor_validation_status) {
             String visitorUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_VISITOR_UID);
 
-            Constants.PREAPPROVED_VISITORS_REFERENCE
-                    .child(visitorUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseReference visitorReference = Constants.PREAPPROVED_VISITORS_REFERENCE
+                    .child(visitorUid);
+            /*Get data and add to the list for displaying in Visitor List*/
+            visitorReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     hideProgressIndicator();
@@ -107,14 +112,17 @@ public class VisitorAndDailyServiceList extends BaseActivity {
             DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                     .child(serviceType)
                     .child(dailyServiceUid);
+            /*Get data and add to the list for displaying in Daily Service List*/
             dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
                     hideProgressIndicator();
+                    /*Retrieving Each Owners UID of that particular Daily Service */
                     dailyServiceReference.
                             child(Constants.FIREBASE_CHILD_OWNERS_UID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            /*Iterate over each of ownersUID and add them to the list*/
                             for (DataSnapshot ownersUidDataSnapshot : dataSnapshot.getChildren()) {
                                 nammaApartmentDailyService = dailyServiceDataSnapshot.getValue(NammaApartmentDailyService.class);
                                 assert nammaApartmentDailyService != null;
