@@ -50,6 +50,7 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
 
     @Override
     public void onBindViewHolder(@NonNull FamilyMemberViewHolder holder, int position) {
+        //Creating an instance of NammaApartmentFamilyMember class and retrieving the values from Firebase
         NammaApartmentUser nammaApartmentFamilyMember = nammaApartmentFamilyMemberList.get(position);
 
         holder.textFamilyMemberNameValue.setText(nammaApartmentFamilyMember.getPersonalDetails().getFullName());
