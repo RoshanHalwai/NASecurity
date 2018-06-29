@@ -105,7 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /* ------------------------------------------------------------- *
-     * Protected Methods
+     * Public Methods
      * ------------------------------------------------------------- */
 
     /**
@@ -114,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param dialogType  - consists of type dialog box in to display
      * @param warningText - consists of message to display in dialog box
      */
-    protected void openValidationStatusDialog(final String dialogType, final String warningText) {
+    public void openValidationStatusDialog(final String dialogType, final String warningText) {
         validationDialog = View.inflate(this, R.layout.layout_validation_type_dialog, null);
 
         /*Getting Id's for all the views*/
@@ -159,10 +159,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         /*This method is used to create ValidationDialog */
         createValidationStatusDialog();
     }
-
-    /* ------------------------------------------------------------- *
-     * Public Methods
-     * ------------------------------------------------------------- */
 
     public void showProgressIndicator() {
         progressIndicator = findViewById(R.id.animationWaitingToLoadData);

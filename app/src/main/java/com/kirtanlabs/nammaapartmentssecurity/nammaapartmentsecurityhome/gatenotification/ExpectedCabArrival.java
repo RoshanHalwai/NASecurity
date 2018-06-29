@@ -96,58 +96,9 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
                 hideProgressIndicator();
                 if (dataSnapshot.exists()) {
                     cabDriverUid = (String) dataSnapshot.getValue();
-                    isExpectedArrivalReachedOnTime(cabDriverUid);
+                    openExpectedArrivalList();
                 } else {
                     openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    /**
-     * This is used check whether expected Arrival reached into society in expected time or not.
-     *
-     * @param cabDriverUid - to check arrival time of Expected Arrival.
-     */
-    private void isExpectedArrivalReachedOnTime(String cabDriverUid) {
-        // Retrieving Cab Driver details from (Cab->Public->CabDriverUID) in Firebase
-        DatabaseReference cabReference = Constants.PUBLIC_CABS_REFERENCE.child(cabDriverUid);
-        cabReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String status = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
-                String validFor = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_VALIDFOR).getValue();
-                String expectedDateAndTime = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).getValue();
-                String[] separatedDateAndTime = TextUtils.split(expectedDateAndTime, "\t\t ");
-                String expectedDate = separatedDateAndTime[0];
-                String expectedTime = separatedDateAndTime[1];
-
-                String[] validHours = TextUtils.split(validFor, " ");
-                int hoursValidFor = Integer.parseInt(validHours[0]);
-                String[] expectedHoursAndMinutes = TextUtils.split(expectedTime, ":");
-                int expectedHour = Integer.parseInt(expectedHoursAndMinutes[0]);
-                int expectedMinutes = Integer.parseInt(expectedHoursAndMinutes[1]);
-                int totalValidHours = expectedHour + hoursValidFor;
-
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-
-                String currentDate = getCurrentDate();
-
-                assert status != null;
-                if (status.equals(getString(R.string.left))) {
-                    openValidationStatusDialog(Constants.FAILED, getString(R.string.cab_left_society));
-                } else {
-                    if (expectedDate.equals(currentDate) && (currentHour < totalValidHours || (currentHour == totalValidHours && currentMinute <= expectedMinutes))) {
-                        openExpectedArrivalList();
-                    } else {
-                        openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
-                    }
                 }
             }
 
@@ -165,5 +116,6 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
         intentCabArrival.putExtra(Constants.SCREEN_TITLE, R.string.expected_cab_arrivals);
         intentCabArrival.putExtra(Constants.EXPECTED_ARRIVAL_UID, cabDriverUid);
         startActivity(intentCabArrival);
+        finish();
     }
 }

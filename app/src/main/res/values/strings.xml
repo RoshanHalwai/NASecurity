@@ -65,6 +65,7 @@
     <string name="allow_package_vendor">Allow Package Vendor</string>
     <string name="dont_allow_package_vendor">Don\'t allow Package Vendor to enter into Society</string>
     <string name="package_vendor_left_society">Cab has already Left the Society</string>
+    <string name="expected_time_of_arrival_is_finished">Expected time of this arrival is finished</string>
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>
