@@ -41,6 +41,9 @@
     <string name="visitor_has_left_society">Visitor has already Left the Society</string>
     <string name="service_type">Type:</string>
     <string name="allow_daily_service">Allow Daily Service</string>
+    <string name="daily_service_has_left_society">Daily Service has already Left the Society</string>
+    <string name="visitor_left">Visitor Left</string>
+    <string name="daily_service_left">Daily Service Left</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_cab_arrivals">Expected Cab Arrivals</string>

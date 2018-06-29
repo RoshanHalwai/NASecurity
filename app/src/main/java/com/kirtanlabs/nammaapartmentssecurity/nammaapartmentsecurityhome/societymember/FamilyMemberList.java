@@ -88,20 +88,20 @@ public class FamilyMemberList extends BaseActivity {
                     String familyMemberUid = familyMemberDataSnapshot.getKey();
 
                     /*Adding family member all details to the list for displaying in Family Member List*/
-                    Constants.PRIVATE_USERS_REFERENCE
-                            .child(familyMemberUid)
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    NammaApartmentUser nammaApartmentFamilyMember = dataSnapshot.getValue(NammaApartmentUser.class);
-                                    nammaApartmentFamilyMembersList.add(index++, nammaApartmentFamilyMember);
-                                    adapter.notifyDataSetChanged();
-                                }
+                    DatabaseReference familyMemberReference = Constants.PRIVATE_USERS_REFERENCE
+                            .child(familyMemberUid);
+                    familyMemberReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            NammaApartmentUser nammaApartmentFamilyMember = dataSnapshot.getValue(NammaApartmentUser.class);
+                            nammaApartmentFamilyMembersList.add(index++, nammaApartmentFamilyMember);
+                            adapter.notifyDataSetChanged();
+                        }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
                 }
             }
 

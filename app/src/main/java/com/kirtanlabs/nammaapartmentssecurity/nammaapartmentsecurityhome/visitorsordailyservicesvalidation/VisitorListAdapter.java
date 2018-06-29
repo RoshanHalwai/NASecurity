@@ -39,6 +39,7 @@ public class VisitorListAdapter extends
     private String flatNumber;
     private String inviterUid;
     private String apartmentName;
+    private String visitorStatus;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -71,6 +72,7 @@ public class VisitorListAdapter extends
         //Creating an instance of NammaApartmentVisitor class and retrieving the values from Firebase
         nammaApartmentVisitor = nammaApartmentVisitorList.get(position);
         inviterUid = nammaApartmentVisitor.getInviterUID();
+        visitorStatus = nammaApartmentVisitor.getStatus();
         holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentVisitor.getFullName());
         Glide.with(mCtx.getApplicationContext()).load(nammaApartmentVisitor.getProfilePhoto())
                 .into(holder.VisitorAndDailyServiceProfilePic);
@@ -79,6 +81,11 @@ public class VisitorListAdapter extends
         getInviterDetailsFromFireBase(holder.textFlatToVisitValue, holder.textInvitedByValue, holder.textApartmentValue);
 
         holder.buttonAllowVisitorAndDailyService.setOnClickListener(this);
+
+        //If status of Visitor is Entered than we have to change button text.
+        if (visitorStatus.equals(mCtx.getString(R.string.entered))) {
+            holder.buttonAllowVisitorAndDailyService.setText(mCtx.getString(R.string.visitor_left));
+        }
     }
 
     @Override
@@ -111,8 +118,10 @@ public class VisitorListAdapter extends
      * @param textApartmentValue   - to display inviter apartment name in this view
      */
     private void getInviterDetailsFromFireBase(final TextView textFlatToVisitValue, final TextView textInvitedByValue, TextView textApartmentValue) {
-        Constants.PRIVATE_USERS_REFERENCE
-                .child(inviterUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference inviterReference = Constants.PRIVATE_USERS_REFERENCE
+                .child(inviterUid);
+        // Retrieving details of inviter from (Users->Private->InviterUID) in firebase.
+        inviterReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
@@ -136,7 +145,6 @@ public class VisitorListAdapter extends
      * This method is invoked to change status of visitor
      */
     private void changeVisitorStatusInFirebase() {
-        String visitorStatus = nammaApartmentVisitor.getStatus();
         DatabaseReference visitorStatusReference = Constants.PREAPPROVED_VISITORS_REFERENCE
                 .child(nammaApartmentVisitor.getUid())
                 .child(Constants.FIREBASE_CHILD_STATUS);
@@ -170,6 +178,7 @@ public class VisitorListAdapter extends
 
         VisitorHolder(View itemView) {
             super(itemView);
+            /*Getting Id's for all the views*/
             VisitorAndDailyServiceProfilePic = itemView.findViewById(R.id.VisitorAndDailyServiceProfilePic);
             textVisitorOrDailyServiceName = itemView.findViewById(R.id.textVisitorOrDailyServiceName);
             textApartment = itemView.findViewById(R.id.textApartment);
