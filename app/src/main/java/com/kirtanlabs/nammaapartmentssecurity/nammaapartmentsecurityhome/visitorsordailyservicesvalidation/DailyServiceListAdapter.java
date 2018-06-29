@@ -81,9 +81,10 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
         //To retrieve of owner details from firebase
         getOwnerDetailsFromFireBase(holder.textFlatToVisitValue, holder.textApartmentValue);
+
         holder.buttonAllowVisitorAndDailyService.setOnClickListener(this);
 
-        //If status of Daily Service is Entered that we have to change button text.
+        //If status of Daily Service is Entered than we have to change button text.
         if (dailyServiceStatus.equals(mCtx.getString(R.string.entered))) {
             holder.buttonAllowVisitorAndDailyService.setText(mCtx.getString(R.string.daily_service_left));
         }

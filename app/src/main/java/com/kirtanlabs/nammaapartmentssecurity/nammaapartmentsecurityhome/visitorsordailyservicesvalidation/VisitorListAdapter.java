@@ -82,7 +82,7 @@ public class VisitorListAdapter extends
 
         holder.buttonAllowVisitorAndDailyService.setOnClickListener(this);
 
-        //If status of Visitor is Entered that we have to change button text.
+        //If status of Visitor is Entered than we have to change button text.
         if (visitorStatus.equals(mCtx.getString(R.string.entered))) {
             holder.buttonAllowVisitorAndDailyService.setText(mCtx.getString(R.string.visitor_left));
         }
