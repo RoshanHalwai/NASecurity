@@ -21,6 +21,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedArrivalsListAdapter.ExpectedArrivalsHolder> {
@@ -217,11 +218,15 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         @Override
         public void onClick(View v) {
             int position = getLayoutPosition();
-            changeExpectedArrivalStatusInFirebase(position);
-            Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mCtx.startActivity(intent);
+            if (isExpectedArrivalReachedOnTime(position)) {
+                changeExpectedArrivalStatusInFirebase(position);
+                Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mCtx.startActivity(intent);
+            } else {
+                baseActivity.openValidationStatusDialog(Constants.FAILED, mCtx.getString(R.string.expected_time_of_arrival_is_finished));
+            }
         }
 
         /* ------------------------------------------------------------- *
@@ -258,6 +263,40 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             String currentDate = baseActivity.getCurrentDate();
             String concatenatedDateAndTime = currentDate + "\t\t" + " " + currentTime;
             expectedArrivalsReference.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).setValue(concatenatedDateAndTime);
+        }
+
+        /**
+         * This method is invoked to checked whether Expected Arrival reached into Society on expected time or not.
+         *
+         * @param position of card view for which expected Time is to be checked.
+         */
+        private boolean isExpectedArrivalReachedOnTime(int position) {
+            NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = nammaApartmentExpectedArrivalsList.get(position);
+            status = nammaApartmentExpectedArrivals.getStatus();
+
+            if (status.equals(mCtx.getString(R.string.not_entered))) {
+                String expectedDateAndTime = nammaApartmentExpectedArrivals.getDateAndTimeOfArrival();
+                String[] separatedDateAndTime = TextUtils.split(expectedDateAndTime, "\t\t ");
+                String expectedDate = separatedDateAndTime[0];
+                String expectedTime = separatedDateAndTime[1];
+
+                String currentDate = baseActivity.getCurrentDate();
+                String validFor = nammaApartmentExpectedArrivals.getValidFor();
+
+                String[] validHours = TextUtils.split(validFor, " ");
+                int hoursValidFor = Integer.parseInt(validHours[0]);
+                String[] expectedHoursAndMinutes = TextUtils.split(expectedTime, ":");
+                int expectedHour = Integer.parseInt(expectedHoursAndMinutes[0]);
+                int expectedMinutes = Integer.parseInt(expectedHoursAndMinutes[1]);
+                int totalValidHours = expectedHour + hoursValidFor;
+
+                Calendar calendar = Calendar.getInstance();
+                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = calendar.get(Calendar.MINUTE);
+                return expectedDate.equals(currentDate) && (currentHour < totalValidHours || (currentHour == totalValidHours && currentMinute <= expectedMinutes));
+            } else {
+                return true;
+            }
         }
     }
 }
