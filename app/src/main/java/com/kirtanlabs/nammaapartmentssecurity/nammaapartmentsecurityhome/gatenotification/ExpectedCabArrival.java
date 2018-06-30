@@ -2,6 +2,8 @@ package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gateno
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +17,7 @@ import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
-
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_NUMBER_FIELD_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 
 public class ExpectedCabArrival extends BaseActivity implements View.OnClickListener {
@@ -24,7 +26,10 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
      * Private Members
      * ------------------------------------------------------------- */
 
-    private EditText editCabNumber;
+    private EditText editCabStateCode;
+    private EditText editCabRtoNumber;
+    private EditText editCabSerialNumberOne;
+    private EditText editCabSerialNumberTwo;
     private String cabDriverUid;
 
     /* ------------------------------------------------------------- *
@@ -47,13 +52,23 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
 
         /*Getting Id's for all the views*/
         TextView textCabNumber = findViewById(R.id.textCabNumber);
-        editCabNumber = findViewById(R.id.editCabNumber);
+        editCabStateCode = findViewById(R.id.editCabStateCode);
+        editCabRtoNumber = findViewById(R.id.editCabRtoNumber);
+        editCabSerialNumberOne = findViewById(R.id.editCabSerialNumberOne);
+        editCabSerialNumberTwo = findViewById(R.id.editCabSerialNumberTwo);
+
         Button buttonVerifyCabNumberAndPackageVendor = findViewById(R.id.buttonVerifyCabNumberAndPackageVendor);
 
         /*Setting font for all the views*/
         textCabNumber.setTypeface(Constants.setLatoBoldFont(this));
-        editCabNumber.setTypeface(Constants.setLatoRegularFont(this));
+        editCabStateCode.setTypeface(Constants.setLatoRegularFont(this));
+        editCabRtoNumber.setTypeface(Constants.setLatoRegularFont(this));
+        editCabSerialNumberOne.setTypeface(Constants.setLatoRegularFont(this));
+        editCabSerialNumberTwo.setTypeface(Constants.setLatoRegularFont(this));
         buttonVerifyCabNumberAndPackageVendor.setTypeface(Constants.setLatoLightFont(this));
+
+        /*Setting events for Cab Number edit text*/
+        setEventsForEditText();
 
         /*Setting onClickListener for view*/
         buttonVerifyCabNumberAndPackageVendor.setOnClickListener(this);
@@ -65,19 +80,103 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        String cabNumber = editCabNumber.getText().toString().trim();
-        if (editCabNumber.length() > EDIT_TEXT_MIN_LENGTH) {
-            /*We need Progress Indicator in this screen*/
+        if (isAllFieldsFilled(new EditText[]{editCabStateCode, editCabRtoNumber, editCabSerialNumberOne, editCabSerialNumberTwo})) {
+            String cabNumber = editCabStateCode.getText().toString().trim() + editCabRtoNumber.getText().toString().trim()
+                    + editCabSerialNumberOne.getText().toString().trim() + editCabSerialNumberTwo.getText().toString().trim();
+            //We need Progress Indicator in this screen
             showProgressIndicator();
             checkDetailsInFirebase(cabNumber);
-        } else {
-            editCabNumber.setError(getString(R.string.field_cant_be_empty));
         }
     }
 
     /* ------------------------------------------------------------- *
      * Private Methods
      * ------------------------------------------------------------- */
+
+    /**
+     * Once user enters details in one edit text we move the cursor to next edit text
+     */
+    private void setEventsForEditText() {
+        editCabStateCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    editCabRtoNumber.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        editCabRtoNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == EDIT_TEXT_MIN_LENGTH) {
+                    editCabStateCode.requestFocus();
+                } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    editCabSerialNumberOne.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editCabSerialNumberOne.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == EDIT_TEXT_MIN_LENGTH) {
+                    editCabRtoNumber.requestFocus();
+                } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    editCabSerialNumberTwo.requestFocus();
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editCabSerialNumberTwo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == EDIT_TEXT_MIN_LENGTH) {
+                    editCabSerialNumberOne.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
 
     /**
      * This method is used to check whether User has booked this cab or not

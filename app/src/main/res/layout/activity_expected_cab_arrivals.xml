@@ -19,32 +19,6 @@
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
     <TextView
-        android:id="@+id/textApartment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/editApartment"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/apartment"
-        android:textAllCaps="true"
-        android:textColor="@color/nmBlack"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
-    <EditText
-        android:id="@+id/editApartment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/textCabNumber"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:inputType="textCapCharacters|textVisiblePassword"
-        android:textColor="@color/nmBlack"
-        android:textSize="@dimen/edit_text_default_size"
-        android:visibility="gone"
-        tools:ignore="LabelFor,TextFields" />
-
-    <TextView
         android:id="@+id/textCabNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,27 +30,79 @@
         android:textColor="@color/nmBlack"
         android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/editCabNumber"
+    <LinearLayout
+        android:id="@+id/layoutCabNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textCabNumber"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:inputType="textCapCharacters|textVisiblePassword"
-        android:textColor="@color/nmBlack"
-        android:textSize="@dimen/edit_text_default_size"
-        tools:ignore="LabelFor,TextFields" />
+        android:layout_below="@id/textCabNumber"
+        android:layout_margin="20dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <EditText
+            android:id="@+id/editCabStateCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/cab_state_code_hint"
+            android:inputType="textCapCharacters"
+            android:maxLength="2"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/editCabRtoNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/cab_rto_number_hint"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/editCabSerialNumberOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/cab_serial_number_one_hint"
+            android:inputType="textCapCharacters"
+            android:maxLength="2"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor,TextFields" />
+
+        <EditText
+            android:id="@+id/editCabSerialNumberTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/cab_serial_number_two_hint"
+            android:inputType="number"
+            android:maxLength="4"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonVerifyCabNumberAndPackageVendor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editCabNumber"
+        android:layout_below="@+id/layoutCabNumber"
         android:layout_margin="20dp"
         android:background="@color/nmBlack"
         android:text="@string/verify_cab"
         android:textAllCaps="true"
         android:textColor="@color/nmLightYellow"
         android:textSize="@dimen/button_default_size" />
+
 </RelativeLayout>

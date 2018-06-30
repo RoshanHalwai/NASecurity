@@ -69,6 +69,10 @@
     <string name="dont_allow_package_vendor">Don\'t allow Package Vendor to enter into Society</string>
     <string name="package_vendor_left_society">Cab has already Left the Society</string>
     <string name="expected_time_of_arrival_is_finished">Expected time of this arrival is finished</string>
+    <string name="cab_state_code_hint">KA</string>
+    <string name="cab_rto_number_hint">01</string>
+    <string name="cab_serial_number_one_hint">AB</string>
+    <string name="cab_serial_number_two_hint">1234</string>
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>
