@@ -7,15 +7,15 @@ public class NammaApartmentDailyService {
      * ------------------------------------------------------------- */
 
     private String fullName;
+    private int numberOfFlats;
     private String phoneNumber;
     private String profilePhoto;
-    private boolean providedThings;
     private int rating;
-    private String status;
     private String timeOfVisit;
     private String uid;
     private String dailyServiceType;
     private String ownerUid;
+    private String status;
 
     /* ------------------------------------------------------------- *
      * Constructors
@@ -24,13 +24,12 @@ public class NammaApartmentDailyService {
     public NammaApartmentDailyService() {
     }
 
-    public NammaApartmentDailyService(String fullName, String phoneNumber, String profilePhoto, boolean providedThings, int rating, String status, String timeOfVisit, String uid) {
+    public NammaApartmentDailyService(String fullName, int numberOfFlats, String phoneNumber, String profilePhoto, int rating, String timeOfVisit, String uid) {
         this.fullName = fullName;
+        this.numberOfFlats = numberOfFlats;
         this.phoneNumber = phoneNumber;
         this.profilePhoto = profilePhoto;
-        this.providedThings = providedThings;
         this.rating = rating;
-        this.status = status;
         this.timeOfVisit = timeOfVisit;
         this.uid = uid;
     }
@@ -43,6 +42,10 @@ public class NammaApartmentDailyService {
         return fullName;
     }
 
+    public int getNumberOfFlats() {
+        return numberOfFlats;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -51,16 +54,8 @@ public class NammaApartmentDailyService {
         return profilePhoto;
     }
 
-    public boolean isProvidedThings() {
-        return providedThings;
-    }
-
     public int getRating() {
         return rating;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public String getTimeOfVisit() {
@@ -79,9 +74,17 @@ public class NammaApartmentDailyService {
         return ownerUid;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     /* ------------------------------------------------------------- *
      * Setters
      * ------------------------------------------------------------- */
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public void setDailyServiceType(String dailyServiceType) {
         this.dailyServiceType = dailyServiceType;

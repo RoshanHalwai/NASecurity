@@ -33,7 +33,6 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     private final BaseActivity baseActivity;
     private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private NammaApartmentDailyService nammaApartmentDailyService;
-    private DatabaseReference dailyServiceReference;
     private String dailyServiceStatus;
 
     /* ------------------------------------------------------------- *
@@ -157,22 +156,10 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
      * This method is invoked to change status of daily service
      */
     private void changeDailyServiceStatus() {
-        dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
+        DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                 .child(nammaApartmentDailyService.getDailyServiceType())
                 .child(nammaApartmentDailyService.getUid());
         baseActivity.changeStatus(dailyServiceStatus, dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS));
-
-        if (dailyServiceStatus.equals(mCtx.getString(R.string.not_entered))) {
-            updateDailyServiceTimeInFirebase();
-        }
-    }
-
-    /**
-     * This method is invoked to change timeOfVisit of daily service in Firebase.
-     */
-    private void updateDailyServiceTimeInFirebase() {
-        String currentTime = baseActivity.getCurrentTime();
-        dailyServiceReference.child(Constants.FIREBASE_CHILD_TIMEOFVISIT).setValue(currentTime);
     }
 
     /* ------------------------------------------------------------- *
