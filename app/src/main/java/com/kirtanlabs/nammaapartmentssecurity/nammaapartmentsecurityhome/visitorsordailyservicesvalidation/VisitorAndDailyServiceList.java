@@ -29,6 +29,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
     private NammaApartmentDailyService nammaApartmentDailyService;
     private int validationStatusOf;
     private String serviceType;
+    private String dailyServiceStatus;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -112,33 +113,39 @@ public class VisitorAndDailyServiceList extends BaseActivity {
             DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                     .child(serviceType)
                     .child(dailyServiceUid);
-            /*Get data and add to the list for displaying in Daily Service List*/
+
+            /*Retrieving Each Owners UID of that particular Daily Service */
             dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
+                    dailyServiceStatus = (String) dailyServiceDataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
                     hideProgressIndicator();
-                    /*Retrieving Each Owners UID of that particular Daily Service */
-                    dailyServiceReference.
-                            child(Constants.FIREBASE_CHILD_OWNERS_UID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            /*Iterate over each of ownersUID and add them to the list*/
-                            for (DataSnapshot ownersUidDataSnapshot : dataSnapshot.getChildren()) {
-                                nammaApartmentDailyService = dailyServiceDataSnapshot.getValue(NammaApartmentDailyService.class);
-                                assert nammaApartmentDailyService != null;
-                                nammaApartmentDailyService.setDailyServiceType(serviceType);
-                                nammaApartmentDailyService.setOwnerUid(ownersUidDataSnapshot.getKey());
-                                nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
-                            }
-                            //Setting adapter to recycler view
-                            recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
-                            dailyServiceListAdapter.notifyDataSetChanged();
-                        }
+                    for (DataSnapshot ownersUidDataSnapshot : dailyServiceDataSnapshot.getChildren()) {
+                        String ownersUid = ownersUidDataSnapshot.getKey();
+                        if (!Constants.FIREBASE_CHILD_STATUS.equals(ownersUid)) {
+                            /*Get data and add to the list for displaying in Daily Service List*/
+                            dailyServiceReference.
+                                    child(ownersUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
+                                    assert nammaApartmentDailyService != null;
+                                    nammaApartmentDailyService.setOwnerUid(ownersUid);
+                                    nammaApartmentDailyService.setDailyServiceType(serviceType);
+                                    nammaApartmentDailyService.setStatus(dailyServiceStatus);
+                                    nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
+                                    dailyServiceListAdapter.notifyDataSetChanged();
+                                }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                         }
-                    });
+                    }
+                    //Setting adapter to recycler view
+                    recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
                 }
 
                 @Override
