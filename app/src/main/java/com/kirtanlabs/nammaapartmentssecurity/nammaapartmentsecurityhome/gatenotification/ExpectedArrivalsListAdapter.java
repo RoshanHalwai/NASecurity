@@ -129,7 +129,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
 
     private void getOwnerDetailsFromFireBase(final TextView textBookedByValue, final TextView textFlatNumberValue, TextView textApartmentValue) {
         DatabaseReference ownerReference = Constants.PRIVATE_USERS_REFERENCE
-                .child(nammaApartmentExpectedArrivals.getUid());
+                .child(nammaApartmentExpectedArrivals.getInviterUID());
         ownerReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
