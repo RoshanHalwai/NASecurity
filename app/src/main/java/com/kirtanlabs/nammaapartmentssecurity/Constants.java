@@ -17,7 +17,6 @@ public class Constants {
     public static final String SCREEN_TITLE = "screen_title";
     public static final String VALIDATION_STATUS = "validation_status";
     public static final String EXPECTED_ARRIVAL_UID = "expected_arrival_uid";
-    public static final String GUEST_UID = "guest_uid";
     public static final String SERVICE_TYPE = "service_type";
 
     /* ------------------------------------------------------------- *
