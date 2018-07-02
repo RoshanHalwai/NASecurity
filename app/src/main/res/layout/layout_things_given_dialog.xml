@@ -1,66 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/layoutValidationSuccessful"
+    <ImageView
+        android:id="@+id/imageSuccess"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:ignore="UseCompoundDrawables">
+        android:layout_margin="10dp"
+        android:contentDescription="@string/image_success"
+        android:src="@drawable/success" />
 
-        <ImageView
-            android:id="@+id/imageSuccess"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/image_success"
-            android:src="@drawable/success" />
-
-        <TextView
-            android:id="@+id/textHasGivenThings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="@string/resident_has_given_things_to_visitor"
-            android:textColor="@color/nmBlack"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutValidationFailed"
+    <TextView
+        android:id="@+id/textHasGivenThings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:id="@+id/imageFailed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/image_failed"
-            android:src="@drawable/failed" />
-
-        <TextView
-            android:id="@+id/textNotGivenThings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="@string/resident_has_not_given_things_to_visitor"
-            android:textColor="@color/nmBlack"
-            android:textSize="18sp" />
-    </LinearLayout>
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:padding="2dp"
+        android:text="@string/resident_has_given_things_to_visitor"
+        android:textColor="@color/nmBlack"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/buttonOk"
@@ -72,5 +33,6 @@
         android:textAllCaps="true"
         android:textColor="@color/nmLightYellow"
         android:textSize="@dimen/button_default_size" />
+
 </LinearLayout>
 
