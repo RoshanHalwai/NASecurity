@@ -39,6 +39,15 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textResidentApartment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:text="@string/apartment"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp" />
+
+                    <TextView
                         android:id="@+id/textResidentFlatNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -85,11 +94,18 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textResidentApartmentValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:textColor="@color/nmBlack"
+                        android:textSize="18sp" />
+
+                    <TextView
                         android:id="@+id/textResidentFlatNumberValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="2dp"
-                        android:text="C504"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
 
@@ -100,7 +116,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:padding="2dp"
-                        android:text="Medical"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
 
@@ -111,7 +126,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:padding="2dp"
-                        android:text="Roshan Halwai"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
 
@@ -122,7 +136,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:padding="2dp"
-                        android:text="7895185103"
                         android:textColor="@color/nmBlack"
                         android:textSize="18sp" />
 

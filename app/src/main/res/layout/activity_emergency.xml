@@ -8,6 +8,34 @@
 
     <include layout="@layout/activity_base" />
 
+    <LinearLayout
+        android:id="@+id/layoutNoEmergency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:contentDescription="@string/no_emergency_desc"
+            android:src="@drawable/feature_unavailable" />
+
+        <TextView
+            android:id="@+id/textFeatureUnavailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:text="@string/no_emergency_message"
+            android:textColor="@color/nmBlack"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewEmergency"
         android:layout_width="match_parent"

@@ -43,44 +43,21 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
 
     @Override
     public void onBindViewHolder(@NonNull EmergencyHolder holder, int position) {
-        holder.textResidentFlatNumber.setTypeface(Constants.setLatoRegularFont(mCtx));
-        holder.textEmergencyType.setTypeface(Constants.setLatoRegularFont(mCtx));
-        holder.textResidentName.setTypeface(Constants.setLatoRegularFont(mCtx));
-        holder.textResidentMobileNumber.setTypeface(Constants.setLatoRegularFont(mCtx));
-        holder.textResidentFlatNumberValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-        holder.textEmergencyTypeValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-        holder.textResidentNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-        holder.textResidentMobileNumberValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+        String apartmentTitle = mCtx.getResources().getString(R.string.apartment) + ":";
+        holder.textResidentApartment.setText(apartmentTitle);
 
-        String flatNumberTitle = mCtx.getResources().getString(R.string.flat_number);
-        flatNumberTitle = flatNumberTitle + ":";
+        String flatNumberTitle = mCtx.getResources().getString(R.string.flat_number) + ":";
         holder.textResidentFlatNumber.setText(flatNumberTitle);
 
-        String mobileNumberTitle = mCtx.getResources().getString(R.string.phone_number);
-        mobileNumberTitle = mobileNumberTitle + ":";
+        String mobileNumberTitle = mCtx.getResources().getString(R.string.phone_number) + ":";
         holder.textResidentMobileNumber.setText(mobileNumberTitle);
 
-        // TODO : To Remove this switch case statement from here
-        switch (position) {
-            case 0:
-                holder.imageEmergencyType.setImageResource(R.drawable.medical_emergency);
-                holder.textEmergencyTypeValue.setText("Medical");
-                break;
-            case 1:
-                holder.imageEmergencyType.setImageResource(R.drawable.fire_alarm);
-                holder.textEmergencyTypeValue.setText("Fire");
-                break;
-            case 2:
-                holder.imageEmergencyType.setImageResource(R.drawable.theft_alarm);
-                holder.textEmergencyTypeValue.setText("Theft");
-                break;
-        }
     }
 
     @Override
     public int getItemCount() {
         // TODO : To change item count here
-        return 3;
+        return 0;
     }
 
     /* ------------------------------------------------------------- *
@@ -93,10 +70,12 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
          * Private Members
          * ------------------------------------------------------------- */
 
+        private TextView textResidentApartment;
         private TextView textResidentFlatNumber;
         private TextView textEmergencyType;
         private TextView textResidentName;
         private TextView textResidentMobileNumber;
+        private TextView textResidentApartmentValue;
         private TextView textResidentFlatNumberValue;
         private TextView textEmergencyTypeValue;
         private TextView textResidentNameValue;
@@ -109,15 +88,30 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
 
         EmergencyHolder(View itemView) {
             super(itemView);
+            /*Getting Id's for all the views*/
+            textResidentApartment = itemView.findViewById(R.id.textResidentApartment);
             textResidentFlatNumber = itemView.findViewById(R.id.textResidentFlatNumber);
             textEmergencyType = itemView.findViewById(R.id.textEmergencyType);
             textResidentName = itemView.findViewById(R.id.textResidentName);
             textResidentMobileNumber = itemView.findViewById(R.id.textResidentMobileNumber);
+            textResidentApartmentValue = itemView.findViewById(R.id.textResidentApartmentValue);
             textResidentFlatNumberValue = itemView.findViewById(R.id.textResidentFlatNumberValue);
             textEmergencyTypeValue = itemView.findViewById(R.id.textEmergencyTypeValue);
             textResidentNameValue = itemView.findViewById(R.id.textResidentNameValue);
             textResidentMobileNumberValue = itemView.findViewById(R.id.textResidentMobileNumberValue);
             imageEmergencyType = itemView.findViewById(R.id.imageEmergencyType);
+
+            /*Setting fonts to the views*/
+            textResidentApartment.setTypeface(Constants.setLatoRegularFont(mCtx));
+            textResidentFlatNumber.setTypeface(Constants.setLatoRegularFont(mCtx));
+            textEmergencyType.setTypeface(Constants.setLatoRegularFont(mCtx));
+            textResidentName.setTypeface(Constants.setLatoRegularFont(mCtx));
+            textResidentMobileNumber.setTypeface(Constants.setLatoRegularFont(mCtx));
+            textResidentApartmentValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+            textResidentFlatNumberValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+            textEmergencyTypeValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+            textResidentNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+            textResidentMobileNumberValue.setTypeface(Constants.setLatoBoldFont(mCtx));
         }
     }
 }

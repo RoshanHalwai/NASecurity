@@ -1,13 +1,16 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.emergency;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
-public class Emergency extends BaseActivity {
+public class Emergency extends BaseActivity implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -37,5 +40,20 @@ public class Emergency extends BaseActivity {
 
         //Setting adapter to recycler view
         recyclerViewEmergency.setAdapter(adapter);
+
+        /*Since we have filter button here, we would want to perform navigate user to Filter Emergency List
+         * and display data*/
+        ImageView filterButton = findViewById(R.id.filterButton);
+        filterButton.setVisibility(View.VISIBLE);
+        filterButton.setOnClickListener(this);
+    }
+
+    /* ------------------------------------------------------------- *
+     * Overriding OnClickListener Methods
+     * ------------------------------------------------------------- */
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(Emergency.this, FilterEmergencyList.class));
     }
 }
