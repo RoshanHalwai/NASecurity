@@ -51,10 +51,6 @@ public class ExpectedArrivalsList extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /* Since we wouldn't want the users to go back to previous screen,
-         * hence hiding the back button from the Title Bar*/
-        hideBackButton();
-
         /*Getting Id of recycler view*/
         RecyclerView recyclerViewExpectedArrivalsList = findViewById(R.id.recyclerViewExpectedArrivalsList);
         recyclerViewExpectedArrivalsList.setHasFixedSize(true);

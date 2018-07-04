@@ -101,6 +101,7 @@ public class Constants {
     public static final int EDIT_TEXT_MIN_LENGTH = 0;
     public static final int CAB_NUMBER_FIELD_LENGTH = 2;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 4;
+    public static final String HYPHEN = "-";
 
     /* ------------------------------------------------------------- *
      * Font Types

@@ -19,6 +19,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_NUMBER_FIELD_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
 
 public class ExpectedCabArrival extends BaseActivity implements View.OnClickListener {
 
@@ -81,8 +82,8 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (isAllFieldsFilled(new EditText[]{editCabStateCode, editCabRtoNumber, editCabSerialNumberOne, editCabSerialNumberTwo})) {
-            String cabNumber = editCabStateCode.getText().toString().trim() + editCabRtoNumber.getText().toString().trim()
-                    + editCabSerialNumberOne.getText().toString().trim() + editCabSerialNumberTwo.getText().toString().trim();
+            String cabNumber = editCabStateCode.getText().toString().trim() + HYPHEN + editCabRtoNumber.getText().toString().trim()
+                    + HYPHEN + editCabSerialNumberOne.getText().toString().trim() + HYPHEN + editCabSerialNumberTwo.getText().toString().trim();
             //We need Progress Indicator in this screen
             showProgressIndicator();
             checkDetailsInFirebase(cabNumber);
