@@ -14,6 +14,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class VisitorAndDailyServiceList extends BaseActivity {
 
@@ -58,10 +59,6 @@ public class VisitorAndDailyServiceList extends BaseActivity {
 
         /*We need Progress Indicator in this screen*/
         showProgressIndicator();
-
-        /* Since we wouldn't want the users to go back to previous screen,
-         * hence hiding the back button from the Title Bar*/
-        hideBackButton();
 
         /*Getting Id of recycler view*/
         recyclerViewVisitorAndDailyServiceList = findViewById(R.id.recyclerViewValidVisitorAndDailyService);
@@ -131,7 +128,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                                     nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
                                     assert nammaApartmentDailyService != null;
                                     nammaApartmentDailyService.setOwnerUid(ownersUid);
-                                    nammaApartmentDailyService.setDailyServiceType(serviceType);
+                                    Objects.requireNonNull(nammaApartmentDailyService).setDailyServiceType(serviceType.substring(0, 1).toUpperCase() + serviceType.substring(1));
                                     nammaApartmentDailyService.setStatus(dailyServiceStatus);
                                     nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
                                     dailyServiceListAdapter.notifyDataSetChanged();
