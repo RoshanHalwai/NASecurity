@@ -41,7 +41,7 @@ public class Emergency extends BaseActivity implements View.OnClickListener {
         //Setting adapter to recycler view
         recyclerViewEmergency.setAdapter(adapter);
 
-        /*Since we have filter button here, we would want to perform navigate user to Filter Emergency List
+        /*Since we have filter button here, we filter data according to the user selection
          * and display data*/
         ImageView filterButton = findViewById(R.id.filterButton);
         filterButton.setVisibility(View.VISIBLE);
