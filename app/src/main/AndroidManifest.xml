@@ -57,6 +57,7 @@
         <activity android:name=".nammaapartmentsecurityhome.gatenotification.GivenThingsToDailyService" />
         <activity android:name=".nammaapartmentsecurityhome.emergency.Emergency" />
         <activity android:name=".nammaapartmentsecurityhome.emergency.FilterEmergencyList" />
+        <activity android:name=".nammaapartmentsecurityhome.emergency.SearchFlatNumber" />
     </application>
 
 </manifest>

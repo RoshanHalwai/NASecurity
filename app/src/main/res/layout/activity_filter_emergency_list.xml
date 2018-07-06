@@ -7,6 +7,8 @@
 
     <include layout="@layout/activity_base" />
 
+    <!--This layout file is not required now, we keep this file for future purpose-->
+
     <RadioGroup
         android:id="@+id/radioFilterType"
         android:layout_width="wrap_content"

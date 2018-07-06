@@ -36,6 +36,16 @@
 
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/editSearchFlatNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableLeft="@drawable/search"
+        android:drawableStart="@drawable/search"
+        android:hint="@string/search_flat_number_hint"
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewEmergency"
         android:layout_width="match_parent"

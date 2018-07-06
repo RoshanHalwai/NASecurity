@@ -110,6 +110,8 @@
     <string name="no_emergency_desc">Image to indicate currently no emergency alarm raised by any of the resident.</string>
     <string name="date">Date</string>
     <string name="Filter">Filter</string>
+    <string name="search_flat_number_hint">Search Flat</string>
+    <string name="search_flat_number">Search Flat number</string>
 
     <!--Validation-->
     <string name="number_10digit_validation">Please Enter a valid 10 digit mobile number</string>

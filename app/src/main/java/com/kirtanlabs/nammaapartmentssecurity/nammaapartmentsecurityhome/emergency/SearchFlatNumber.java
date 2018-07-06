@@ -1,15 +1,15 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.emergency;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
+import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FilterEmergencyList extends BaseActivity implements View.OnClickListener {
+public class SearchFlatNumber extends BaseActivity implements SearchView.OnQueryTextListener {
 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
 
-    private ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> flatNumberAdapter;
     private List<String> itemsInList = new ArrayList<>();
 
     /* ------------------------------------------------------------- *
@@ -38,99 +38,75 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
 
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.activity_filter_emergency_list;
+        return R.layout.activity_search_flat_number;
     }
 
     @Override
     protected int getActivityTitle() {
-        return R.string.Filter;
+        return R.string.search_flat_number;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*We are not using this file. This file is kept on hold for future reference*/
-
         /*Getting Id's for all the views*/
-        RadioButton radioButtonApartment = findViewById(R.id.radioButtonApartment);
-        RadioButton radioButtonFlat = findViewById(R.id.radioButtonFlat);
-        RadioButton radioButtonDate = findViewById(R.id.radioButtonDate);
         ListView listView = findViewById(R.id.listView);
+        SearchView searchFlatNumber = findViewById(R.id.searchFlatNumber);
 
         /*Setting font for all the items in the list view*/
-        adapter = new ArrayAdapter<String>(this,
+        flatNumberAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, itemsInList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = view.findViewById(android.R.id.text1);
-                textView.setTypeface(Constants.setLatoRegularFont(FilterEmergencyList.this));
+                textView.setTypeface(Constants.setLatoRegularFont(SearchFlatNumber.this));
                 return view;
             }
         };
-        listView.setAdapter(adapter);
+        //Setting adapter to listView view
+        listView.setAdapter(flatNumberAdapter);
 
-        /*Setting onClickListener for view*/
-        radioButtonApartment.setOnClickListener(this);
-        radioButtonFlat.setOnClickListener(this);
-        radioButtonDate.setOnClickListener(this);
+        /*Attaching listeners to ListView*/
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String flatNumber = (String) listView.getItemAtPosition(position);
+            searchSelectedFlat(flatNumber);
+        });
+
+        // Adding all flat numbers in a list.
+        initializeListWithFlatNumbers();
+
+        /*Setting OnQueryTextListener for view*/
+        searchFlatNumber.setOnQueryTextListener(this);
     }
 
     /* ------------------------------------------------------------- *
-     * Overriding OnClickListener Methods
+     * Overriding OnQueryTextListener Methods
      * ------------------------------------------------------------- */
 
     @Override
-    public void onClick(View v) {
-        itemsInList.clear();
-        adapter.notifyDataSetChanged();
-        switch (v.getId()) {
-            case R.id.radioButtonApartment:
-                displayApartmentsInList();
-                break;
-            case R.id.radioButtonFlat:
-                displayFlatsInList();
-                break;
-            case R.id.radioButtonDate:
-                Toast.makeText(this, "Yet to Implement", Toast.LENGTH_SHORT).show();
-                break;
-        }
+    public boolean onQueryTextSubmit(String query) {
+        searchSelectedFlat(query);
+        return true;
     }
 
-    /**
-     * Updates list according with all Apartment values.
-     */
-    private void displayApartmentsInList() {
-        DatabaseReference apartmentReference = Constants.CITIES_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BANGALORE)
-                .child(Constants.FIREBASE_CHILD_SOCIETIES)
-                .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
-                .child(Constants.FIREBASE_CHILD_APARTMENTS);
-        // Retrieving List of all Apartment names from firebase.
-        apartmentReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot apartmentDataSnapshot : dataSnapshot.getChildren()) {
-                    itemsInList.add(apartmentDataSnapshot.getKey());
-                    adapter.notifyDataSetChanged();
-                }
-                Collections.sort(itemsInList);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        flatNumberAdapter.getFilter().filter(newText);
+        return true;
     }
 
 
+    /* ------------------------------------------------------------- *
+     * Private Methods
+     * ------------------------------------------------------------- */
+
     /**
-     * Updates list according with all Flats values.
+     * Updates list with all Flats values.
      */
-    private void displayFlatsInList() {
-        itemsInList.clear();
+    private void initializeListWithFlatNumbers() {
         DatabaseReference apartmentReference = Constants.CITIES_REFERENCE
                 .child(Constants.FIREBASE_CHILD_BANGALORE)
                 .child(Constants.FIREBASE_CHILD_SOCIETIES)
@@ -151,7 +127,7 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot flatDataSnapshot : dataSnapshot.getChildren()) {
                                 itemsInList.add(flatDataSnapshot.getKey());
-                                adapter.notifyDataSetChanged();
+                                flatNumberAdapter.notifyDataSetChanged();
                             }
                         }
 
@@ -167,5 +143,17 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    /**
+     * This method is invoked to send back flat number to Emergency Screen to display details for that particular flat.
+     *
+     * @param flatNumber of which emergency details to be displayed.
+     */
+    private void searchSelectedFlat(String flatNumber) {
+        Intent intent = new Intent();
+        intent.putExtra(Constants.FLAT_NUMBER, flatNumber);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

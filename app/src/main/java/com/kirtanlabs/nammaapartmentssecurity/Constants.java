@@ -18,6 +18,7 @@ public class Constants {
     public static final String VALIDATION_STATUS = "validation_status";
     public static final String EXPECTED_ARRIVAL_UID = "expected_arrival_uid";
     public static final String SERVICE_TYPE = "service_type";
+    public static final String FLAT_NUMBER = "flat_number";
 
     /* ------------------------------------------------------------- *
      * Dialog Types
@@ -102,6 +103,12 @@ public class Constants {
     public static final int CAB_NUMBER_FIELD_LENGTH = 2;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 4;
     public static final String HYPHEN = "-";
+
+    /* ------------------------------------------------------------- *
+     * Request Code
+     * ------------------------------------------------------------- */
+
+    public static final int SEARCH_FLAT_NUMBER_REQUEST_CODE = 1;
 
     /* ------------------------------------------------------------- *
      * Font Types
