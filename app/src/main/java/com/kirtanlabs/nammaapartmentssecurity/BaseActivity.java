@@ -2,9 +2,9 @@ package com.kirtanlabs.nammaapartmentssecurity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -167,6 +167,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void hideProgressIndicator() {
+        if (progressIndicator == null)
+            progressIndicator = findViewById(R.id.animationWaitingToLoadData);
         progressIndicator.smoothToHide();
     }
 

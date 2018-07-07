@@ -47,6 +47,9 @@
         <activity
             android:name=".nammaapartmentsecurityhome.eintercom.EIntercom"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.eintercom.AwaitingResponse"
+            android:screenOrientation="portrait" />
 
         <!-- Visitor and Daily Service Validation Screens -->
         <activity
