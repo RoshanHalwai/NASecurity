@@ -75,7 +75,9 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
         nammaApartmentDailyService = nammaApartmentDailyServiceList.get(position);
         dailyServiceStatus = nammaApartmentDailyService.getStatus();
         holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentDailyService.getFullName());
-        holder.textServiceTypeValue.setText(nammaApartmentDailyService.getDailyServiceType());
+        String dailyServiceType = nammaApartmentDailyService.getDailyServiceType();
+        dailyServiceType = dailyServiceType.substring(0, 1).toUpperCase() + dailyServiceType.substring(1);
+        holder.textServiceTypeValue.setText(dailyServiceType);
         Glide.with(mCtx.getApplicationContext()).load(nammaApartmentDailyService.getProfilePhoto()).into(holder.VisitorAndDailyServiceProfilePic);
 
         //To retrieve of owner details from firebase
