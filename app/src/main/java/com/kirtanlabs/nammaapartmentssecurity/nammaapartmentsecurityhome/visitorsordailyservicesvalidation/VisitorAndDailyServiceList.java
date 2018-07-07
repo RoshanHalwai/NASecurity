@@ -14,7 +14,6 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class VisitorAndDailyServiceList extends BaseActivity {
 
@@ -128,7 +127,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                                     nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
                                     assert nammaApartmentDailyService != null;
                                     nammaApartmentDailyService.setOwnerUid(ownersUid);
-                                    Objects.requireNonNull(nammaApartmentDailyService).setDailyServiceType(serviceType.substring(0, 1).toUpperCase() + serviceType.substring(1));
+                                    nammaApartmentDailyService.setDailyServiceType(serviceType);
                                     nammaApartmentDailyService.setStatus(dailyServiceStatus);
                                     nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
                                     dailyServiceListAdapter.notifyDataSetChanged();
@@ -140,6 +139,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                                 }
                             });
                         }
+                        break;
                     }
                     //Setting adapter to recycler view
                     recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
