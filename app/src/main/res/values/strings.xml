@@ -106,6 +106,12 @@
     <string name="emergency_type">Emergency Type:</string>
     <string name="resident_name">Resident Name:</string>
     <string name="image_emergency">Image to indicate type of Emergency</string>
+    <string name="no_emergency_message">Sorry, there\'s no Emergency alarm raised by any of the resident at the moment.</string>
+    <string name="no_emergency_desc">Image to indicate currently no emergency alarm raised by any of the resident.</string>
+    <string name="date">Date</string>
+    <string name="Filter">Filter</string>
+    <string name="search_flat_number_hint">Search Flat</string>
+    <string name="search_flat_number">Search Flat number</string>
 
     <!--Validation-->
     <string name="number_10digit_validation">Please Enter a valid 10 digit mobile number</string>

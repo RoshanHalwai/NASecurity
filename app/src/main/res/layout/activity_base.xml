@@ -31,4 +31,14 @@
         android:textColor="@android:color/white"
         android:textSize="24sp" />
 
+    <ImageView
+        android:id="@+id/filterButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="0.05"
+        android:src="@drawable/filter"
+        android:visibility="gone" />
+
 </LinearLayout>
