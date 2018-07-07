@@ -17,9 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.ImagePicker;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.UserFlatDetails;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +35,10 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAMERA_PERMISSION_REQUEST_CODE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
@@ -83,14 +92,17 @@ public class EIntercom extends BaseActivity {
         /*Setting event for all button clicks */
         circleImageView.setOnClickListener(v -> launchCamera());
         buttonSendNotification.setOnClickListener(v -> {
-            if (profilePhotoByteArray == null) {
+            sendNotification();
+
+            /*TODO: Uncomment these since for sending notifications currently we are not using profile photo*/
+            /*if (profilePhotoByteArray == null) {
                 textErrorProfilePic.setVisibility(View.VISIBLE);
                 textErrorProfilePic.requestFocus();
             } else {
                 textErrorProfilePic.setVisibility(View.INVISIBLE);
-            }
+            }*/
             // This method gets invoked to check all the validation fields such as editTexts
-            validateFields();
+            /*validateFields();*/
         });
 
     }
@@ -115,6 +127,64 @@ public class EIntercom extends BaseActivity {
                 startActivityForResult(cameraIntent, CAMERA_PERMISSION_REQUEST_CODE);
             }
         }
+    }
+
+    /**
+     * Method is invoked when Guard sends the notification to the user
+     */
+    private void sendNotification() {
+        /*We first get the user UID from the mobile number*/
+        String mobileNumber = editMobileNumber.getText().toString().trim();
+        DatabaseReference userMobileReference = ALL_USERS_REFERENCE.child(mobileNumber);
+        userMobileReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userUID = dataSnapshot.getValue().toString();
+
+                //We get user information by their UID
+                DatabaseReference userPrivateReference = PRIVATE_USERS_REFERENCE.child(userUID);
+                userPrivateReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
+
+                        /*We store Notification under FlatDetails->Notification->userUID*/
+                        UserFlatDetails userFlatDetails = nammaApartmentUser.getFlatDetails();
+                        DatabaseReference userDataReference = PRIVATE_USER_DATA_REFERENCE
+                                .child(userFlatDetails.getCity())
+                                .child(userFlatDetails.getSocietyName())
+                                .child(userFlatDetails.getApartmentName())
+                                .child(userFlatDetails.getFlatNumber());
+
+                        /*We create a unique ID for every push notifications*/
+                        DatabaseReference notificationsReference = userDataReference
+                                .child("notifications")
+                                .child(userUID)
+                                .push();
+                        notificationsReference.child("uid").setValue(notificationsReference.getKey());
+                        notificationsReference.child("message").setValue("Roshan wants to enter your Society");
+
+                        /*Call AwaitingResponse activity, by this time user should have received the Notification
+                         * Since, cloud functions would have been triggered*/
+                        Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
+                        awaitingResponseIntent.putExtra("SentUserUID", userUID);
+                        awaitingResponseIntent.putExtra("NotificationUID", notificationsReference.getKey());
+                        startActivity(awaitingResponseIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     /**
