@@ -33,33 +33,65 @@
         </provider>
 
         <!-- Namma Apartments Security Home Screen -->
-        <activity android:name=".nammaapartmentsecurityhome.NammaApartmentSecurityHome">
+        <activity
+            android:name=".nammaapartmentsecurityhome.NammaApartmentSecurityHome"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- E-Intercom Screen -->
+        <activity
+            android:name=".nammaapartmentsecurityhome.eintercom.EIntercom"
+            android:screenOrientation="portrait" />
+
+        <!-- Visitor and Daily Service Validation Screens -->
         <activity
             android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".nammaapartmentsecurityhome.eintercom.EIntercom" />
-        <activity android:name=".nammaapartmentsecurityhome.gatenotification.GateNotificationHome" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorAndDailyServiceList"
+            android:screenOrientation="portrait" />
+
+        <!-- Gate Notification Screens -->
+        <activity
+            android:name=".nammaapartmentsecurityhome.gatenotification.GateNotificationHome"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedCabArrival"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedArrivalsList"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".nammaapartmentsecurityhome.gatenotification.ThingsGiven"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".nammaapartmentsecurityhome.gatenotification.GivenThingsToDailyService"
+            android:screenOrientation="portrait" />
+
+        <!--Society Member Screens-->
+        <activity
             android:name=".nammaapartmentsecurityhome.societymember.SocietyMemberAndExpectedPackageArrival"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList" />
-        <activity android:name=".nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorAndDailyServiceList" />
-        <activity android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedArrivalsList" />
-        <activity android:name=".nammaapartmentsecurityhome.gatenotification.GivenThingsToDailyService" />
-        <activity android:name=".nammaapartmentsecurityhome.emergency.Emergency" />
-        <activity android:name=".nammaapartmentsecurityhome.emergency.SearchFlatNumber" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList"
+            android:screenOrientation="portrait" />
+
+        <!--Emergency Screens-->
+        <activity
+            android:name=".nammaapartmentsecurityhome.emergency.Emergency"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.emergency.SearchFlatNumber"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
