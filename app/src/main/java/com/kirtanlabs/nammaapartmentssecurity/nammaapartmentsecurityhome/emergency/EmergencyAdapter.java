@@ -43,15 +43,6 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
 
     @Override
     public void onBindViewHolder(@NonNull EmergencyHolder holder, int position) {
-        String apartmentTitle = mCtx.getResources().getString(R.string.apartment) + ":";
-        holder.textResidentApartment.setText(apartmentTitle);
-
-        String flatNumberTitle = mCtx.getResources().getString(R.string.flat_number) + ":";
-        holder.textResidentFlatNumber.setText(flatNumberTitle);
-
-        String mobileNumberTitle = mCtx.getResources().getString(R.string.phone_number) + ":";
-        holder.textResidentMobileNumber.setText(mobileNumberTitle);
-
     }
 
     @Override
@@ -112,6 +103,14 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
             textEmergencyTypeValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textResidentNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
             textResidentMobileNumberValue.setTypeface(Constants.setLatoBoldFont(mCtx));
+
+            /*Setting titles for views*/
+            String apartmentTitle = mCtx.getResources().getString(R.string.apartment) + ":";
+            textResidentApartment.setText(apartmentTitle);
+            String flatNumberTitle = mCtx.getResources().getString(R.string.flat_number) + ":";
+            textResidentFlatNumber.setText(flatNumberTitle);
+            String mobileNumberTitle = mCtx.getResources().getString(R.string.phone_number) + ":";
+            textResidentMobileNumber.setText(mobileNumberTitle);
         }
     }
 }

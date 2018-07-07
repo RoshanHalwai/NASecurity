@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/*We are not using this file. This file is kept on hold for future reference*/
+
 public class FilterEmergencyList extends BaseActivity implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
@@ -50,8 +52,6 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*We are not using this file. This file is kept on hold for future reference*/
-
         /*Getting Id's for all the views*/
         RadioButton radioButtonApartment = findViewById(R.id.radioButtonApartment);
         RadioButton radioButtonFlat = findViewById(R.id.radioButtonFlat);
@@ -65,8 +65,8 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                TextView textView = view.findViewById(android.R.id.text1);
-                textView.setTypeface(Constants.setLatoRegularFont(FilterEmergencyList.this));
+                TextView textFlatNumber = view.findViewById(android.R.id.text1);
+                textFlatNumber.setTypeface(Constants.setLatoRegularFont(FilterEmergencyList.this));
                 return view;
             }
         };

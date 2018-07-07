@@ -61,8 +61,8 @@ public class SearchFlatNumber extends BaseActivity implements SearchView.OnQuery
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                TextView textView = view.findViewById(android.R.id.text1);
-                textView.setTypeface(Constants.setLatoRegularFont(SearchFlatNumber.this));
+                TextView textFlatNumber = view.findViewById(android.R.id.text1);
+                textFlatNumber.setTypeface(Constants.setLatoRegularFont(SearchFlatNumber.this));
                 return view;
             }
         };
