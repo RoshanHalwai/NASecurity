@@ -33,7 +33,8 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			const payload = {
 				data: {
 					message: message,
-					notification_uid : uid
+					notification_uid : uid,
+					user_uid : userUID
 				}
             };
 			
