@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
+import java.util.List;
+
 public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.EmergencyHolder> {
 
     /* ------------------------------------------------------------- *
@@ -19,13 +21,15 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
+    private List<NammaApartmentEmergency> nammaApartmentEmergencyList;
 
     /* ------------------------------------------------------------- *
      * Constructor
      * ------------------------------------------------------------- */
 
-    EmergencyAdapter(Context mCtx) {
+    EmergencyAdapter(Context mCtx, List<NammaApartmentEmergency> nammaApartmentEmergencyList) {
         this.mCtx = mCtx;
+        this.nammaApartmentEmergencyList = nammaApartmentEmergencyList;
     }
 
     /* ------------------------------------------------------------- *
@@ -43,12 +47,32 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
 
     @Override
     public void onBindViewHolder(@NonNull EmergencyHolder holder, int position) {
+        //Creating an instance of NammaApartmentEmergency class and retrieving the values from Firebase
+        NammaApartmentEmergency nammaApartmentEmergency = nammaApartmentEmergencyList.get(position);
+        String emergencyType = nammaApartmentEmergency.getEmergencyType();
+        holder.textEmergencyTypeValue.setText(emergencyType);
+        holder.textResidentNameValue.setText(nammaApartmentEmergency.getFullName());
+        holder.textResidentMobileNumberValue.setText(nammaApartmentEmergency.getPhoneNumber());
+        holder.textResidentApartmentValue.setText(nammaApartmentEmergency.getApartmentName());
+        holder.textResidentFlatNumberValue.setText(nammaApartmentEmergency.getFlatNumber());
+
+        // Here we are setting image in cardView according to the emergency type
+        switch (emergencyType) {
+            case Constants.EMERGENCY_TYPE_MEDICAL:
+                holder.imageEmergencyType.setImageResource(R.drawable.medical_emergency);
+                break;
+            case Constants.EMERGENCY_TYPE_FIRE:
+                holder.imageEmergencyType.setImageResource(R.drawable.fire_alarm);
+                break;
+            case Constants.EMERGENCY_TYPE_THEFT:
+                holder.imageEmergencyType.setImageResource(R.drawable.theft_alarm);
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
-        // TODO : To change item count here
-        return 0;
+        return nammaApartmentEmergencyList.size();
     }
 
     /* ------------------------------------------------------------- *
