@@ -258,7 +258,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param message - Body of the message
      * @param status  - of visitor, daily service and arrival
      */
-    public void showNotificationSendDialog(String title, String message, String status) {
+    public void showNotificationSentDialog(String title, String message, String status) {
         android.app.AlertDialog.Builder alertNotifyUserDialog = new android.app.AlertDialog.Builder(this);
         alertNotifyUserDialog.setCancelable(false);
         alertNotifyUserDialog.setTitle(title);

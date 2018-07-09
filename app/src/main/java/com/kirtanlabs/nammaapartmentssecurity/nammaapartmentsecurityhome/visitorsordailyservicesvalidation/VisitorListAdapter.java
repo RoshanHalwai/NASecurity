@@ -98,7 +98,7 @@ public class VisitorListAdapter extends
     @Override
     public void onClick(View v) {
         changeVisitorStatusInFirebase();
-        baseActivity.showNotificationSendDialog(mCtx.getString(R.string.visitor_notification_title), mCtx.getString(R.string.visitor_notification_message), visitorStatus);
+        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.visitor_notification_title), mCtx.getString(R.string.visitor_notification_message), visitorStatus);
     }
 
     /* ------------------------------------------------------------- *

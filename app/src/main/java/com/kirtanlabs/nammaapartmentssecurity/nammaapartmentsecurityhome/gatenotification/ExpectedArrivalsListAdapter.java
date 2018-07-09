@@ -218,7 +218,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             int position = getLayoutPosition();
             if (isExpectedArrivalReachedOnTime(position)) {
                 changeExpectedArrivalStatusInFirebase(position);
-                baseActivity.showNotificationSendDialog(mCtx.getString(R.string.expected_arrival_notification_title), mCtx.getString(R.string.expected_arrival_notification_message), status);
+                baseActivity.showNotificationSentDialog(mCtx.getString(R.string.expected_arrival_notification_title), mCtx.getString(R.string.expected_arrival_notification_message), status);
             } else {
                 baseActivity.openValidationStatusDialog(Constants.FAILED, mCtx.getString(R.string.expected_time_of_arrival_is_finished));
             }

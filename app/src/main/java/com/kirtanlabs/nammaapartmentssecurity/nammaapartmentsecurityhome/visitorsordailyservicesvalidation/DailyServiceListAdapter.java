@@ -101,7 +101,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     @Override
     public void onClick(View v) {
         changeDailyServiceStatus();
-        baseActivity.showNotificationSendDialog(mCtx.getString(R.string.daily_service_notification_title), mCtx.getString(R.string.daily_service_notification_message), dailyServiceStatus);
+        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.daily_service_notification_title), mCtx.getString(R.string.daily_service_notification_message), dailyServiceStatus);
     }
 
     /* ------------------------------------------------------------- *
