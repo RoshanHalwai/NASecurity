@@ -44,6 +44,10 @@
     <string name="daily_service_has_left_society">Daily Service has already Left the Society</string>
     <string name="visitor_left">Visitor Left</string>
     <string name="daily_service_left">Daily Service Left</string>
+    <string name="visitor_notification_title">Visitor Notification</string>
+    <string name="visitor_notification_message">Visitor arrival notification has been sent to user.</string>
+    <string name="daily_service_notification_title">Daily Service Notification</string>
+    <string name="daily_service_notification_message">Daily service arrival notification has been sent to user.</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_cab_arrivals">Expected Cab Arrivals</string>
@@ -73,6 +77,8 @@
     <string name="cab_rto_number_hint">01</string>
     <string name="cab_serial_number_one_hint">AB</string>
     <string name="cab_serial_number_two_hint">1234</string>
+    <string name="expected_arrival_notification_title">Expected Arrival Notification</string>
+    <string name="expected_arrival_notification_message">Expected arrival notification has been sent to user.</string>
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>

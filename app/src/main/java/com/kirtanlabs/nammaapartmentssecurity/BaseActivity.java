@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -225,7 +226,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     *  This method is invoked to get Current date
+     * This method is invoked to get Current date
      */
     public String getCurrentDate() {
         calendar = Calendar.getInstance();
@@ -247,5 +248,40 @@ public abstract class BaseActivity extends AppCompatActivity {
         int currentMinute = calendar.get(Calendar.MINUTE);
 
         return String.format(Locale.getDefault(), "%02d:%02d", currentHour, currentMinute);
+    }
+
+    /**
+     * Shows message box message and action to be performed when user
+     * clicks on Ok button.
+     *
+     * @param title   - Title of the message
+     * @param message - Body of the message
+     * @param status  - of visitor, daily service and arrival
+     */
+    public void showNotificationSendDialog(String title, String message, String status) {
+        android.app.AlertDialog.Builder alertNotifyUserDialog = new android.app.AlertDialog.Builder(this);
+        alertNotifyUserDialog.setCancelable(false);
+        alertNotifyUserDialog.setTitle(title);
+        alertNotifyUserDialog.setMessage(message);
+        alertNotifyUserDialog.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+            dialog.cancel();
+            openNammaApartmentHomeScreen();
+        });
+        new Dialog(this);
+        if (status.equals(getString(R.string.not_entered))) {
+            alertNotifyUserDialog.show();
+        } else {
+            openNammaApartmentHomeScreen();
+        }
+    }
+
+    /**
+     * This method is invoked to open nammaApartmentHome Screen.
+     */
+    private void openNammaApartmentHomeScreen() {
+        Intent intent = new Intent(BaseActivity.this, NammaApartmentSecurityHome.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
