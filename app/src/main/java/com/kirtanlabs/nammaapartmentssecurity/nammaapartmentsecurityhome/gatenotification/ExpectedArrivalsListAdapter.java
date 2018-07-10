@@ -1,7 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
-import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.Calendar;
@@ -220,10 +218,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             int position = getLayoutPosition();
             if (isExpectedArrivalReachedOnTime(position)) {
                 changeExpectedArrivalStatusInFirebase(position);
-                Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                mCtx.startActivity(intent);
+                baseActivity.showNotificationSentDialog(mCtx.getString(R.string.expected_arrival_notification_title), mCtx.getString(R.string.expected_arrival_notification_message), status);
             } else {
                 baseActivity.openValidationStatusDialog(Constants.FAILED, mCtx.getString(R.string.expected_time_of_arrival_is_finished));
             }

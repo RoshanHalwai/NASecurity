@@ -1,7 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
-import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
@@ -103,10 +101,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     @Override
     public void onClick(View v) {
         changeDailyServiceStatus();
-        Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        mCtx.startActivity(intent);
+        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.daily_service_notification_title), mCtx.getString(R.string.daily_service_notification_message), dailyServiceStatus);
     }
 
     /* ------------------------------------------------------------- *
