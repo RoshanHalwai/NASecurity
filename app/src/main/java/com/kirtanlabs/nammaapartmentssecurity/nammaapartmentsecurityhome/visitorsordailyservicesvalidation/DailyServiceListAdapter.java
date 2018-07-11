@@ -32,6 +32,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private NammaApartmentDailyService nammaApartmentDailyService;
     private String dailyServiceStatus;
+    private String notificationMessage;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -86,6 +87,9 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
         //If status of Daily Service is Entered than we have to change button text.
         if (dailyServiceStatus.equals(mCtx.getString(R.string.entered))) {
             holder.buttonAllowVisitorAndDailyService.setText(mCtx.getString(R.string.daily_service_left));
+            notificationMessage = mCtx.getString(R.string.daily_service_left_notification_message);
+        } else {
+            notificationMessage = mCtx.getString(R.string.daily_service_arrival_notification_message);
         }
     }
 
@@ -101,7 +105,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     @Override
     public void onClick(View v) {
         changeDailyServiceStatus();
-        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.daily_service_notification_title), mCtx.getString(R.string.daily_service_notification_message), dailyServiceStatus);
+        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.daily_service_notification_title), notificationMessage);
     }
 
     /* ------------------------------------------------------------- *
