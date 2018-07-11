@@ -256,32 +256,20 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @param title   - Title of the message
      * @param message - Body of the message
-     * @param status  - of visitor, daily service and arrival
      */
-    public void showNotificationSentDialog(String title, String message, String status) {
+    public void showNotificationSentDialog(String title, String message) {
         android.app.AlertDialog.Builder alertNotifyUserDialog = new android.app.AlertDialog.Builder(this);
         alertNotifyUserDialog.setCancelable(false);
         alertNotifyUserDialog.setTitle(title);
         alertNotifyUserDialog.setMessage(message);
         alertNotifyUserDialog.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
             dialog.cancel();
-            openNammaApartmentHomeScreen();
+            Intent intent = new Intent(BaseActivity.this, NammaApartmentSecurityHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         });
         new Dialog(this);
-        if (status.equals(getString(R.string.not_entered))) {
-            alertNotifyUserDialog.show();
-        } else {
-            openNammaApartmentHomeScreen();
-        }
-    }
-
-    /**
-     * This method is invoked to open nammaApartmentHome Screen.
-     */
-    private void openNammaApartmentHomeScreen() {
-        Intent intent = new Intent(BaseActivity.this, NammaApartmentSecurityHome.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        alertNotifyUserDialog.show();
     }
 }

@@ -38,6 +38,7 @@ public class VisitorListAdapter extends
     private String inviterUid;
     private String apartmentName;
     private String visitorStatus;
+    private String notificationMessage;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -83,6 +84,9 @@ public class VisitorListAdapter extends
         //If status of Visitor is Entered than we have to change button text.
         if (visitorStatus.equals(mCtx.getString(R.string.entered))) {
             holder.buttonAllowVisitorAndDailyService.setText(mCtx.getString(R.string.visitor_left));
+            notificationMessage = mCtx.getString(R.string.visitor_left_notification_message);
+        } else {
+            notificationMessage = mCtx.getString(R.string.visitor_arrival_notification_message);
         }
     }
 
@@ -98,7 +102,7 @@ public class VisitorListAdapter extends
     @Override
     public void onClick(View v) {
         changeVisitorStatusInFirebase();
-        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.visitor_notification_title), mCtx.getString(R.string.visitor_notification_message), visitorStatus);
+        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.visitor_notification_title), notificationMessage);
     }
 
     /* ------------------------------------------------------------- *

@@ -35,6 +35,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
     private DatabaseReference expectedArrivalsReference;
     private int validationStatusOf;
     private String status;
+    private String notificationMessage;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -99,6 +100,9 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         status = nammaApartmentExpectedArrivals.getStatus();
         if (status.equals(mCtx.getString(R.string.entered))) {
             holder.buttonAllowExpectedArrivals.setText(expectedArrivalLeft);
+            notificationMessage = mCtx.getString(R.string.expected_arrival_left_notification_message);
+        } else {
+            notificationMessage = mCtx.getString(R.string.expected_arrival_notification_message);
         }
     }
 
@@ -218,7 +222,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             int position = getLayoutPosition();
             if (isExpectedArrivalReachedOnTime(position)) {
                 changeExpectedArrivalStatusInFirebase(position);
-                baseActivity.showNotificationSentDialog(mCtx.getString(R.string.expected_arrival_notification_title), mCtx.getString(R.string.expected_arrival_notification_message), status);
+                baseActivity.showNotificationSentDialog(mCtx.getString(R.string.expected_arrival_notification_title), notificationMessage);
             } else {
                 baseActivity.openValidationStatusDialog(Constants.FAILED, mCtx.getString(R.string.expected_time_of_arrival_is_finished));
             }
