@@ -66,8 +66,8 @@
     <string name="daily_service_notification_title">Daily Service Notification</string>
     <string name="daily_service_arrival_notification_message">Daily service arrival notification has been sent to user.</string>
     <string name="daily_service_left_notification_message">Daily service left notification has been sent to user.</string>
-    <string name="visitor_record_not_found">Visitor Record Not found.</string>
-    <string name="daily_service_record_not_found">Daily Service Record Not found.</string>
+    <string name="visitor_record_not_found">Visitor record not found.</string>
+    <string name="daily_service_record_not_found">Daily Service record not found.</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_cab_arrivals">Expected Cab Arrivals</string>
