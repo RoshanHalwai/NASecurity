@@ -12,6 +12,22 @@
     <string name="mobile_number_validation">Please Enter Mobile Number</string>
     <string name="accept_alphabets">Accept Alphabets Only.</string>
     <string name="upload_image">Please Upload Image</string>
+    <string name="e_intercom_type">E-Intercom Type:</string>
+    <string-array name="e_intercom_type_list">
+        <item>@string/select_any_one</item>
+        <item>@string/guest</item>
+        <item>@string/daily_service</item>
+        <item>@string/family_member</item>
+        <item>@string/cab</item>
+        <item>@string/package_vendor</item>
+    </string-array>
+
+    <string name="select_any_one">Select any one</string>
+    <string name="guest">Guest</string>
+    <string name="daily_service">Daily Service</string>
+    <string name="family_member">Family Member</string>
+    <string name="cab">Cab</string>
+    <string name="package_vendor">Package</string>
 
     <!--NammaApartment security Home Activity-->
     <string name="e_intercom">E - Intercom</string>
@@ -45,9 +61,11 @@
     <string name="visitor_left">Visitor Left</string>
     <string name="daily_service_left">Daily Service Left</string>
     <string name="visitor_notification_title">Visitor Notification</string>
-    <string name="visitor_notification_message">Visitor arrival notification has been sent to user.</string>
+    <string name="visitor_arrival_notification_message">Visitor arrival notification has been sent to user.</string>
+    <string name="visitor_left_notification_message">Visitor left notification has been sent to user.</string>
     <string name="daily_service_notification_title">Daily Service Notification</string>
-    <string name="daily_service_notification_message">Daily service arrival notification has been sent to user.</string>
+    <string name="daily_service_arrival_notification_message">Daily service arrival notification has been sent to user.</string>
+    <string name="daily_service_left_notification_message">Daily service left notification has been sent to user.</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_cab_arrivals">Expected Cab Arrivals</string>
@@ -79,6 +97,7 @@
     <string name="cab_serial_number_two_hint">1234</string>
     <string name="expected_arrival_notification_title">Expected Arrival Notification</string>
     <string name="expected_arrival_notification_message">Expected arrival notification has been sent to user.</string>
+    <string name="expected_arrival_left_notification_message">Expected arrival left notification has been sent to user.</string>
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>
