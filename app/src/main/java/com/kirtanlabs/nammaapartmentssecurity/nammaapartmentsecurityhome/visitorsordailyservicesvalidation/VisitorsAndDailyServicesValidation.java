@@ -167,7 +167,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                 String visitorStatus = (String) dataSnapshot.getValue();
                 assert visitorStatus != null;
                 if (visitorStatus.equals(getString(R.string.left))) {
-                    openValidationStatusDialog(Constants.FAILED, getString(R.string.visitor_has_left_society));
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.visitor_record_not_found));
                 } else {
                     openVisitorOrDailyServiceList();
                 }
@@ -204,8 +204,7 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                         String dailyServiceStatus = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
                         assert dailyServiceStatus != null;
                         if (dailyServiceStatus.equals(getString(R.string.left))) {
-                            String alreadyLeft = getString(R.string.daily_service_has_left_society);
-                            openValidationStatusDialog(Constants.FAILED, alreadyLeft);
+                            openValidationStatusDialog(Constants.FAILED, getString(R.string.daily_service_record_not_found));
                         } else {
                             openVisitorOrDailyServiceList();
                         }
