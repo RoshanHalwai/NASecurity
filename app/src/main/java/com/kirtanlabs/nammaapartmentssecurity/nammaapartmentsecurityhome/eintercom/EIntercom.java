@@ -198,7 +198,7 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
                                 .child(userFlatDetails.getApartmentName())
                                 .child(userFlatDetails.getFlatNumber());
 
-                        String notificationMessage = editFullName.getText() + "wants to enter your Society";
+                        String notificationMessage = editFullName.getText() + " wants to enter your Society";
                         /*We create a unique ID for every push notifications*/
                         DatabaseReference notificationsReference = userDataReference
                                 .child("notifications")
