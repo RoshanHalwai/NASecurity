@@ -198,13 +198,14 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
                                 .child(userFlatDetails.getApartmentName())
                                 .child(userFlatDetails.getFlatNumber());
 
+                        String notificationMessage = editFullName.getText() + " wants to enter your Society";
                         /*We create a unique ID for every push notifications*/
                         DatabaseReference notificationsReference = userDataReference
                                 .child("notifications")
                                 .child(userUID)
                                 .push();
                         notificationsReference.child("uid").setValue(notificationsReference.getKey());
-                        notificationsReference.child("message").setValue("Roshan wants to enter your Society");
+                        notificationsReference.child("message").setValue(notificationMessage);
 
                         /*Call AwaitingResponse activity, by this time user should have received the Notification
                          * Since, cloud functions would have been triggered*/
