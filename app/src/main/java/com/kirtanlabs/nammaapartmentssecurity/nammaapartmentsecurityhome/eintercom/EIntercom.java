@@ -9,17 +9,29 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
+import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.ImagePicker;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.UserFlatDetails;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,13 +41,16 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAMERA_PERMISSION_REQUEST_CODE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
 import static com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.ImagePicker.bitmapToByteArray;
 
-public class EIntercom extends BaseActivity {
+public class EIntercom extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
     /*----------------------------------------------
      *Private Members
@@ -66,6 +81,8 @@ public class EIntercom extends BaseActivity {
         /*Getting Id's for all the views*/
         circleImageView = findViewById(R.id.familyMemberProfilePic);
         TextView textFullName = findViewById(R.id.textFullName);
+        TextView textEIntercomType = findViewById(R.id.textEIntercomType);
+        Spinner spinnerEIntercomType = findViewById(R.id.spinnerEIntercomType);
         TextView textMobileNumber = findViewById(R.id.textMobileNumber);
         editFullName = findViewById(R.id.editFullName);
         editMobileNumber = findViewById(R.id.editMobileNumber);
@@ -74,6 +91,7 @@ public class EIntercom extends BaseActivity {
 
         /*Setting font for all the views*/
         textFullName.setTypeface(setLatoBoldFont(this));
+        textEIntercomType.setTypeface(setLatoBoldFont(this));
         textErrorProfilePic.setTypeface(setLatoRegularFont(this));
         textMobileNumber.setTypeface(setLatoBoldFont(this));
         editFullName.setTypeface(setLatoRegularFont(this));
@@ -83,17 +101,53 @@ public class EIntercom extends BaseActivity {
         /*Setting event for all button clicks */
         circleImageView.setOnClickListener(v -> launchCamera());
         buttonSendNotification.setOnClickListener(v -> {
-            if (profilePhotoByteArray == null) {
+            sendNotification();
+
+            /*TODO: Uncomment these since for sending notifications currently we are not using profile photo*/
+            /*if (profilePhotoByteArray == null) {
                 textErrorProfilePic.setVisibility(View.VISIBLE);
                 textErrorProfilePic.requestFocus();
             } else {
                 textErrorProfilePic.setVisibility(View.INVISIBLE);
-            }
+            }*/
             // This method gets invoked to check all the validation fields such as editTexts
-            validateFields();
+            /*validateFields();*/
         });
 
+        /*Setting font for all the items in the list*/
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, getResources().getStringArray(R.array.e_intercom_type_list)) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textEIntercomType = view.findViewById(android.R.id.text1);
+                textEIntercomType.setTypeface(Constants.setLatoRegularFont(EIntercom.this));
+                return view;
+            }
+        };
+        //Setting adapter to Spinner view
+        spinnerEIntercomType.setAdapter(adapter);
+
     }
+
+    /* ------------------------------------------------------------- *
+     * Overriding OnItemSelectedListener Methods
+     * ------------------------------------------------------------- */
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //TODO: To Write business logic here when user select any item from the list.
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    /*-------------------------------------------------------------------------------
+     *Overriding onActivityResult
+     *-----------------------------------------------------------------------------*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -115,6 +169,65 @@ public class EIntercom extends BaseActivity {
                 startActivityForResult(cameraIntent, CAMERA_PERMISSION_REQUEST_CODE);
             }
         }
+    }
+
+    /**
+     * Method is invoked when Guard sends the notification to the user
+     */
+    private void sendNotification() {
+        /*We first get the user UID from the mobile number*/
+        String mobileNumber = editMobileNumber.getText().toString().trim();
+        DatabaseReference userMobileReference = ALL_USERS_REFERENCE.child(mobileNumber);
+        userMobileReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userUID = dataSnapshot.getValue().toString();
+
+                //We get user information by their UID
+                DatabaseReference userPrivateReference = PRIVATE_USERS_REFERENCE.child(userUID);
+                userPrivateReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
+
+                        /*We store Notification under FlatDetails->Notification->userUID*/
+                        UserFlatDetails userFlatDetails = nammaApartmentUser.getFlatDetails();
+                        DatabaseReference userDataReference = PRIVATE_USER_DATA_REFERENCE
+                                .child(userFlatDetails.getCity())
+                                .child(userFlatDetails.getSocietyName())
+                                .child(userFlatDetails.getApartmentName())
+                                .child(userFlatDetails.getFlatNumber());
+
+                        String notificationMessage = editFullName.getText() + " wants to enter your Society";
+                        /*We create a unique ID for every push notifications*/
+                        DatabaseReference notificationsReference = userDataReference
+                                .child("notifications")
+                                .child(userUID)
+                                .push();
+                        notificationsReference.child("uid").setValue(notificationsReference.getKey());
+                        notificationsReference.child("message").setValue(notificationMessage);
+
+                        /*Call AwaitingResponse activity, by this time user should have received the Notification
+                         * Since, cloud functions would have been triggered*/
+                        Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
+                        awaitingResponseIntent.putExtra("SentUserUID", userUID);
+                        awaitingResponseIntent.putExtra("NotificationUID", notificationsReference.getKey());
+                        startActivity(awaitingResponseIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     /**

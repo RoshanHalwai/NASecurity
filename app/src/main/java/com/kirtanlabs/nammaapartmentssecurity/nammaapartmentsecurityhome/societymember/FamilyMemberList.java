@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
@@ -25,6 +24,7 @@ public class FamilyMemberList extends BaseActivity {
 
     private List<NammaApartmentUser> nammaApartmentFamilyMembersList;
     private FamilyMemberListAdapter adapter;
+    private int index = 0;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -73,11 +73,10 @@ public class FamilyMemberList extends BaseActivity {
     private void retrieveFamilyMembersDataFromFireBase() {
         String apartment = getIntent().getStringExtra(Constants.FIREBASE_CHILD_APARTMENTS);
         String flat = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
-        DatabaseReference familyMemberUid = FirebaseDatabase.getInstance().getReference()
-                .child(Constants.FIREBASE_CHILD_USERDATA)
-                .child(Constants.FIREBASE_CHILD_PRIVATE)
+        // Retrieving UID of all Family Members of a particular flat from (userData->private->apartment->flat->flatMembers) in firebase.
+        DatabaseReference familyMemberUid = Constants.PRIVATE_USER_DATA_REFERENCE
                 .child(Constants.FIREBASE_CHILD_BANGALORE)
-                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
+                .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
                 .child(apartment)
                 .child(flat)
                 .child(Constants.FIREBASE_CHILD_FLATMEMBERS);
@@ -88,20 +87,21 @@ public class FamilyMemberList extends BaseActivity {
                 for (DataSnapshot familyMemberDataSnapshot : dataSnapshot.getChildren()) {
                     String familyMemberUid = familyMemberDataSnapshot.getKey();
 
-                    Constants.PRIVATE_USERS_REFERENCE
-                            .child(familyMemberUid)
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    NammaApartmentUser nammaApartmentFamilyMember = dataSnapshot.getValue(NammaApartmentUser.class);
-                                    nammaApartmentFamilyMembersList.add(0, nammaApartmentFamilyMember);
-                                    adapter.notifyDataSetChanged();
-                                }
+                    /*Adding family member all details to the list for displaying in Family Member List*/
+                    DatabaseReference familyMemberReference = Constants.PRIVATE_USERS_REFERENCE
+                            .child(familyMemberUid);
+                    familyMemberReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            NammaApartmentUser nammaApartmentFamilyMember = dataSnapshot.getValue(NammaApartmentUser.class);
+                            nammaApartmentFamilyMembersList.add(index++, nammaApartmentFamilyMember);
+                            adapter.notifyDataSetChanged();
+                        }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
                 }
             }
 

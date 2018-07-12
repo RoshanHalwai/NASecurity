@@ -1,7 +1,9 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 
 public class ThingsGiven extends BaseActivity implements View.OnClickListener {
 
@@ -22,10 +25,12 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
      * ------------------------------------------------------------- */
 
     private EditText editMobileNumber;
+    private DatabaseReference visitorReference;
     private int givenThingsTo;
     private String mobileNumber;
     private String serviceType;
     private String visitorOrDailyServiceUid;
+    private AlertDialog dialog;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -72,13 +77,25 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        mobileNumber = editMobileNumber.getText().toString().trim();
-        if (isValidPhone(mobileNumber)) {
-            /*We need Progress Indicator in this screen*/
-            showProgressIndicator();
-            checkIsThingsGivenInFireBase();
-        } else {
-            editMobileNumber.setError(getText(R.string.number_10digit_validation));
+        switch (v.getId()) {
+            case R.id.buttonVerifyThings:
+                mobileNumber = editMobileNumber.getText().toString().trim();
+                if (isValidPhone(mobileNumber)) {
+                    /*We need Progress Indicator in this screen*/
+                    showProgressIndicator();
+                    checkIsThingsGivenInFireBase();
+                } else {
+                    editMobileNumber.setError(getText(R.string.number_10digit_validation));
+                }
+                break;
+            case R.id.buttonOk:
+                dialog.cancel();
+                visitorReference.child(Constants.FIREBASE_CHILD_STATUS).setValue(getString(R.string.left));
+                Intent intent = new Intent(ThingsGiven.this, NammaApartmentSecurityHome.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -104,23 +121,23 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
                     if (dataSnapshot.exists()) {
                         visitorOrDailyServiceUid = (String) dataSnapshot.getValue();
                         assert visitorOrDailyServiceUid != null;
-                        DatabaseReference visitorReference = Constants.PREAPPROVED_VISITORS_REFERENCE
-                                .child(visitorOrDailyServiceUid)
-                                .child(Constants.FIREBASE_CHILD_HANDED_THINGS);
-                        visitorReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    residentHasGivenThings();
-                                } else {
-                                    openValidationStatusDialog(Constants.FAILED, getString(R.string.resident_has_not_given_things_to_visitor));
-                                }
-                            }
+                        visitorReference = Constants.PREAPPROVED_VISITORS_REFERENCE
+                                .child(visitorOrDailyServiceUid);
+                        visitorReference.child(Constants.FIREBASE_CHILD_HANDED_THINGS)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            givenThingsToVisitorDialog();
+                                        } else {
+                                            openValidationStatusDialog(Constants.FAILED, getString(R.string.resident_has_not_given_things_to_visitor));
+                                        }
+                                    }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            }
-                        });
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
                     } else {
                         openValidationStatusDialog(Constants.FAILED, getString(R.string.invalid_visitor));
                     }
@@ -148,25 +165,7 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 serviceType = (String) dataSnapshot.getValue();
-
-                                assert serviceType != null;
-                                dailyServiceReference.child(serviceType)
-                                        .child(visitorOrDailyServiceUid)
-                                        .child(Constants.FIREBASE_CHILD_HANDED_THINGS)
-                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot.exists()) {
-                                                    residentHasGivenThings();
-                                                } else {
-                                                    openValidationStatusDialog(Constants.FAILED, getString(R.string.resident_has_not_given_things_to_daily_service));
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                            }
-                                        });
+                                givenThingsToDailyService();
                             }
 
                             @Override
@@ -186,16 +185,38 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * This method is invoked when visitor has given something to visitor or daily service.
+     * This method is invoked when Resident has given something to daily service.
      */
-    private void residentHasGivenThings() {
-        Intent intent = new Intent(ThingsGiven.this, ResidentHasGivenThings.class);
-        intent.putExtra(Constants.SCREEN_TITLE, givenThingsTo);
-        intent.putExtra(Constants.GUEST_UID, visitorOrDailyServiceUid);
-        if (givenThingsTo == R.string.things_given_to_daily_services) {
-            intent.putExtra(Constants.SERVICE_TYPE, serviceType);
-        }
+    private void givenThingsToDailyService() {
+        Intent intent = new Intent(ThingsGiven.this, GivenThingsToDailyService.class);
+        intent.putExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID, visitorOrDailyServiceUid);
+        intent.putExtra(Constants.SERVICE_TYPE, serviceType);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * This method is invoked when Resident has given something to visitor.
+     */
+    private void givenThingsToVisitorDialog() {
+        View givenThingsToVisitorDialog = View.inflate(this, R.layout.layout_things_given_dialog, null);
+
+        /*Getting Id's for all the views*/
+        TextView textHasGivenThings = givenThingsToVisitorDialog.findViewById(R.id.textHasGivenThings);
+        Button buttonOk = givenThingsToVisitorDialog.findViewById(R.id.buttonOk);
+
+        /*Setting font for all the views*/
+        textHasGivenThings.setTypeface(Constants.setLatoBoldFont(this));
+        buttonOk.setTypeface(Constants.setLatoLightFont(this));
+
+        /*Setting onClickListener for view*/
+        buttonOk.setOnClickListener(this);
+
+        AlertDialog.Builder alertGivenThingsDialog = new AlertDialog.Builder(this);
+        alertGivenThingsDialog.setView(givenThingsToVisitorDialog);
+        dialog = alertGivenThingsDialog.create();
+
+        new Dialog(this);
+        dialog.show();
     }
 }

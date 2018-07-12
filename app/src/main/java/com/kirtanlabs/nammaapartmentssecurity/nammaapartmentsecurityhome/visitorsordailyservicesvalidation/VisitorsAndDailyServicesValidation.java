@@ -106,9 +106,12 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
      * @param mobileNumber - that need to be checked whether it is present in Firebase or not
      */
     private void checkMobileNumberInFirebase(final String mobileNumber) {
+        DatabaseReference mobileNumberReference;
         if (validationType == R.string.visitors_validation) {
-            Constants.PREAPPROVED_VISITORS_MOBILE_REFERENCE
-                    .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            mobileNumberReference = Constants.PREAPPROVED_VISITORS_MOBILE_REFERENCE
+                    .child(mobileNumber);
+            // Checking if Mobile number provided by Visitor is present in firebase or not.
+            mobileNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     hideProgressIndicator();
@@ -126,8 +129,10 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                 }
             });
         } else {
-            Constants.PRIVATE_DAILYSERVICES_REFERENCE
-                    .child(mobileNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            mobileNumberReference = Constants.PRIVATE_DAILYSERVICES_REFERENCE
+                    .child(mobileNumber);
+            // Checking if Mobile number provided by Daily Service is present in firebase or not.
+            mobileNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     hideProgressIndicator();
@@ -135,9 +140,8 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
                         dailyServiceUid = (String) dataSnapshot.getValue();
                         checkDailyServiceStatusInFirebase();
                     } else {
-                        String invalidDailyServices = getString(R.string.invalid_visitor);
-                        invalidDailyServices = invalidDailyServices.replace("Visitor", "Daily Services");
-                        openValidationStatusDialog(Constants.FAILED, invalidDailyServices);
+                        String invalidDailyService = getString(R.string.invalid_daily_service);
+                        openValidationStatusDialog(Constants.FAILED, invalidDailyService);
                     }
                 }
 
@@ -156,13 +160,14 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
         DatabaseReference visitorStatusReference = Constants.PREAPPROVED_VISITORS_REFERENCE
                 .child(visitorUid)
                 .child(Constants.FIREBASE_CHILD_STATUS);
+        // Retrieving Status of Visitor from (Visitors->PreApprovedVisitors->VisitorUID) in firebase.
         visitorStatusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String visitorStatus = (String) dataSnapshot.getValue();
                 assert visitorStatus != null;
                 if (visitorStatus.equals(getString(R.string.left))) {
-                    openValidationStatusDialog(Constants.FAILED, getString(R.string.visitor_has_left_society));
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.visitor_record_not_found));
                 } else {
                     openVisitorOrDailyServiceList();
                 }
@@ -179,24 +184,27 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
      * This method is invoked to check status of daily service whether it is Not Entered, Entered or Left in Firebase.
      */
     private void checkDailyServiceStatusInFirebase() {
-        Constants.PUBLIC_DAILYSERVICES_REFERENCE
+        DatabaseReference serviceTypeReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                 .child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE)
-                .child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                .child(dailyServiceUid);
+        // Getting Service Type of that daily Service from firebase.
+        serviceTypeReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 serviceType = (String) dataSnapshot.getValue();
                 assert serviceType != null;
-                Constants.PUBLIC_DAILYSERVICES_REFERENCE
+
+                DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                         .child(serviceType)
-                        .child(dailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        .child(dailyServiceUid);
+                // Retrieving Status of Daily Services from (dailyServices->all->public->serviceType->dailyServiceUID) in firebase.
+                dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String dailyServiceStatus = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
                         assert dailyServiceStatus != null;
                         if (dailyServiceStatus.equals(getString(R.string.left))) {
-                            String alreadyLeft = getString(R.string.visitor_has_left_society);
-                            alreadyLeft = alreadyLeft.replace("Visitor", "Daily Service");
-                            openValidationStatusDialog(Constants.FAILED, alreadyLeft);
+                            openValidationStatusDialog(Constants.FAILED, getString(R.string.daily_service_record_not_found));
                         } else {
                             openVisitorOrDailyServiceList();
                         }

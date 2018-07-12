@@ -12,6 +12,22 @@
     <string name="mobile_number_validation">Please Enter Mobile Number</string>
     <string name="accept_alphabets">Accept Alphabets Only.</string>
     <string name="upload_image">Please Upload Image</string>
+    <string name="e_intercom_type">E-Intercom Type:</string>
+    <string-array name="e_intercom_type_list">
+        <item>@string/select_any_one</item>
+        <item>@string/guest</item>
+        <item>@string/daily_service</item>
+        <item>@string/family_member</item>
+        <item>@string/cab</item>
+        <item>@string/package_vendor</item>
+    </string-array>
+
+    <string name="select_any_one">Select any one</string>
+    <string name="guest">Guest</string>
+    <string name="daily_service">Daily Service</string>
+    <string name="family_member">Family Member</string>
+    <string name="cab">Cab</string>
+    <string name="package_vendor">Package</string>
 
     <!--NammaApartment security Home Activity-->
     <string name="e_intercom">E - Intercom</string>
@@ -41,6 +57,17 @@
     <string name="visitor_has_left_society">Visitor has already Left the Society</string>
     <string name="service_type">Type:</string>
     <string name="allow_daily_service">Allow Daily Service</string>
+    <string name="daily_service_has_left_society">Daily Service has already Left the Society</string>
+    <string name="visitor_left">Visitor Left</string>
+    <string name="daily_service_left">Daily Service Left</string>
+    <string name="visitor_notification_title">Visitor Notification</string>
+    <string name="visitor_arrival_notification_message">Visitor arrival notification has been sent to user.</string>
+    <string name="visitor_left_notification_message">Visitor left notification has been sent to user.</string>
+    <string name="daily_service_notification_title">Daily Service Notification</string>
+    <string name="daily_service_arrival_notification_message">Daily service arrival notification has been sent to user.</string>
+    <string name="daily_service_left_notification_message">Daily service left notification has been sent to user.</string>
+    <string name="visitor_record_not_found">Visitor record not found.</string>
+    <string name="daily_service_record_not_found">Daily Service record not found.</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_cab_arrivals">Expected Cab Arrivals</string>
@@ -63,6 +90,16 @@
     <string name="cab_left_society">Cab has already Left the Society</string>
     <string name="ordered_by">Ordered By:</string>
     <string name="allow_package_vendor">Allow Package Vendor</string>
+    <string name="dont_allow_package_vendor">Don\'t allow Package Vendor to enter into Society</string>
+    <string name="package_vendor_left_society">Cab has already Left the Society</string>
+    <string name="expected_time_of_arrival_is_finished">Expected time of this arrival is finished</string>
+    <string name="cab_state_code_hint">KA</string>
+    <string name="cab_rto_number_hint">01</string>
+    <string name="cab_serial_number_one_hint">AB</string>
+    <string name="cab_serial_number_two_hint">1234</string>
+    <string name="expected_arrival_notification_title">Expected Arrival Notification</string>
+    <string name="expected_arrival_notification_message">Expected arrival notification has been sent to user.</string>
+    <string name="expected_arrival_left_notification_message">Expected arrival left notification has been sent to user.</string>
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>
@@ -79,6 +116,7 @@
     <string name="apartment">Apartment</string>
     <string name="flat">Flat</string>
     <string name="no_member_in_this_flat">There are no members in this flat</string>
+    <string name="not_ordered_any_packages">Members of this flat has not ordered any package</string>
 
     <!--Visitors And Daily Services Validation Status Activity-->
     <string name="visitor_validation_status">Visitor Validation Status</string>
@@ -87,11 +125,20 @@
     <!--Expected Arrivals Validation Status Activity-->
     <string name="cab_driver_validation_status">Cab Driver Validation Status</string>
     <string name="package_vendor_validation_status">Package Vendor Validation Status</string>
+    <string name="vendor">Vendor:</string>
+    <string name="package_vendor_left">Package vendor Left</string>
+    <string name="cab_driver_left">cab Driver Left</string>
 
     <!--Emergency Activity-->
     <string name="emergency_type">Emergency Type:</string>
     <string name="resident_name">Resident Name:</string>
     <string name="image_emergency">Image to indicate type of Emergency</string>
+    <string name="no_emergency_message">Sorry, there\'s no Emergency alarm raised by any of the resident at the moment.</string>
+    <string name="no_emergency_desc">Image to indicate currently no emergency alarm raised by any of the resident.</string>
+    <string name="date">Date</string>
+    <string name="Filter">Filter</string>
+    <string name="search_flat_number_hint">Search Flat</string>
+    <string name="search_flat_number">Search Flat number</string>
 
     <!--Validation-->
     <string name="number_10digit_validation">Please Enter a valid 10 digit mobile number</string>

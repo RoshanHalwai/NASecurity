@@ -2,9 +2,9 @@ package com.kirtanlabs.nammaapartmentssecurity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -105,7 +106,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /* ------------------------------------------------------------- *
-     * Protected Methods
+     * Public Methods
      * ------------------------------------------------------------- */
 
     /**
@@ -114,7 +115,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param dialogType  - consists of type dialog box in to display
      * @param warningText - consists of message to display in dialog box
      */
-    protected void openValidationStatusDialog(final String dialogType, final String warningText) {
+    public void openValidationStatusDialog(final String dialogType, final String warningText) {
         validationDialog = View.inflate(this, R.layout.layout_validation_type_dialog, null);
 
         /*Getting Id's for all the views*/
@@ -160,10 +161,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         createValidationStatusDialog();
     }
 
-    /* ------------------------------------------------------------- *
-     * Public Methods
-     * ------------------------------------------------------------- */
-
     public void showProgressIndicator() {
         progressIndicator = findViewById(R.id.animationWaitingToLoadData);
         progressIndicator.setVisibility(View.VISIBLE);
@@ -171,6 +168,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void hideProgressIndicator() {
+        if (progressIndicator == null)
+            progressIndicator = findViewById(R.id.animationWaitingToLoadData);
         progressIndicator.smoothToHide();
     }
 
@@ -227,7 +226,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     *  This method is invoked to get Current date
+     * This method is invoked to get Current date
      */
     public String getCurrentDate() {
         calendar = Calendar.getInstance();
@@ -249,5 +248,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         int currentMinute = calendar.get(Calendar.MINUTE);
 
         return String.format(Locale.getDefault(), "%02d:%02d", currentHour, currentMinute);
+    }
+
+    /**
+     * Shows message box message and action to be performed when user
+     * clicks on Ok button.
+     *
+     * @param title   - Title of the message
+     * @param message - Body of the message
+     */
+    public void showNotificationSentDialog(String title, String message) {
+        android.app.AlertDialog.Builder alertNotifyUserDialog = new android.app.AlertDialog.Builder(this);
+        alertNotifyUserDialog.setCancelable(false);
+        alertNotifyUserDialog.setTitle(title);
+        alertNotifyUserDialog.setMessage(message);
+        alertNotifyUserDialog.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+            dialog.cancel();
+            Intent intent = new Intent(BaseActivity.this, NammaApartmentSecurityHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+        new Dialog(this);
+        alertNotifyUserDialog.show();
     }
 }

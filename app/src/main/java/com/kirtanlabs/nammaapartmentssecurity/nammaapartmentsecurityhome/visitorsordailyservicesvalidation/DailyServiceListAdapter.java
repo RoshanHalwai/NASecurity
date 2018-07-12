@@ -1,7 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
-import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
@@ -33,7 +31,8 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     private final BaseActivity baseActivity;
     private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private NammaApartmentDailyService nammaApartmentDailyService;
-    private DatabaseReference dailyServiceReference;
+    private String dailyServiceStatus;
+    private String notificationMessage;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -73,14 +72,25 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
         //Creating an instance of NammaApartmentDailyService class and retrieving the values from Firebase
         nammaApartmentDailyService = nammaApartmentDailyServiceList.get(position);
+        dailyServiceStatus = nammaApartmentDailyService.getStatus();
         holder.textVisitorOrDailyServiceNameValue.setText(nammaApartmentDailyService.getFullName());
-        holder.textServiceTypeValue.setText(nammaApartmentDailyService.getDailyServiceType());
+        String dailyServiceType = nammaApartmentDailyService.getDailyServiceType();
+        dailyServiceType = dailyServiceType.substring(0, 1).toUpperCase() + dailyServiceType.substring(1);
+        holder.textServiceTypeValue.setText(dailyServiceType);
         Glide.with(mCtx.getApplicationContext()).load(nammaApartmentDailyService.getProfilePhoto()).into(holder.VisitorAndDailyServiceProfilePic);
 
         //To retrieve of owner details from firebase
         getOwnerDetailsFromFireBase(holder.textFlatToVisitValue, holder.textApartmentValue);
 
         holder.buttonAllowVisitorAndDailyService.setOnClickListener(this);
+
+        //If status of Daily Service is Entered than we have to change button text.
+        if (dailyServiceStatus.equals(mCtx.getString(R.string.entered))) {
+            holder.buttonAllowVisitorAndDailyService.setText(mCtx.getString(R.string.daily_service_left));
+            notificationMessage = mCtx.getString(R.string.daily_service_left_notification_message);
+        } else {
+            notificationMessage = mCtx.getString(R.string.daily_service_arrival_notification_message);
+        }
     }
 
     @Override
@@ -95,10 +105,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     @Override
     public void onClick(View v) {
         changeDailyServiceStatus();
-        Intent intent = new Intent(mCtx, NammaApartmentSecurityHome.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        mCtx.startActivity(intent);
+        baseActivity.showNotificationSentDialog(mCtx.getString(R.string.daily_service_notification_title), notificationMessage);
     }
 
     /* ------------------------------------------------------------- *
@@ -128,44 +135,32 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
      * @param textApartmentValue   - to display owner apartment name in this view
      */
     private void getOwnerDetailsFromFireBase(final TextView textFlatToVisitValue, final TextView textApartmentValue) {
-        Constants.PRIVATE_USERS_REFERENCE
-                .child(nammaApartmentDailyService.getOwnerUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
-                        assert nammaApartmentUser != null;
-                        textFlatToVisitValue.setText(nammaApartmentUser.getFlatDetails().getFlatNumber());
-                        textApartmentValue.setText(nammaApartmentUser.getFlatDetails().getApartmentName());
-                    }
+        DatabaseReference ownersReference = Constants.PRIVATE_USERS_REFERENCE
+                .child(nammaApartmentDailyService.getOwnerUid());
+        // Retrieving details of owner from (Users->Private->ownersUID) in firebase.
+        ownersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
+                assert nammaApartmentUser != null;
+                textFlatToVisitValue.setText(nammaApartmentUser.getFlatDetails().getFlatNumber());
+                textApartmentValue.setText(nammaApartmentUser.getFlatDetails().getApartmentName());
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
      * This method is invoked to change status of daily service
      */
     private void changeDailyServiceStatus() {
-        dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
+        DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                 .child(nammaApartmentDailyService.getDailyServiceType())
                 .child(nammaApartmentDailyService.getUid());
-        String dailyServiceStatus = nammaApartmentDailyService.getStatus();
         baseActivity.changeStatus(dailyServiceStatus, dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS));
-
-        if (dailyServiceStatus.equals(mCtx.getString(R.string.not_entered))) {
-            updateDailyServiceTimeInFirebase();
-        }
-    }
-
-    /**
-     * This method is invoked to change timeOfVisit of daily service in Firebase.
-     */
-    private void updateDailyServiceTimeInFirebase() {
-        String currentTime = baseActivity.getCurrentTime();
-        dailyServiceReference.child(Constants.FIREBASE_CHILD_TIMEOFVISIT).setValue(currentTime);
     }
 
     /* ------------------------------------------------------------- *
@@ -197,7 +192,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
         DailyServiceHolder(View itemView) {
             super(itemView);
-
+            /*Getting Id's for all the views*/
             VisitorAndDailyServiceProfilePic = itemView.findViewById(R.id.VisitorAndDailyServiceProfilePic);
             textServiceType = itemView.findViewById(R.id.textServiceType);
             textApartment = itemView.findViewById(R.id.textApartment);

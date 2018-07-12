@@ -8,7 +8,7 @@ public class NammaApartmentExpectedArrivals {
 
     private String dateAndTimeOfArrival;
     private String reference;
-    private String uid;
+    private String inviterUID;
     private String validFor;
     private String status;
     private String expectedArrivalUid;
@@ -20,11 +20,11 @@ public class NammaApartmentExpectedArrivals {
     public NammaApartmentExpectedArrivals() {
     }
 
-    public NammaApartmentExpectedArrivals(String dateAndTimeOfArrival, String reference, String status, String uid, String validFor) {
+    public NammaApartmentExpectedArrivals(String dateAndTimeOfArrival, String reference, String status, String inviterUID, String validFor) {
         this.dateAndTimeOfArrival = dateAndTimeOfArrival;
         this.reference = reference;
         this.status = status;
-        this.uid = uid;
+        this.inviterUID = inviterUID;
         this.validFor = validFor;
     }
 
@@ -40,8 +40,8 @@ public class NammaApartmentExpectedArrivals {
         return reference;
     }
 
-    public String getUid() {
-        return uid;
+    public String getInviterUID() {
+        return inviterUID;
     }
 
     public String getValidFor() {
