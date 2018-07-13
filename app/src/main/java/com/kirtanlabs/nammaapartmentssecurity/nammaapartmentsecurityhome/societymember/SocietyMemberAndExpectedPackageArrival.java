@@ -185,20 +185,12 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
         switch (viewId) {
             case R.id.editApartment:
                 hideViews();
-                updateItemsInList(Constants.CITIES_REFERENCE
-                        .child(Constants.FIREBASE_CHILD_BANGALORE)
-                        .child(Constants.FIREBASE_CHILD_SOCIETIES)
-                        .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
-                        .child(Constants.FIREBASE_CHILD_APARTMENTS));
+                updateItemsInList(Constants.APARTMENTS_REFERENCE
+                        .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY));
                 break;
             case R.id.editFlat:
-                updateItemsInList(Constants.CITIES_REFERENCE
-                        .child(Constants.FIREBASE_CHILD_BANGALORE)
-                        .child(Constants.FIREBASE_CHILD_SOCIETIES)
-                        .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
-                        .child(Constants.FIREBASE_CHILD_APARTMENTS)
-                        .child(editApartment.getText().toString())
-                        .child(Constants.FIREBASE_CHILD_FLATS));
+                updateItemsInList(Constants.FLATS_REFERENCE
+                        .child(editApartment.getText().toString()));
                 break;
         }
     }
@@ -214,8 +206,8 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot values : dataSnapshot.getChildren()) {
                     itemsInList.add(values.getKey());
-                    adapter.notifyDataSetChanged();
                 }
+                adapter.notifyDataSetChanged();
                 Collections.sort(itemsInList);
                 dialog.show();
             }
@@ -264,8 +256,8 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
 
         //Database Reference for Retrieving all details of that particular flat from (userData->private->apartment->flat) in firebase.
         DatabaseReference flatReference = Constants.PRIVATE_USER_DATA_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BANGALORE)
-                .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
+                .child(Constants.FIREBASE_CHILD_BANGALURU)
+                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
                 .child(apartment)
                 .child(flat);
         if (screenTitle == R.string.society_member) {

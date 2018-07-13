@@ -34,7 +34,7 @@ public class Constants {
 
     public static final String FIREBASE_CHILD_ALL = "all";
     public static final String FIREBASE_CHILD_APARTMENTS = "apartments";
-    public static final String FIREBASE_CHILD_BANGALORE = "Bangalore";
+    public static final String FIREBASE_CHILD_BANGALURU = "Bengaluru";
     public static final String FIREBASE_CHILD_BRIGADEGATEWAY = "Brigade Gateway";
     public static final String FIREBASE_CHILD_SALARPURIA_CAMBRIDGE = "Salarpuria Cambridge";
     public static final String FIREBASE_CHILD_CABS = "cabs";
@@ -76,9 +76,7 @@ public class Constants {
     private static final DatabaseReference DAILYSERVICES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_DAILYSERVICES);
     private static final DatabaseReference CABS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CABS);
     private static final DatabaseReference DELIVERIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_DELIVERIES);
-    private static final DatabaseReference FLATS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_FLATS);
     private static final DatabaseReference EMERGENCIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_EMERGENCIES);
-    public static final DatabaseReference PRIVATE_FLATS_REFERENCE = FLATS_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     private static final DatabaseReference PRIVATE_CLIENTS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CLIENTS).child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference CITIES_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_CITIES);
     public static final DatabaseReference PRIVATE_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
@@ -98,6 +96,8 @@ public class Constants {
     public static final DatabaseReference PUBLIC_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
     private static final DatabaseReference PRIVATE_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_EMERGENCIES_REFERENCE = PRIVATE_EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_ALL);
+    public static final DatabaseReference FLATS_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_FLATS);
+    public static final DatabaseReference APARTMENTS_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_APARTMENTS);
 
     /* ------------------------------------------------------------- *
      * Validation Keys
