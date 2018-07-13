@@ -6,8 +6,9 @@ admin.initializeApp(functions.config().firebase);
 
 //Notifications triggered when Guests either Enters or Leaves the User Society
 
-exports.guestNotifications = functions.database.ref('/visitors/preApprovedVisitors/{visitorUID}')
+exports.guestNotifications = functions.database.ref('/visitors/preApprovedVisitors/{visitorUID}/status')
 .onWrite((change, context) => {
+	
 		const visitorUID = context.params.visitorUID;
 		
 		return admin.database().ref("/visitors").child("preApprovedVisitors").child(visitorUID).once('value').then(queryResult => {
@@ -16,7 +17,7 @@ exports.guestNotifications = functions.database.ref('/visitors/preApprovedVisito
 			const inviterUID = queryResult.val().inviterUID;
 			
 			if(status.localeCompare("Not Entered") === 0)
-				return;
+				return null;
 			
 			return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 				const tokenId = queryResult.val().tokenId;
@@ -39,15 +40,16 @@ exports.guestNotifications = functions.database.ref('/visitors/preApprovedVisito
 
 //Notifications triggered when Daily Services either Enters or Leaves the User Society
 
-exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}')
+exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
 	.onWrite((change, context) => {
+				
 		const dailyServiceType = context.params.dailyServiceType;
 		const dailyServiceUID = context.params.dailyServiceUID;
 		
 		return admin.database().ref("/dailyServices").child("all").child("public").child(dailyServiceType).child(dailyServiceUID).once('value').then(queryResult => {
 			const status = queryResult.val().status;
 			if(status.localeCompare("Not Entered") === 0)
-				return;
+				return null;
 			
 			return queryResult.forEach((userSnap) => {
 				var userUID = userSnap.key;
@@ -76,7 +78,7 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 	
 //Notifications triggered when Cabs either Enters or Leaves the User Society
 
-exports.cabNotifications = functions.database.ref('/cabs/public/{cabUID}')
+exports.cabNotifications = functions.database.ref('/cabs/public/{cabUID}/status')
 .onWrite((change, context) => {
 	const cabUID = context.params.cabUID;
 	
@@ -85,7 +87,7 @@ exports.cabNotifications = functions.database.ref('/cabs/public/{cabUID}')
 		const inviterUID = queryResult.val().inviterUID;
 		
 		if(status.localeCompare("Not Entered") === 0)
-			return;
+			return null;
 		
 		return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
@@ -108,7 +110,7 @@ exports.cabNotifications = functions.database.ref('/cabs/public/{cabUID}')
 
 //Notifications triggered when Packages either Enters or Leaves the User Society
 
-exports.packageNotifications = functions.database.ref('/deliveries/public/{deliveryUID}')
+exports.packageNotifications = functions.database.ref('/deliveries/public/{deliveryUID}/status')
 .onWrite((change, context) => {
 	const deliveryUID = context.params.deliveryUID;
 	
@@ -118,7 +120,7 @@ exports.packageNotifications = functions.database.ref('/deliveries/public/{deliv
 		const inviterUID = queryResult.val().inviterUID;
 		
 		if(status.localeCompare("Not Entered") === 0)
-			return;
+			return null;
 		
 		return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
