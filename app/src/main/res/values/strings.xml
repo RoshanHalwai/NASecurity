@@ -13,6 +13,8 @@
     <string name="accept_alphabets">Accept Alphabets Only.</string>
     <string name="upload_image">Please Upload Image</string>
     <string name="e_intercom_type">E-Intercom Type:</string>
+    <string name="notifying_user">Notifying User</string>
+    <string name="please_wait_a_moment">Please wait a moment</string>
     <string-array name="e_intercom_type_list">
         <item>@string/select_any_one</item>
         <item>@string/guest</item>
