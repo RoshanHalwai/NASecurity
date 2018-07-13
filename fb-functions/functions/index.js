@@ -2,6 +2,18 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+
+/*Mapping Daily Service Firebase Keys with Notification value*/
+const dailyServiceLookup = {};
+dailyServiceLookup['cooks'] = "Cook";
+dailyServiceLookup['maids'] = "Maid";
+dailyServiceLookup['childDayCares'] = "Child Day Care";
+dailyServiceLookup['dailyNewsPapers'] = "Daily Newspaper";
+dailyServiceLookup['carBikeCleaners'] = "Car/Bike Cleaner";
+dailyServiceLookup['drivers'] = "Driver";
+dailyServiceLookup['laundries'] = "Laundry";
+dailyServiceLookup['milkmen'] = "Milkman";
+		
 admin.initializeApp(functions.config().firebase);
 
 //Notifications triggered when Guests either Enters or Leaves the User Society
@@ -58,7 +70,7 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 				const tokenId = queryResult.val().tokenId;
 				const payload = {
 					data: {
-						message: "Your " + dailyServiceType + " has " + status + " your society.",
+						message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
 						type: "Daily_Service_Notification"
 					}
 				};

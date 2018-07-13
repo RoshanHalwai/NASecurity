@@ -102,8 +102,8 @@ public class ExpectedArrivalsList extends BaseActivity {
 
             // Retrieving UID of Package Vendor from (userData->private->apartment->flat) in firebase.
             DatabaseReference packageVendorReference = Constants.PRIVATE_USER_DATA_REFERENCE
-                    .child(Constants.FIREBASE_CHILD_BANGALORE)
-                    .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
+                    .child(Constants.FIREBASE_CHILD_BANGALURU)
+                    .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
                     .child(apartment)
                     .child(flat);
             packageVendorReference.child(Constants.FIREBASE_CHILD_FLATMEMBERS).addListenerForSingleValueEvent(new ValueEventListener() {

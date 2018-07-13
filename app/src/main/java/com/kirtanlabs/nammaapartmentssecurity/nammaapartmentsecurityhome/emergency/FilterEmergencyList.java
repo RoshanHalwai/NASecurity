@@ -104,7 +104,7 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
      */
     private void displayApartmentsInList() {
         DatabaseReference apartmentReference = Constants.CITIES_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BANGALORE)
+                .child(Constants.FIREBASE_CHILD_BANGALURU)
                 .child(Constants.FIREBASE_CHILD_SOCIETIES)
                 .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
                 .child(Constants.FIREBASE_CHILD_APARTMENTS);
@@ -132,7 +132,7 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
     private void displayFlatsInList() {
         itemsInList.clear();
         DatabaseReference apartmentReference = Constants.CITIES_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BANGALORE)
+                .child(Constants.FIREBASE_CHILD_BANGALURU)
                 .child(Constants.FIREBASE_CHILD_SOCIETIES)
                 .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
                 .child(Constants.FIREBASE_CHILD_APARTMENTS);
