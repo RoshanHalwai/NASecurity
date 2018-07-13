@@ -181,6 +181,11 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
      * Method is invoked when Guard sends the notification to the user
      */
     private void sendNotification() {
+        //displaying progress dialog while image is uploading
+        showProgressDialog(this,
+                getResources().getString(R.string.notifying_user),
+                getResources().getString(R.string.please_wait_a_moment));
+
         /*We first get the user UID from the mobile number*/
         String mobileNumber = editMobileNumber.getText().toString().trim();
         DatabaseReference userMobileReference = ALL_USERS_REFERENCE.child(mobileNumber);
@@ -225,14 +230,19 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
                             //creating the upload object to store uploaded image details and notification data
                             notificationsReference.child("uid").setValue(notificationsReference.getKey());
                             notificationsReference.child("message").setValue(notificationMessage);
-                            notificationsReference.child("profilePhoto").setValue(Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString());
+                            notificationsReference.child("profilePhoto").setValue(Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString())
+                                    .addOnCompleteListener(task -> {
 
-                            /*Call AwaitingResponse activity, by this time user should have received the Notification
-                             * Since, cloud functions would have been triggered*/
-                            Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
-                            awaitingResponseIntent.putExtra("SentUserUID", userUID);
-                            awaitingResponseIntent.putExtra("NotificationUID", notificationsReference.getKey());
-                            startActivity(awaitingResponseIntent);
+                                        //dismissing the progress dialog
+                                        hideProgressDialog();
+
+                                        /*Call AwaitingResponse activity, by this time user should have received the Notification
+                                         * Since, cloud functions would have been triggered*/
+                                        Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
+                                        awaitingResponseIntent.putExtra("SentUserUID", userUID);
+                                        awaitingResponseIntent.putExtra("NotificationUID", notificationsReference.getKey());
+                                        startActivity(awaitingResponseIntent);
+                                    });
 
                         }).addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show());
                     }

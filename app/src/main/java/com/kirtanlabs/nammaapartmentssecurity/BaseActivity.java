@@ -1,6 +1,8 @@
 package com.kirtanlabs.nammaapartmentssecurity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private Calendar calendar;
     private AVLoadingIndicatorView progressIndicator;
+    private ProgressDialog progressDialog;
 
     /* ------------------------------------------------------------- *
      * Abstract Methods
@@ -171,6 +174,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (progressIndicator == null)
             progressIndicator = findViewById(R.id.animationWaitingToLoadData);
         progressIndicator.smoothToHide();
+    }
+
+    protected void showProgressDialog(Context context, String title, String message) {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+    protected void hideProgressDialog() {
+        progressDialog.dismiss();
     }
 
     /**
