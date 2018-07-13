@@ -21,11 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
@@ -38,11 +42,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAMERA_PERMISSION_REQUEST_CODE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITORS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
@@ -199,20 +205,36 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
                                 .child(userFlatDetails.getFlatNumber());
 
                         String notificationMessage = editFullName.getText() + " wants to enter your Society";
+
                         /*We create a unique ID for every push notifications*/
                         DatabaseReference notificationsReference = userDataReference
                                 .child("notifications")
                                 .child(userUID)
                                 .push();
-                        notificationsReference.child("uid").setValue(notificationsReference.getKey());
-                        notificationsReference.child("message").setValue(notificationMessage);
 
-                        /*Call AwaitingResponse activity, by this time user should have received the Notification
-                         * Since, cloud functions would have been triggered*/
-                        Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
-                        awaitingResponseIntent.putExtra("SentUserUID", userUID);
-                        awaitingResponseIntent.putExtra("NotificationUID", notificationsReference.getKey());
-                        startActivity(awaitingResponseIntent);
+                        //getting the storage reference
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference(FIREBASE_CHILD_VISITORS)
+                                .child(Constants.FIREBASE_CHILD_PRIVATE)
+                                .child(Constants.FIREBASE_CHILD_POSTAPPROVEDVISITORS)
+                                .child(userUID); //TODO: PostApproved Visitor UID might be placed here instead of User UID
+
+                        UploadTask uploadTask = storageReference.putBytes(Objects.requireNonNull(profilePhotoByteArray));
+
+                        //adding the profile photo to storage reference and notification data to real time database under Flat Details
+                        uploadTask.addOnSuccessListener(taskSnapshot -> {
+                            //creating the upload object to store uploaded image details and notification data
+                            notificationsReference.child("uid").setValue(notificationsReference.getKey());
+                            notificationsReference.child("message").setValue(notificationMessage);
+                            notificationsReference.child("profilePhoto").setValue(Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString());
+
+                            /*Call AwaitingResponse activity, by this time user should have received the Notification
+                             * Since, cloud functions would have been triggered*/
+                            Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
+                            awaitingResponseIntent.putExtra("SentUserUID", userUID);
+                            awaitingResponseIntent.putExtra("NotificationUID", notificationsReference.getKey());
+                            startActivity(awaitingResponseIntent);
+
+                        }).addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show());
                     }
 
                     @Override
