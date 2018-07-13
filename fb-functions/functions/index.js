@@ -174,6 +174,7 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 	return admin.database().ref("/userData").child("private").child(city).child(society).child(apartment).child(flat).child("notifications").child(userUID).child(notification_id).once('value').then(queryResult => {
 
 		const uid = queryResult.val().uid;
+		const uri = queryResult.val().profilePhoto;
 		const message = queryResult.val().message;
 		
 		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
@@ -185,6 +186,7 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			const payload = {
 				data: {
 					message: message,
+					profile_photo: uri,
 					notification_uid : uid,
 					user_uid : userUID,
 					type: "E-Intercom"
