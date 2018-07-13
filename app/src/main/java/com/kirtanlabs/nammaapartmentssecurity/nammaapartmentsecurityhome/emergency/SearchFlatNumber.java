@@ -107,11 +107,8 @@ public class SearchFlatNumber extends BaseActivity implements SearchView.OnQuery
      * Updates list with all Flats values.
      */
     private void initializeListWithFlatNumbers() {
-        DatabaseReference apartmentReference = Constants.CITIES_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BANGALORE)
-                .child(Constants.FIREBASE_CHILD_SOCIETIES)
-                .child(Constants.FIREBASE_CHILD_SALARPURIA_CAMBRIDGE)
-                .child(Constants.FIREBASE_CHILD_APARTMENTS);
+        DatabaseReference apartmentReference = Constants.APARTMENTS_REFERENCE
+                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY);
         // Retrieving List of all Apartment names from firebase.
         apartmentReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -120,15 +117,16 @@ public class SearchFlatNumber extends BaseActivity implements SearchView.OnQuery
                     String apartmentName = apartmentDataSnapshot.getKey();
 
                     // Retrieving List flat number of each apartment from firebase.
-                    apartmentReference
-                            .child(apartmentName)
-                            .child(Constants.FIREBASE_CHILD_FLATS).addListenerForSingleValueEvent(new ValueEventListener() {
+                    DatabaseReference flatReference = Constants.FLATS_REFERENCE
+                            .child(apartmentName);
+                    flatReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot flatDataSnapshot : dataSnapshot.getChildren()) {
                                 itemsInList.add(flatDataSnapshot.getKey());
-                                flatNumberAdapter.notifyDataSetChanged();
                             }
+                            flatNumberAdapter.notifyDataSetChanged();
+                            Collections.sort(itemsInList);
                         }
 
                         @Override
@@ -136,7 +134,6 @@ public class SearchFlatNumber extends BaseActivity implements SearchView.OnQuery
                         }
                     });
                 }
-                Collections.sort(itemsInList);
             }
 
             @Override
