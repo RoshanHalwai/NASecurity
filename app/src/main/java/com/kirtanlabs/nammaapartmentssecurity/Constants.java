@@ -54,6 +54,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_PERSONALDETAILS = "personalDetails";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
+    public static final String FIREBASE_CHILD_POSTAPPROVEDVISITORS = "postApprovedVisitors";
     public static final String FIREBASE_CHILD_PRIVATE = "private";
     public static final String FIREBASE_CHILD_PUBLIC = "public";
     public static final String FIREBASE_CHILD_DAILYSERVICETYPE = "dailyServiceType";
