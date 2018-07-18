@@ -57,6 +57,7 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 				
 		const dailyServiceType = context.params.dailyServiceType;
 		const dailyServiceUID = context.params.dailyServiceUID;
+		const promises = [];
 		
 		return admin.database().ref("/dailyServices").child("all").child("public").child(dailyServiceType).child(dailyServiceUID).once('value').then(queryResult => {
 			const status = queryResult.val().status;
@@ -66,23 +67,29 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 			return queryResult.forEach((userSnap) => {
 				var userUID = userSnap.key;
 				
-				return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
-				const tokenId = queryResult.val().tokenId;
-				const payload = {
-					data: {
-						message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
-						type: "Daily_Service_Notification"
-					}
-				};
+				if(userUID.localeCompare("status") !== 0) {
+				
+					const userDataReference = admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+						const tokenId = queryResult.val().tokenId;
+						const payload = {
+							data: {
+								message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+								type: "Daily_Service_Notification"
+							}
+						};
 
-				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
-				});				
+						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+							return console.log("Notification sent");	
+					
+						});
+					});
+					promises.push(userDataReference);
+				}
 			
 			});
-			
-		});
 		
+		}).then(()=> {
+			return Promise.all(promises);
 	});
 	
 });
@@ -174,7 +181,6 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 	return admin.database().ref("/userData").child("private").child(city).child(society).child(apartment).child(flat).child("notifications").child(userUID).child(notification_id).once('value').then(queryResult => {
 
 		const uid = queryResult.val().uid;
-		const uri = queryResult.val().profilePhoto;
 		const message = queryResult.val().message;
 		
 		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
@@ -186,7 +192,6 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			const payload = {
 				data: {
 					message: message,
-					profile_photo: uri,
 					notification_uid : uid,
 					user_uid : userUID,
 					type: "E-Intercom"
