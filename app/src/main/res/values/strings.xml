@@ -102,6 +102,7 @@
     <string name="expected_arrival_notification_title">Expected Arrival Notification</string>
     <string name="expected_arrival_notification_message">Expected arrival notification has been sent to user.</string>
     <string name="expected_arrival_left_notification_message">Expected arrival left notification has been sent to user.</string>
+    <string name="expected_arrival_record_not_found">Expected Arrival record not found.</string>
 
     <!--Things Given Activity-->
     <string name="verify_things">Verify Things</string>
