@@ -46,7 +46,7 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
     private int screenTitle;
     private String apartment;
     private String flat;
-    int count = 0;
+    private int noOfvalidVendors = 0;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -286,13 +286,34 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
             packageVendorReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot packageDataSnapshot) {
+
                     hideProgressIndicator();
+
                     if (packageDataSnapshot.exists()) {
-                        int noOfValidVendor = isAllPackageVendorLeft();
-                        if (noOfValidVendor > 0) {
-                            openFlatMemberOrPackageArrivalList();
-                        } else {
-                            openValidationStatusDialog(Constants.FAILED, getString(R.string.expected_arrival_record_not_found));
+                        for (DataSnapshot ownerUID : packageDataSnapshot.getChildren()) {
+                            DatabaseReference ownerUIDReference = flatReference.child(Constants.FIREBASE_CHILD_DELIVERIES).child(ownerUID.getKey());
+                            ownerUIDReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot deliveryUID : dataSnapshot.getChildren()) {
+                                        if (deliveryUID.getValue(Boolean.class)) {
+                                            noOfvalidVendors++;
+                                        }
+                                    }
+
+                                    if (noOfvalidVendors == 0) {
+                                        openValidationStatusDialog(Constants.FAILED, getString(R.string.not_ordered_any_packages));
+                                    } else {
+                                        openFlatMemberOrPackageArrivalList();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
                         }
                     } else {
                         openValidationStatusDialog(Constants.FAILED, getString(R.string.not_ordered_any_packages));
@@ -304,57 +325,6 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
                 }
             });
         }
-    }
-
-    private int isAllPackageVendorLeft() {
-        // Retrieving UID of Package Vendor from (userData->private->apartment->flat) in firebase.
-        flatReference.child(Constants.FIREBASE_CHILD_FLATMEMBERS).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ownerUidDataSnapshot : dataSnapshot.getChildren()) {
-                    String ownerUid = ownerUidDataSnapshot.getKey();
-
-                    // Getting Package Vendor UID from (UserData->private->apartment->flat->deliveries) in firebase.
-                    flatReference.child(Constants.FIREBASE_CHILD_DELIVERIES)
-                            .child(ownerUid)
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot packageVendorUidDataSnapshot : dataSnapshot.getChildren()) {
-                                        String packageVendorUid = packageVendorUidDataSnapshot.getKey();
-
-                                        // Retrieving all Details of Package Vendor from (deliveries->public->PackageVendorUid) in firebase.
-                                        DatabaseReference packageVendorReference = Constants.PUBLIC_DELIVERIES_REFERENCE
-                                                .child(packageVendorUid);
-                                        packageVendorReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                String status = (String) dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
-                                                assert status != null;
-                                                if (status.equals(getString(R.string.left))) {
-                                                    count++;
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return count;
     }
 
     /**
