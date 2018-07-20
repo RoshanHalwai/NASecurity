@@ -17,6 +17,8 @@ import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
+import java.util.Objects;
+
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_NUMBER_FIELD_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
@@ -210,10 +212,27 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
      * This method is used to open Expected Arrivals List Activity.
      */
     private void openExpectedArrivalList() {
-        Intent intentCabArrival = new Intent(ExpectedCabArrival.this, ExpectedArrivalsList.class);
-        intentCabArrival.putExtra(Constants.SCREEN_TITLE, R.string.expected_cab_arrivals);
-        intentCabArrival.putExtra(Constants.EXPECTED_ARRIVAL_UID, cabDriverUid);
-        startActivity(intentCabArrival);
-        finish();
+        // Retrieving Status of Cab driver from(Cab->Public->CabDriverUid) in Firebase.
+        DatabaseReference expectedArrivalStatusReference = Constants.PUBLIC_CABS_REFERENCE
+                .child(cabDriverUid);
+        expectedArrivalStatusReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String status = Objects.requireNonNull(dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue()).toString();
+                if (!status.equals(getString(R.string.left))) {
+                    Intent intentCabArrival = new Intent(ExpectedCabArrival.this, ExpectedArrivalsList.class);
+                    intentCabArrival.putExtra(Constants.SCREEN_TITLE, R.string.expected_cab_arrivals);
+                    intentCabArrival.putExtra(Constants.EXPECTED_ARRIVAL_UID, cabDriverUid);
+                    startActivity(intentCabArrival);
+                    finish();
+                } else {
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.expected_arrival_record_not_found));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 }
