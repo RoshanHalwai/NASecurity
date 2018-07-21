@@ -46,7 +46,7 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
     private int screenTitle;
     private String apartment;
     private String flat;
-    private int noOfvalidVendors = 0;
+    private boolean vendorsToArrive;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -297,14 +297,15 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     for (DataSnapshot deliveryUID : dataSnapshot.getChildren()) {
                                         if (deliveryUID.getValue(Boolean.class)) {
-                                            noOfvalidVendors++;
+                                            vendorsToArrive = true;
+                                            break;
                                         }
                                     }
 
-                                    if (noOfvalidVendors == 0) {
-                                        openValidationStatusDialog(Constants.FAILED, getString(R.string.not_ordered_any_packages));
-                                    } else {
+                                    if (vendorsToArrive) {
                                         openFlatMemberOrPackageArrivalList();
+                                    } else {
+                                        openValidationStatusDialog(Constants.FAILED, getString(R.string.not_ordered_any_packages));
                                     }
                                 }
 
