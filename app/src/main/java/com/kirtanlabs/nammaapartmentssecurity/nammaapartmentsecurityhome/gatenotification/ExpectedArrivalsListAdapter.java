@@ -36,6 +36,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
     private int validationStatusOf;
     private String status;
     private String notificationMessage;
+    private String flatNumber, apartmentName;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -89,7 +90,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         }
 
         //To retrieve Owners details from firebase
-        getOwnerDetailsFromFireBase(holder.textBookedByValue, holder.textFlatNumberValue, holder.textApartmentValue);
+        getOwnerDetailsFromFireBase(holder.textBookedByValue, holder.textFlatNumberValue, holder.textApartmentValue, validationStatusOf);
 
         String dateAndTime = nammaApartmentExpectedArrivals.getDateAndTimeOfArrival();
         String separatedDateAndTime[] = TextUtils.split(dateAndTime, "\t\t ");
@@ -129,17 +130,20 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         buttonAllowExpectedArrivals.setText(allowTo);
     }
 
-    private void getOwnerDetailsFromFireBase(final TextView textBookedByValue, final TextView textFlatNumberValue, TextView textApartmentValue) {
+    private void getOwnerDetailsFromFireBase(final TextView textBookedByValue, final TextView textFlatNumberValue, final TextView textApartmentValue, final int validationStatusOf) {
         DatabaseReference ownerReference = Constants.PRIVATE_USERS_REFERENCE
                 .child(nammaApartmentExpectedArrivals.getInviterUID());
         ownerReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
-                assert nammaApartmentUser != null;
+                flatNumber = nammaApartmentUser.getFlatDetails().getFlatNumber();
+                apartmentName = nammaApartmentUser.getFlatDetails().getApartmentName();
                 textBookedByValue.setText(nammaApartmentUser.getPersonalDetails().getFullName());
-                textApartmentValue.setText(nammaApartmentUser.getFlatDetails().getApartmentName());
-                textFlatNumberValue.setText(nammaApartmentUser.getFlatDetails().getFlatNumber());
+                if (validationStatusOf == R.string.cab_driver_validation_status) {
+                    textApartmentValue.setText(apartmentName);
+                    textFlatNumberValue.setText(flatNumber);
+                }
             }
 
             @Override
@@ -246,6 +250,16 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             } else {
                 expectedArrivalsReference = Constants.PUBLIC_DELIVERIES_REFERENCE
                         .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
+
+                if (status.equals(mCtx.getString(R.string.entered))) {
+                    DatabaseReference deliveryUID = Constants.PRIVATE_USER_DATA_REFERENCE
+                            .child(Constants.FIREBASE_CHILD_BANGALURU)
+                            .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
+                            .child(apartmentName).child(flatNumber).child(Constants.FIREBASE_CHILD_DELIVERIES).child(nammaApartmentExpectedArrivals.getInviterUID())
+                            .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
+                    deliveryUID.setValue(false);
+                }
+
             }
             baseActivity.changeStatus(status, expectedArrivalsReference.child(Constants.FIREBASE_CHILD_STATUS));
 

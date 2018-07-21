@@ -40,11 +40,13 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
     private EditText editFlat;
     private Dialog dialog;
     private ListView listView;
+    private DatabaseReference flatReference;
     private ArrayAdapter<String> adapter;
     private List<String> itemsInList = new ArrayList<>();
     private int screenTitle;
     private String apartment;
     private String flat;
+    private boolean vendorsToArrive;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -255,7 +257,7 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
         flat = editFlat.getText().toString();
 
         //Database Reference for Retrieving all details of that particular flat from (userData->private->apartment->flat) in firebase.
-        DatabaseReference flatReference = Constants.PRIVATE_USER_DATA_REFERENCE
+        flatReference = Constants.PRIVATE_USER_DATA_REFERENCE
                 .child(Constants.FIREBASE_CHILD_BANGALURU)
                 .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
                 .child(apartment)
@@ -280,13 +282,40 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
             });
         } else {
             // Checking if any member in this particular flat has ordered any package or not.
-            flatReference.child(Constants.FIREBASE_CHILD_DELIVERIES).addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseReference packageVendorReference = flatReference.child(Constants.FIREBASE_CHILD_DELIVERIES);
+            packageVendorReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    hideProgressIndicator();
-                    if (dataSnapshot.exists()) {
-                        openFlatMemberOrPackageArrivalList();
+                public void onDataChange(DataSnapshot packageDataSnapshot) {
 
+                    hideProgressIndicator();
+
+                    if (packageDataSnapshot.exists()) {
+                        for (DataSnapshot ownerUID : packageDataSnapshot.getChildren()) {
+                            DatabaseReference ownerUIDReference = flatReference.child(Constants.FIREBASE_CHILD_DELIVERIES).child(ownerUID.getKey());
+                            ownerUIDReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot deliveryUID : dataSnapshot.getChildren()) {
+                                        if (deliveryUID.getValue(Boolean.class)) {
+                                            vendorsToArrive = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (vendorsToArrive) {
+                                        openFlatMemberOrPackageArrivalList();
+                                    } else {
+                                        openValidationStatusDialog(Constants.FAILED, getString(R.string.not_ordered_any_packages));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
                     } else {
                         openValidationStatusDialog(Constants.FAILED, getString(R.string.not_ordered_any_packages));
                     }
