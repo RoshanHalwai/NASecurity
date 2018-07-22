@@ -22,6 +22,22 @@
         <activity android:name=".nammaapartmentsecurityhome.emergency.FilterEmergencyList" />
         <activity android:name=".MainActivity" />
 
+        <!-- Notification Services -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <service android:name=".nammaapartmentsecurityhome.MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".nammaapartmentsecurityhome.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -79,7 +95,7 @@
             android:name=".nammaapartmentsecurityhome.gatenotification.GivenThingsToDailyService"
             android:screenOrientation="portrait" />
 
-        <!--Society Member Screens-->
+        <!-- Society Member Screens -->
         <activity
             android:name=".nammaapartmentsecurityhome.societymember.SocietyMemberAndExpectedPackageArrival"
             android:screenOrientation="portrait"
@@ -88,12 +104,15 @@
             android:name=".nammaapartmentsecurityhome.societymember.FamilyMemberList"
             android:screenOrientation="portrait" />
 
-        <!--Emergency Screens-->
+        <!-- Emergency Screens -->
         <activity
             android:name=".nammaapartmentsecurityhome.emergency.Emergency"
             android:screenOrientation="portrait" />
         <activity
             android:name=".nammaapartmentsecurityhome.emergency.SearchFlatNumber"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".nammaapartmentsecurityhome.emergency.RecentEmergencyDetails"
             android:screenOrientation="portrait" />
     </application>
 
