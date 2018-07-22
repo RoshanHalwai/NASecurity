@@ -73,7 +73,7 @@ public class RecentEmergencyDetails extends BaseActivity {
         String mobileNumberTitle = getString(R.string.phone_number) + ":";
         textResidentMobileNumber.setText(mobileNumberTitle);
 
-        // To display of details of recent occurred emergency
+        /* To display of details of recent occurred emergency */
         showRecentEmergencyDetails();
 
     }
@@ -102,7 +102,7 @@ public class RecentEmergencyDetails extends BaseActivity {
         textResidentApartmentValue.setText(apartmentName);
         textResidentFlatNumberValue.setText(flatNumber);
 
-        // Here we are setting image in cardView according to the emergency type
+        /* Here we are setting image in cardView according to the emergency type */
         switch (emergencyType) {
             case Constants.EMERGENCY_TYPE_MEDICAL:
                 imageEmergencyType.setImageResource(R.drawable.medical_emergency);
