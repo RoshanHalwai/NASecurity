@@ -18,7 +18,12 @@ public class Constants {
     public static final String VALIDATION_STATUS = "validation_status";
     public static final String EXPECTED_ARRIVAL_UID = "expected_arrival_uid";
     public static final String SERVICE_TYPE = "service_type";
-    public static final String FLAT_NUMBER = "flat_number";
+    public static final String FLAT_NUMBER = "flatNumber";
+    public static final String EMERGENCY_TYPE = "emergencyType";
+    public static final String OWNER_NAME = "ownerName";
+    public static final String MOBILE_NUMBER = "mobileNumber";
+    public static final String APARTMENT_NAME = "apartmentName";
+    public static final String MESSAGE = "message";
 
     /* ------------------------------------------------------------- *
      * Dialog Types
@@ -58,9 +63,11 @@ public class Constants {
     public static final String FIREBASE_CHILD_PRIVATE = "private";
     public static final String FIREBASE_CHILD_PUBLIC = "public";
     public static final String FIREBASE_CHILD_DAILYSERVICETYPE = "dailyServiceType";
+    public static final String FIREBASE_CHILD_SECURITY_GUARD = "securityGuard";
     public static final String FIREBASE_CHILD_SOCIETIES = "societies";
     public static final String FIREBASE_CHILD_STATUS = "status";
     public static final String FIREBASE_CHILD_TIMEOFVISIT = "timeOfVisit";
+    public static final String FIREBASE_CHILD_TOKEN_ID = "tokenId";
     public static final String FIREBASE_CHILD_USERS = "users";
     public static final String FIREBASE_CHILD_USERDATA = "userData";
     public static final String FIREBASE_CHILD_VALIDFOR = "validFor";
@@ -78,6 +85,7 @@ public class Constants {
     private static final DatabaseReference CABS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CABS);
     private static final DatabaseReference DELIVERIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_DELIVERIES);
     private static final DatabaseReference EMERGENCIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_EMERGENCIES);
+    public static final DatabaseReference SECURITY_GUARD_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SECURITY_GUARD);
     private static final DatabaseReference PRIVATE_CLIENTS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CLIENTS).child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference CITIES_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_CITIES);
     public static final DatabaseReference PRIVATE_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
@@ -114,6 +122,7 @@ public class Constants {
      * Request Code
      * ------------------------------------------------------------- */
 
+    public static final int RECENT_EMERGENCY_REQUEST_CODE = 0;
     public static final int SEARCH_FLAT_NUMBER_REQUEST_CODE = 1;
 
     /* ------------------------------------------------------------- *

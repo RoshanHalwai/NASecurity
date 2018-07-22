@@ -159,6 +159,52 @@ exports.packageNotifications = functions.database.ref('/deliveries/public/{deliv
 	});
 	
 });
+
+// Notifications triggered when User Raises an Emergency Alarm to Security Guard
+
+exports.emergencyNotifications = functions.database.ref('/emergencies/public/{emergencyUID}')
+.onCreate((change, context) => {
+	
+	const emergencyUID = context.params.emergencyUID;
+	
+	return admin.database().ref('/emergencies').child('public').child(emergencyUID).once('value').then(queryResult => {
+		const ownerName = queryResult.val().fullName;
+		const emergencyType = queryResult.val().emergencyType;
+		const apartmentName = queryResult.val().apartmentName;
+		const flatNumber = queryResult.val().flatNumber;
+		const mobileNumber = queryResult.val().phoneNumber;
+		
+		console.log("Owners Name: "+ownerName);
+		console.log("Emergency Type: "+emergencyType);
+		console.log("Apartment Name: "+apartmentName);
+		console.log("Flat Number: "+flatNumber);
+		console.log("Mobile Number:"+mobileNumber);
+		
+		return admin.database().ref('/securityGuard').once('value').then(queryResult =>{
+			const tokenId = queryResult.val().tokenId;
+			
+			console.log("Token Id: "+tokenId);
+			
+			const payload = {		
+				data: {
+					message: "A " + emergencyType + " has been raised by " + ownerName + " of " + flatNumber + " in " + apartmentName,
+					emergencyType: emergencyType,
+					ownerName: ownerName,
+					mobileNumber: mobileNumber,
+					apartmentName: apartmentName,
+					flatNumber: flatNumber
+				}
+			};		
+		
+			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+			});
+			
+		});
+		
+	});
+	
+});
 	
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
 
