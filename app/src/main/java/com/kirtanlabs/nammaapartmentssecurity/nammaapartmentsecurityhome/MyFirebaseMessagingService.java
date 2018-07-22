@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -50,6 +51,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setPriority(PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .build();
+
+        /* Setting Push Notification Custom Sound */
+        notification.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.emergency_alarm);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
