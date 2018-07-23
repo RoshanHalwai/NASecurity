@@ -226,7 +226,7 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
                     startActivity(intentCabArrival);
                     finish();
                 } else {
-                    openValidationStatusDialog(Constants.FAILED, getString(R.string.expected_arrival_record_not_found));
+                    openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
                 }
             }
 
