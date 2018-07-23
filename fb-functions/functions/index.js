@@ -159,6 +159,49 @@ exports.packageNotifications = functions.database.ref('/deliveries/public/{deliv
 	});
 	
 });
+
+// Notifications triggered when User sends notification to Society Service
+
+exports.societyServiceNotificatioins = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{notificationUID}')
+.onCreate((change, context) => {
+
+	const notificationUID = context.params.notificationUID;
+
+	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+		const notificationUID = queryResult.val().notificationUID
+		const problem = queryResult.val().problem;
+		const societyServiceType = queryResult.val().societyServiceType;
+		const status = queryResult.val().status;
+		const takenBy = queryResult.val().takenBy;
+		const timeSlot = queryResult.val().timeSlot;
+		const ownerUID = queryResult.val().uid;
+			
+		return admin.database().ref('/societyService').once('value').then(queryResult =>{
+			const tokenId = queryResult.val().tokenId;
+		
+		console.log("Token Id: "+tokenId);
+			
+			const payload = {		
+				data: {
+					message: "User needs your service at his Flat. Please confirm! ",
+					society_service_uid: notificationUID, 
+					users_issue: problem, 
+					society_service_type: societyServiceType, 
+					society_service_status: status, 
+					taken_by: takenBy, 
+					time_slot: timeSlot 
+				}
+			};		
+		
+			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+			});
+		
+		});
+		
+	});
+	
+});
 	
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
 
