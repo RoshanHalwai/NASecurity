@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
@@ -47,6 +49,12 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
 
         /*Setting event for grid view items*/
         gridNammaApartmentsSecurity.setOnItemClickListener(this);
+
+        /*Storing Security Guard token_id in firebase so that User can send notification to guard*/
+        DatabaseReference securityGuardReference = Constants.SECURITY_GUARD_REFERENCE.child(Constants.FIREBASE_CHILD_TOKEN_ID);
+        String token_id = FirebaseInstanceId.getInstance().getToken();
+        securityGuardReference.setValue(token_id);
+
     }
 
     /* ------------------------------------------------------------- *

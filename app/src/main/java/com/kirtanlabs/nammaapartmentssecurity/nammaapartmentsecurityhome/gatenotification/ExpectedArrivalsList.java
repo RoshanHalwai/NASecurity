@@ -14,7 +14,6 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ExpectedArrivalsList extends BaseActivity {
 
@@ -86,16 +85,11 @@ public class ExpectedArrivalsList extends BaseActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     hideProgressIndicator();
-                    String status = Objects.requireNonNull(dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue()).toString();
-                    if (!status.equals(getString(R.string.left))) {
-                        NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = dataSnapshot.getValue(NammaApartmentExpectedArrivals.class);
-                        assert nammaApartmentExpectedArrivals != null;
-                        nammaApartmentExpectedArrivals.setExpectedArrivalUid(cabDriverUid);
-                        nammaApartmentExpectedArrivalsList.add(index++, nammaApartmentExpectedArrivals);
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        openValidationStatusDialog(Constants.FAILED, getString(R.string.expected_arrival_record_not_found));
-                    }
+                    NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = dataSnapshot.getValue(NammaApartmentExpectedArrivals.class);
+                    assert nammaApartmentExpectedArrivals != null;
+                    nammaApartmentExpectedArrivals.setExpectedArrivalUid(cabDriverUid);
+                    nammaApartmentExpectedArrivalsList.add(index++, nammaApartmentExpectedArrivals);
+                    adapter.notifyDataSetChanged();
                 }
 
                 @Override
