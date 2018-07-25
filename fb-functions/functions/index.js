@@ -189,7 +189,8 @@ exports.societyServiceNotificatioins = functions.database.ref('/userData/private
 					society_service_type: societyServiceType, 
 					society_service_status: status, 
 					taken_by: takenBy, 
-					time_slot: timeSlot
+					time_slot: timeSlot,
+					owner_uid: ownerUID
 					}
 				};
 				
