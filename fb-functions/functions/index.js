@@ -162,7 +162,7 @@ exports.packageNotifications = functions.database.ref('/deliveries/public/{deliv
 
 // Notifications triggered when User sends notification to Society Service
 
-exports.societyServiceNotificatioins = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{notificationUID}')
+exports.societyServiceNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{notificationUID}')
 .onCreate((change, context) => {
 
 	const notificationUID = context.params.notificationUID;
