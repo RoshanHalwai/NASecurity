@@ -160,6 +160,61 @@ exports.packageNotifications = functions.database.ref('/deliveries/public/{deliv
 	
 });
 
+// Notifications triggered when User sends notification to Society Service
+
+exports.societyServiceNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{notificationUID}')
+.onCreate((change, context) => {
+
+	const notificationUID = context.params.notificationUID;
+
+	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+		const notificationUID = queryResult.val().notificationUID
+		const problem = queryResult.val().problem;
+		const societyServiceType = queryResult.val().societyServiceType;
+		const status = queryResult.val().status;
+		const takenBy = queryResult.val().takenBy;
+		const timeSlot = queryResult.val().timeSlot;
+		const ownerUID = queryResult.val().uid;
+		
+		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
+			
+			const userFullName = queryResult.val().fullName;
+			
+			return admin.database().ref('/users').child("private").child(ownerUID).child("flatDetails").once('value').then(queryResult => {
+				
+				const apartmentName = queryResult.val().apartmentName;
+				const flatNumber = queryResult.val().flatNumber;
+			
+			return admin.database().ref('/societyService').once('value').then(queryResult =>{
+				const tokenId = queryResult.val().tokenId;
+		
+				console.log("Token Id: "+tokenId);
+			
+				const payload = {		
+					data: {
+						message: userFullName + " needs your service at " + apartmentName + " , " + flatNumber + " .Please confirm! ",
+						society_service_uid: notificationUID, 
+						users_issue: problem, 
+						society_service_type: societyServiceType, 
+						society_service_status: status, 
+						taken_by: takenBy, 
+						time_slot: timeSlot,
+						owner_uid: ownerUID
+						}
+					};
+				
+					return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+						return console.log("Notification sent");
+					});
+			
+				});
+			});
+		});
+	});
+	
+});
+					
+
 // Notifications triggered when User Raises an Emergency Alarm to Security Guard
 
 exports.emergencyNotifications = functions.database.ref('/emergencies/public/{emergencyUID}')
@@ -199,7 +254,7 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 					return console.log("Notification sent");
 			});
-			
+
 		});
 		
 	});
