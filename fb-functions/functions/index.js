@@ -168,11 +168,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 	const notificationUID = context.params.notificationUID;
 
 	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
-		const notificationUID = queryResult.val().notificationUID
-		const problem = queryResult.val().problem;
 		const societyServiceType = queryResult.val().societyServiceType;
-		const status = queryResult.val().status;
-		const timeSlot = queryResult.val().timeSlot;
 		const ownerUID = queryResult.val().userUID;
 
 		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
@@ -195,12 +191,8 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 					data: {
 						message: notificationMessage,
 						notificationUID: notificationUID, 
-						users_issue: problem, 
-						society_service_type: societyServiceType, 
-						society_service_status: status, 
-						time_slot: timeSlot,
-						owner_uid: ownerUID,
-						mobile_number : mobileNumber
+						mobileNumber : mobileNumber,
+						societyServiceType : societyServiceType
 						}
 					};
 				
