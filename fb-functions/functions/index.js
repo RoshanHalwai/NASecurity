@@ -174,7 +174,15 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 		const status = queryResult.val().status;
 		const takenBy = queryResult.val().takenBy;
 		const timeSlot = queryResult.val().timeSlot;
-		const ownerUID = queryResult.val().uid;
+		const ownerUID = queryResult.val().userUID;
+		
+		console.log("notificationUID: "+notificationUID);
+		console.log("problem: "+problem);
+		console.log("societyServiceType: "+societyServiceType);
+		console.log("status: "+status);
+		console.log("takenBy: "+takenBy);
+		console.log("timeSlot: "+timeSlot);
+		console.log("ownerUID: "+ownerUID);
 		
 		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
 			
@@ -185,9 +193,16 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				const apartmentName = queryResult.val().apartmentName;
 				const flatNumber = queryResult.val().flatNumber;
 			
-			return admin.database().ref('/societyService').once('value').then(queryResult =>{
-				const tokenId = queryResult.val().tokenId;
-		
+			return admin.database().ref('/societyServices').child(societyServiceType).child("private").child("available").once('value').then(queryResult =>{
+				
+				var availableServiceMap = queryResult.val();
+				
+				console.log("availableServiceMap: " + availableServiceMap);
+				
+				const mobileNumber = availableServiceMap.key;
+				const tokenId = availableServiceMap[mobileNumber];
+				
+				console.log("Mobile Number: "+mobileNumber);
 				console.log("Token Id: "+tokenId);
 			
 				const payload = {		
