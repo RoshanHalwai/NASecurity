@@ -172,9 +172,15 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 		const problem = queryResult.val().problem;
 		const societyServiceType = queryResult.val().societyServiceType;
 		const status = queryResult.val().status;
-		const takenBy = queryResult.val().takenBy;
 		const timeSlot = queryResult.val().timeSlot;
-		const ownerUID = queryResult.val().uid;
+		const ownerUID = queryResult.val().userUID;
+		
+		console.log("notificationUID: "+notificationUID);
+		console.log("problem: "+problem);
+		console.log("societyServiceType: "+societyServiceType);
+		console.log("status: "+status);		
+		console.log("timeSlot: "+timeSlot);
+		console.log("ownerUID: "+ownerUID);
 		
 		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
 			
@@ -185,21 +191,25 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				const apartmentName = queryResult.val().apartmentName;
 				const flatNumber = queryResult.val().flatNumber;
 			
-			return admin.database().ref('/societyService').once('value').then(queryResult =>{
-				const tokenId = queryResult.val().tokenId;
-		
-				console.log("Token Id: "+tokenId);
-			
+			return admin.database().ref('/societyServices').child(societyServiceType).child("private").child("available").once('value').then(queryResult =>{
+				
+				var availableServiceMap = queryResult.val();
+				
+				console.log("availableServiceMap: " + availableServiceMap);
+				
+				const mobileNumber = "8667226939";
+				const tokenId = "ehjt95HGfos:APA91bGDJPFd0rONKgSwj8C6W6x4Ert4VVtEYR9RrqwJM6xbwKk5WserQsKc_DzgRd-y3t2d0q6Y4Fz1LeXHOb2E_s6p9NJw-9HCP-ewFJcdFyF2fkL6X1murW2yPK1sGV_aPHU92jxGGCzgr6bMA_tYDkFhaOwP-A";
+							
 				const payload = {		
 					data: {
-						message: userFullName + " needs your service at " + apartmentName + " , " + flatNumber + " .Please confirm! ",
-						society_service_uid: notificationUID, 
+						message: userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ",
+						notificationUID: notificationUID, 
 						users_issue: problem, 
 						society_service_type: societyServiceType, 
 						society_service_status: status, 
-						taken_by: takenBy, 
 						time_slot: timeSlot,
-						owner_uid: ownerUID
+						owner_uid: ownerUID,
+						mobile_number : mobileNumber
 						}
 					};
 				
