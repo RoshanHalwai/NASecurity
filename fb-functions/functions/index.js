@@ -174,14 +174,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 		const status = queryResult.val().status;
 		const timeSlot = queryResult.val().timeSlot;
 		const ownerUID = queryResult.val().userUID;
-		
-		console.log("notificationUID: "+notificationUID);
-		console.log("problem: "+problem);
-		console.log("societyServiceType: "+societyServiceType);
-		console.log("status: "+status);		
-		console.log("timeSlot: "+timeSlot);
-		console.log("ownerUID: "+ownerUID);
-		
+
 		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
 			
 			const userFullName = queryResult.val().fullName;
@@ -194,15 +187,13 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 			return admin.database().ref('/societyServices').child(societyServiceType).child("private").child("available").once('value').then(queryResult =>{
 				
 				var availableServiceMap = queryResult.val();
+				const mobileNumber = Object.keys(availableServiceMap)[0];
+				const tokenId = availableServiceMap[mobileNumber];
+				const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
 				
-				console.log("availableServiceMap: " + availableServiceMap);
-				
-				const mobileNumber = "8667226939";
-				const tokenId = "ehjt95HGfos:APA91bGDJPFd0rONKgSwj8C6W6x4Ert4VVtEYR9RrqwJM6xbwKk5WserQsKc_DzgRd-y3t2d0q6Y4Fz1LeXHOb2E_s6p9NJw-9HCP-ewFJcdFyF2fkL6X1murW2yPK1sGV_aPHU92jxGGCzgr6bMA_tYDkFhaOwP-A";
-							
 				const payload = {		
 					data: {
-						message: userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ",
+						message: notificationMessage,
 						notificationUID: notificationUID, 
 						users_issue: problem, 
 						society_service_type: societyServiceType, 
