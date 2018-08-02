@@ -183,7 +183,10 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				var tokenId;
 				
 				const availableReference = admin.database().ref('/societyServices').child(societyServiceType).child("private")
-					.child("available").on('value', function(snapshot){												
+					.child("available").on('value', function(snapshot){		
+
+						console.log("Entered availableReference Block");
+					
 						var minimumServiceCount = -1;
 						snapshot.forEach(function(child){
 							
@@ -193,6 +196,9 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 								const serviceCount = mobileNumberMap["serviceCount"];
 								
 								if (minimumServiceCount === -1 || serviceCount < minimumServiceCount) {
+									
+									console.log("Entered IF Statement");
+									
 									minimumServiceCount = serviceCount;
 									tokenId = mobileNumberMap["tokenId"];
 									mobileNumber = child.key;
@@ -201,21 +207,29 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 							});
 							
 						});
+						
+						console.log("Society Service Type : " + societyServiceType);
+						console.log("Mobile Number : " + mobileNumber);
+						console.log("tokenId : " + tokenId);
+						
+						const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
+						const payload = {		
+								data: {
+									message: notificationMessage,
+									notificationUID: notificationUID, 
+									mobileNumber : mobileNumber,
+									societyServiceType : societyServiceType
+									}
+								};
+							
+						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+							return console.log("Notification sent");
+						
 					});
-				const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
 				
-				const payload = {		
-						data: {
-							message: notificationMessage,
-							notificationUID: notificationUID, 
-							mobileNumber : mobileNumber,
-							societyServiceType : societyServiceType
-							}
-						};
-					
-				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
 				});
+				
+				return console.log("End Of Function");
 			});
 		});
 	});
