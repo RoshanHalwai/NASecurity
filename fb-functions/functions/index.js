@@ -285,7 +285,7 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 	
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
 
-exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/notifications/{userUID}/{notification_id}')
+exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{notification_id}')
 .onCreate((change,context)=>{
 	const city = context.params.city;
 	const society = context.params.society;
@@ -301,7 +301,10 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 	console.log("UserUID:" + userUID);
 	console.log("NotificationUID:" + notification_id);
 	
-	return admin.database().ref("/userData").child("private").child(city).child(society).child(apartment).child(flat).child("notifications").child(userUID).child(notification_id).once('value').then(queryResult => {
+	return admin.database().ref("/userData").child("private")
+	.child(city).child(society).child(apartment).child(flat)
+	.child("gateNotifications").child(userUID).child(notification_id)
+	.once('value').then(queryResult => {
 
 		const uid = queryResult.val().uid;
 		const message = queryResult.val().message;
