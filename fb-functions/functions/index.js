@@ -18,12 +18,12 @@ admin.initializeApp(functions.config().firebase);
 
 //Notifications triggered when Guests either Enters or Leaves the User Society
 
-exports.guestNotifications = functions.database.ref('/visitors/preApprovedVisitors/{visitorUID}/status')
+exports.guestNotifications = functions.database.ref('/visitors/private/{visitorUID}/status')
 .onWrite((change, context) => {
 	
 		const visitorUID = context.params.visitorUID;
 		
-		return admin.database().ref("/visitors").child("preApprovedVisitors").child(visitorUID).once('value').then(queryResult => {
+		return admin.database().ref("/visitors").child("private").child(visitorUID).once('value').then(queryResult => {
 			const guestName = queryResult.val().fullName;
 			const status = queryResult.val().status;
 			const inviterUID = queryResult.val().inviterUID;
