@@ -14,7 +14,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.UserFlatDetails;
 
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.VISITOR_TYPE_MAP;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE_MAP;
 
 public class AwaitingResponse extends BaseActivity {
 
@@ -53,7 +53,7 @@ public class AwaitingResponse extends BaseActivity {
                             .child(userFlatDetails.getFlatNumber())
                             .child("gateNotifications")
                             .child(SentUserUID)
-                            .child(VISITOR_TYPE_MAP.get(visitorType));
+                            .child(EINTERCOM_TYPE_MAP.get(visitorType));
                     userDataReference.child(NotificationUID).child("status").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

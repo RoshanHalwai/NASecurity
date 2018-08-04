@@ -61,6 +61,9 @@
 
         <!-- E-Intercom Screen -->
         <activity
+            android:name=".nammaapartmentsecurityhome.eintercom.EIntercomType"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".nammaapartmentsecurityhome.eintercom.EIntercom"
             android:screenOrientation="portrait" />
         <activity

@@ -25,14 +25,15 @@
     </string-array>
 
     <string name="select_any_one">Select any one</string>
-    <string name="guest">Guest</string>
-    <string name="daily_service">Daily Service</string>
-    <string name="family_member">Family Member</string>
-    <string name="cab">Cab</string>
-    <string name="package_vendor">Package</string>
+    <string name="guest">Guest Approval</string>
+    <string name="daily_service">Daily Service Approval</string>
+    <string name="family_member">Family Member Approval</string>
+    <string name="cab">Cab Approval</string>
+    <string name="package_vendor">Package Approval</string>
 
     <!--NammaApartment security Home Activity-->
     <string name="e_intercom">E - Intercom</string>
+    <string name="e_intercom_category">Categories</string>
     <string name="visitors_validation">Visitors Validation</string>
     <string name="daily_services_validation">Daily Services Validation</string>
     <string name="gate_notification">Gate Notification</string>
