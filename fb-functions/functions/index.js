@@ -97,11 +97,11 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 	
 //Notifications triggered when Cabs either Enters or Leaves the User Society
 
-exports.cabNotifications = functions.database.ref('/cabs/public/{cabUID}/status')
+exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status')
 .onWrite((change, context) => {
 	const cabUID = context.params.cabUID;
 	
-	return admin.database().ref("/cabs").child("public").child(cabUID).once('value').then(queryResult => {
+	return admin.database().ref("/cabs").child("private").child(cabUID).once('value').then(queryResult => {
 		const status = queryResult.val().status;
 		const inviterUID = queryResult.val().inviterUID;
 		
@@ -129,11 +129,11 @@ exports.cabNotifications = functions.database.ref('/cabs/public/{cabUID}/status'
 
 //Notifications triggered when Packages either Enters or Leaves the User Society
 
-exports.packageNotifications = functions.database.ref('/deliveries/public/{deliveryUID}/status')
+exports.packageNotifications = functions.database.ref('/deliveries/private/{deliveryUID}/status')
 .onWrite((change, context) => {
 	const deliveryUID = context.params.deliveryUID;
 	
-	return admin.database().ref("/deliveries").child("public").child(deliveryUID).once('value').then(queryResult => {
+	return admin.database().ref("/deliveries").child("private").child(deliveryUID).once('value').then(queryResult => {
 		const status = queryResult.val().status;
 		const reference = queryResult.val().reference;
 		const inviterUID = queryResult.val().inviterUID;

@@ -9,7 +9,8 @@
 
     <include layout="@layout/activity_base" />
 
-    <ScrollView
+    <android.support.v7.widget.CardView
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -61,27 +62,6 @@
                 tools:ignore="LabelFor" />
 
             <TextView
-                android:id="@+id/textEIntercomType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/e_intercom_type"
-                android:textColor="@color/nmBlack"
-                android:textSize="@dimen/text_view_default_size" />
-
-            <Spinner
-                android:id="@+id/spinnerEIntercomType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/nmBlack"
-                android:textSize="@dimen/edit_text_default_size" />
-
-            <TextView
                 android:id="@+id/textMobileNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,9 +107,7 @@
                 android:id="@+id/buttonSendNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_margin="20dp"
                 android:background="@color/nmBlack"
                 android:text="@string/send_notification"
                 android:textAllCaps="false"
@@ -142,12 +120,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:indicatorColor="@color/nmBlack"
                 app:indicatorName="BallSpinFadeLoaderIndicator" />
 
         </LinearLayout>
 
-    </ScrollView>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

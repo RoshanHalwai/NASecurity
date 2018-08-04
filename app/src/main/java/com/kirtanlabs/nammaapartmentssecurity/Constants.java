@@ -132,11 +132,11 @@ public class Constants {
     private static final DatabaseReference PRIVATE_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_EMERGENCIES_REFERENCE = PRIVATE_EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_ALL);
 
-    public static final Map<String, String> VISITOR_TYPE_MAP = new HashMap<>();
+    public static final Map<String, String> EINTERCOM_TYPE_MAP = new HashMap<>();
     static {
-        VISITOR_TYPE_MAP.put("guest", "guests");
-        VISITOR_TYPE_MAP.put("cab", "cabs");
-        VISITOR_TYPE_MAP.put("package", "packages");
+        EINTERCOM_TYPE_MAP.put("guest", "guests");
+        EINTERCOM_TYPE_MAP.put("cab", "cabs");
+        EINTERCOM_TYPE_MAP.put("package", "packages");
     }
 
     /* ------------------------------------------------------------- *
