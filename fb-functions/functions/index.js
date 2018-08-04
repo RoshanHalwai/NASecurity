@@ -285,29 +285,32 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 	
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
 
-exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{notification_id}')
+exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
 .onCreate((change,context)=>{
 	const city = context.params.city;
 	const society = context.params.society;
 	const apartment = context.params.apartment;
 	const flat = context.params.flat;
 	const userUID = context.params.userUID;
-	const notification_id = context.params.notification_id;
+	const notificationUID = context.params.notificationUID;
+	const visitorType = context.params.visitorType;
 	
 	console.log("City:" + city);
 	console.log("Society:" + society);
 	console.log("Apartment:" + apartment);
 	console.log("Flat:" + flat);
 	console.log("UserUID:" + userUID);
-	console.log("NotificationUID:" + notification_id);
+	console.log("NotificationUID:" + notificationUID);
 	
 	return admin.database().ref("/userData").child("private")
 	.child(city).child(society).child(apartment).child(flat)
-	.child("gateNotifications").child(userUID).child(notification_id)
+	.child("gateNotifications").child(userUID).child(visitorType).child(notificationUID)
 	.once('value').then(queryResult => {
 
-		const uid = queryResult.val().uid;
 		const message = queryResult.val().message;
+		const profilePhoto = queryResult.val().profilePhoto;
+		
+		console.log("NotificationUID:" + profilePhoto);
 		
 		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
 			
@@ -318,8 +321,10 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			const payload = {
 				data: {
 					message: message,
-					notification_uid : uid,
+					notification_uid : notificationUID,
 					user_uid : userUID,
+					visitor_type : visitorType,
+					profile_photo : profilePhoto,
 					type: "E-Intercom"
 				}
             };

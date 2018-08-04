@@ -14,6 +14,8 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.UserFlatDetails;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.VISITOR_TYPE_MAP;
+
 public class AwaitingResponse extends BaseActivity {
 
     TextView textUserResponse;
@@ -36,6 +38,7 @@ public class AwaitingResponse extends BaseActivity {
         if (getIntent() != null && getIntent().getStringExtra("NotificationUID") != null) {
             String NotificationUID = getIntent().getStringExtra("NotificationUID");
             String SentUserUID = getIntent().getStringExtra("SentUserUID");
+            String visitorType = getIntent().getStringExtra("VisitorType");
 
             DatabaseReference databaseReference = Constants.PRIVATE_USERS_REFERENCE.child(SentUserUID);
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -48,8 +51,9 @@ public class AwaitingResponse extends BaseActivity {
                             .child(userFlatDetails.getSocietyName())
                             .child(userFlatDetails.getApartmentName())
                             .child(userFlatDetails.getFlatNumber())
-                            .child("notifications")
-                            .child(SentUserUID);
+                            .child("gateNotifications")
+                            .child(SentUserUID)
+                            .child(VISITOR_TYPE_MAP.get(visitorType));
                     userDataReference.child(NotificationUID).child("status").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
