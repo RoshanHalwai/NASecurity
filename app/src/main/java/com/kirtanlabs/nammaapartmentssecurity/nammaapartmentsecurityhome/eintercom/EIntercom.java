@@ -51,6 +51,7 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAMERA_PERMISSION
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITORS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.VISITOR_TYPE_MAP;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
@@ -69,6 +70,7 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
     private byte[] profilePhotoByteArray;
     private TextView textErrorProfilePic;
     private Intent cameraIntent;
+    private Spinner spinnerEIntercomType;
 
     @Override
     protected int getLayoutResourceId() {
@@ -88,7 +90,7 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
         circleImageView = findViewById(R.id.familyMemberProfilePic);
         TextView textFullName = findViewById(R.id.textFullName);
         TextView textEIntercomType = findViewById(R.id.textEIntercomType);
-        Spinner spinnerEIntercomType = findViewById(R.id.spinnerEIntercomType);
+        spinnerEIntercomType = findViewById(R.id.spinnerEIntercomType);
         TextView textMobileNumber = findViewById(R.id.textMobileNumber);
         editFullName = findViewById(R.id.editFullName);
         editMobileNumber = findViewById(R.id.editMobileNumber);
@@ -209,19 +211,22 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
                                 .child(userFlatDetails.getApartmentName())
                                 .child(userFlatDetails.getFlatNumber());
 
-                        String notificationMessage = editFullName.getText() + " wants to enter your Society";
+                        String notificationMessage = editFullName.getText() + " wants to enter your Society. Please Confirm?";
+                        String visitorType = spinnerEIntercomType.getSelectedItem().toString().toLowerCase();
 
                         /*We create a unique ID for every push notifications*/
                         DatabaseReference notificationsReference = userDataReference
                                 .child("gateNotifications")
                                 .child(userUID)
+                                .child(VISITOR_TYPE_MAP.get(visitorType))
                                 .push();
 
                         //getting the storage reference
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference(FIREBASE_CHILD_VISITORS)
                                 .child(Constants.FIREBASE_CHILD_PRIVATE)
                                 .child(Constants.FIREBASE_CHILD_POSTAPPROVEDVISITORS)
-                                .child(userUID); //TODO: PostApproved Visitor UID might be placed here instead of User UID
+                                .child(VISITOR_TYPE_MAP.get(visitorType))
+                                .child(notificationsReference.getKey());
 
                         UploadTask uploadTask = storageReference.putBytes(Objects.requireNonNull(profilePhotoByteArray));
 
@@ -239,6 +244,7 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
                                         /*Call AwaitingResponse activity, by this time user should have received the Notification
                                          * Since, cloud functions would have been triggered*/
                                         Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
+                                        awaitingResponseIntent.putExtra("VisitorType", visitorType);
                                         awaitingResponseIntent.putExtra("SentUserUID", userUID);
                                         awaitingResponseIntent.putExtra("NotificationUID", notificationsReference.getKey());
                                         startActivity(awaitingResponseIntent);
