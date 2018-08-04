@@ -213,7 +213,7 @@ public class EIntercom extends BaseActivity implements AdapterView.OnItemSelecte
 
                         /*We create a unique ID for every push notifications*/
                         DatabaseReference notificationsReference = userDataReference
-                                .child("notifications")
+                                .child("gateNotifications")
                                 .child(userUID)
                                 .push();
 
