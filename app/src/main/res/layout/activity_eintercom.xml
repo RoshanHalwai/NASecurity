@@ -62,6 +62,83 @@
                 tools:ignore="LabelFor" />
 
             <TextView
+                android:id="@+id/textCabOrVendorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/cab_number"
+                android:textColor="@color/nmBlack"
+                android:textSize="@dimen/text_view_default_size"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/cabNumberLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="4">
+
+                <EditText
+                    android:id="@+id/editCabStateCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.05"
+                    android:gravity="center"
+                    android:hint="@string/cab_state_code_hint"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="2"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="@dimen/text_view_numbers_size"
+                    tools:ignore="LabelFor">
+
+                    <requestFocus />
+                </EditText>
+
+                <EditText
+                    android:id="@+id/editCabRtoNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.05"
+                    android:gravity="center"
+                    android:hint="@string/cab_rto_number_hint"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="@dimen/text_view_numbers_size"
+                    tools:ignore="LabelFor" />
+
+                <EditText
+                    android:id="@+id/editCabSerialNumberOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.05"
+                    android:gravity="center"
+                    android:hint="@string/cab_serial_number_one_hint"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="2"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="@dimen/text_view_numbers_size"
+                    tools:ignore="LabelFor,TextFields" />
+
+                <EditText
+                    android:id="@+id/editCabSerialNumberTwo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.85"
+                    android:gravity="center"
+                    android:hint="@string/cab_serial_number_two_hint"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="@dimen/text_view_numbers_size"
+                    tools:ignore="LabelFor" />
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/textMobileNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

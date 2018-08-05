@@ -15,6 +15,9 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpoj
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.UserFlatDetails;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE_MAP;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_GATE_NOTIFICATIONS;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_USERDATA;
 
 public class AwaitingResponse extends BaseActivity {
 
@@ -38,23 +41,23 @@ public class AwaitingResponse extends BaseActivity {
         if (getIntent() != null && getIntent().getStringExtra("NotificationUID") != null) {
             String NotificationUID = getIntent().getStringExtra("NotificationUID");
             String SentUserUID = getIntent().getStringExtra("SentUserUID");
-            String visitorType = getIntent().getStringExtra("VisitorType");
+            String visitorType = getIntent().getStringExtra("EIntercomType");
 
             DatabaseReference databaseReference = Constants.PRIVATE_USERS_REFERENCE.child(SentUserUID);
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserFlatDetails userFlatDetails = dataSnapshot.getValue(NammaApartmentUser.class).getFlatDetails();
-                    DatabaseReference userDataReference = FirebaseDatabase.getInstance().getReference().child("userData")
+                    DatabaseReference userDataReference = FirebaseDatabase.getInstance().getReference().child(FIREBASE_CHILD_USERDATA)
                             .child(Constants.FIREBASE_CHILD_PRIVATE)
                             .child(userFlatDetails.getCity())
                             .child(userFlatDetails.getSocietyName())
                             .child(userFlatDetails.getApartmentName())
                             .child(userFlatDetails.getFlatNumber())
-                            .child("gateNotifications")
+                            .child(FIREBASE_CHILD_GATE_NOTIFICATIONS)
                             .child(SentUserUID)
                             .child(EINTERCOM_TYPE_MAP.get(visitorType));
-                    userDataReference.child(NotificationUID).child("status").addValueEventListener(new ValueEventListener() {
+                    userDataReference.child(NotificationUID).child(FIREBASE_CHILD_STATUS).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
