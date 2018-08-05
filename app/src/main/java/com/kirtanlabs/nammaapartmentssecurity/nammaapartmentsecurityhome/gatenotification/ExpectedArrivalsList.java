@@ -106,7 +106,7 @@ public class ExpectedArrivalsList extends BaseActivity {
                     .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
                     .child(apartment)
                     .child(flat);
-            packageVendorReference.child(Constants.FIREBASE_CHILD_FLATMEMBERS).addListenerForSingleValueEvent(new ValueEventListener() {
+            packageVendorReference.child(Constants.FIREBASE_CHILD_FLAT_MEMBERS).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot ownerUidDataSnapshot : dataSnapshot.getChildren()) {

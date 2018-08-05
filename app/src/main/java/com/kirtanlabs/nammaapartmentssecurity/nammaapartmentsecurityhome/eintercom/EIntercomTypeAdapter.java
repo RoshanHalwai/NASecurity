@@ -14,6 +14,12 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.List;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.DAILY_SERVICE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAMILY_MEMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
 
 /**
@@ -72,22 +78,27 @@ public class EIntercomTypeAdapter extends RecyclerView.Adapter<EIntercomTypeAdap
             switch (position) {
                 case 0: {
                     intent = new Intent(mCtx, EIntercom.class);
+                    intent.putExtra(EINTERCOM_TYPE, GUEST);
                     break;
                 }
                 case 1: {
                     intent = new Intent(mCtx, EIntercom.class);
+                    intent.putExtra(EINTERCOM_TYPE, DAILY_SERVICE);
                     break;
                 }
                 case 2: {
                     intent = new Intent(mCtx, EIntercom.class);
+                    intent.putExtra(EINTERCOM_TYPE, CAB);
                     break;
                 }
                 case 3: {
                     intent = new Intent(mCtx, EIntercom.class);
+                    intent.putExtra(EINTERCOM_TYPE, PACKAGE);
                     break;
                 }
                 case 4: {
                     intent = new Intent(mCtx, EIntercom.class);
+                    intent.putExtra(EINTERCOM_TYPE, FAMILY_MEMBER);
                     break;
                 }
             }

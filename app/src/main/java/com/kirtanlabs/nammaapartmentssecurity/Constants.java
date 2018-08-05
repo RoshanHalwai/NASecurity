@@ -6,7 +6,7 @@ import android.graphics.Typeface;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Constants {
@@ -27,6 +27,7 @@ public class Constants {
     public static final String MOBILE_NUMBER = "mobileNumber";
     public static final String APARTMENT_NAME = "apartmentName";
     public static final String MESSAGE = "message";
+    public static final String EINTERCOM_TYPE = "eIntercomType";
 
     /* ------------------------------------------------------------- *
      * Dialog Types
@@ -54,14 +55,16 @@ public class Constants {
     public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
     public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
+    public static final String FIREBASE_CHILD_FLAT_MEMBERS = "flatMembers";
+    public static final String FIREBASE_CHILD_GATE_NOTIFICATIONS = "gateNotifications";
     public static final String FIREBASE_CHILD_HANDED_THINGS = "handedThings";
     public static final String FIREBASE_CHILD_OWNERS_UID = "ownersUID";
-    public static final String FIREBASE_CHILD_FLATMEMBERS = "flatMembers";
     public static final String FIREBASE_CHILD_PERSONALDETAILS = "personalDetails";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
     public static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
     public static final String FIREBASE_CHILD_POSTAPPROVEDVISITORS = "postApprovedVisitors";
     public static final String FIREBASE_CHILD_PRIVATE = "private";
+    public static final String FIREBASE_CHILD_PROFILE_PHOTO = "profilePhoto";
     public static final String FIREBASE_CHILD_PUBLIC = "public";
     public static final String FIREBASE_CHILD_DAILYSERVICETYPE = "dailyServiceType";
     public static final String FIREBASE_CHILD_SECURITY_GUARD = "securityGuard";
@@ -132,11 +135,19 @@ public class Constants {
     private static final DatabaseReference PRIVATE_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_EMERGENCIES_REFERENCE = PRIVATE_EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_ALL);
 
-    public static final Map<String, String> EINTERCOM_TYPE_MAP = new HashMap<>();
+    public static final String GUEST = "guest";
+    public static final String DAILY_SERVICE = "dailyService";
+    public static final String CAB = "cab";
+    public static final String PACKAGE = "package";
+    public static final String FAMILY_MEMBER = "familyMember";
+
+    public static final Map<String, String> EINTERCOM_TYPE_MAP = new LinkedHashMap<>();
     static {
-        EINTERCOM_TYPE_MAP.put("guest", "guests");
-        EINTERCOM_TYPE_MAP.put("cab", "cabs");
-        EINTERCOM_TYPE_MAP.put("package", "packages");
+        EINTERCOM_TYPE_MAP.put(GUEST, "guests");
+        EINTERCOM_TYPE_MAP.put(DAILY_SERVICE, "dailyServices");
+        EINTERCOM_TYPE_MAP.put(CAB, "cabs");
+        EINTERCOM_TYPE_MAP.put(PACKAGE, "packages");
+        EINTERCOM_TYPE_MAP.put(FAMILY_MEMBER, "familyMembers");
     }
 
     /* ------------------------------------------------------------- *
@@ -181,6 +192,26 @@ public class Constants {
 
     public static Typeface setLatoRegularFont(Context c) {
         return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-Regular.ttf");
+    }
+
+    public static String getGuestMessage(String guestName) {
+        return "Your Guest " + guestName + " wants to enter your society. Please confirm !";
+    }
+
+    public static String getDailyServiceMessage(String dailyServiceName) {
+        return "Your Daily Service " + dailyServiceName + " wants to enter your society. Please confirm !";
+    }
+
+    public static String getCabMessage(String cabNumber) {
+        return "Your Cab Number " + cabNumber + " wants to enter your society. Please confirm !";
+    }
+
+    public static String getPackageMessage(String packageVendor) {
+        return "Your Package Vendor " + packageVendor + " wants to enter your society. Please confirm !";
+    }
+
+    public static String getFamilyMemberMessage(String familyMemberName) {
+        return "Your Family Member " + familyMemberName + " wants to enter your society. Please confirm !";
     }
 
 }

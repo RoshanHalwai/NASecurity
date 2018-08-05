@@ -79,7 +79,7 @@ public class FamilyMemberList extends BaseActivity {
                 .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
                 .child(apartment)
                 .child(flat)
-                .child(Constants.FIREBASE_CHILD_FLATMEMBERS);
+                .child(Constants.FIREBASE_CHILD_FLAT_MEMBERS);
         familyMemberUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
