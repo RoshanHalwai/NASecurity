@@ -15,10 +15,8 @@ public class Constants {
      * Intent Keys
      * ------------------------------------------------------------- */
 
-    public static final String ARRIVAL_TYPE = "arrival_type";
     public static final String GIVEN_THINGS_TO = "given_things_to";
     public static final String SCREEN_TITLE = "screen_title";
-    public static final String VALIDATION_STATUS = "validation_status";
     public static final String EXPECTED_ARRIVAL_UID = "expected_arrival_uid";
     public static final String SERVICE_TYPE = "service_type";
     public static final String FLAT_NUMBER = "flatNumber";
@@ -41,43 +39,38 @@ public class Constants {
      * Firebase objects
      * ------------------------------------------------------------- */
 
-    public static final String FIREBASE_CHILD_ALL = "all";
+    static final int PHONE_NUMBER_MAX_LENGTH = 10;
     public static final String FIREBASE_CHILD_APARTMENTS = "apartments";
     public static final String FIREBASE_CHILD_BANGALURU = "Bengaluru";
     public static final String FIREBASE_CHILD_BRIGADEGATEWAY = "Brigade Gateway";
     public static final String FIREBASE_CHILD_SALARPURIA_CAMBRIDGE = "Salarpuria Cambridge";
-    public static final String FIREBASE_CHILD_CABS = "cabs";
-    public static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
+    private static final String FIREBASE_CHILD_ALL = "all";
+    private static final String FIREBASE_CHILD_CABS = "cabs";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL = "dateAndTimeOfArrival";
     public static final String FIREBASE_CHILD_DELIVERIES = "deliveries";
-    public static final String FIREBASE_CHILD_EMERGENCIES = "emergencies";
-    public static final String FIREBASE_CHILD_FULL_NAME = "fullName";
+    private static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
     public static final String FIREBASE_CHILD_FLAT_MEMBERS = "flatMembers";
     public static final String FIREBASE_CHILD_GATE_NOTIFICATIONS = "gateNotifications";
     public static final String FIREBASE_CHILD_HANDED_THINGS = "handedThings";
-    public static final String FIREBASE_CHILD_OWNERS_UID = "ownersUID";
-    public static final String FIREBASE_CHILD_PERSONALDETAILS = "personalDetails";
-    public static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
-    public static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
+    private static final String FIREBASE_CHILD_EMERGENCIES = "emergencies";
+    private static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
     public static final String FIREBASE_CHILD_POSTAPPROVEDVISITORS = "postApprovedVisitors";
     public static final String FIREBASE_CHILD_PRIVATE = "private";
     public static final String FIREBASE_CHILD_PROFILE_PHOTO = "profilePhoto";
-    public static final String FIREBASE_CHILD_PUBLIC = "public";
+    private static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
     public static final String FIREBASE_CHILD_DAILYSERVICETYPE = "dailyServiceType";
-    public static final String FIREBASE_CHILD_SECURITY_GUARD = "securityGuard";
+    private static final String FIREBASE_CHILD_PUBLIC = "public";
     public static final String FIREBASE_CHILD_SOCIETIES = "societies";
     public static final String FIREBASE_CHILD_STATUS = "status";
-    public static final String FIREBASE_CHILD_TIMEOFVISIT = "timeOfVisit";
     public static final String FIREBASE_CHILD_TOKEN_ID = "tokenId";
-    public static final String FIREBASE_CHILD_USERS = "users";
+    private static final String FIREBASE_CHILD_SECURITY_GUARD = "securityGuard";
     public static final String FIREBASE_CHILD_USERDATA = "userData";
-    public static final String FIREBASE_CHILD_VALIDFOR = "validFor";
     public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
-    public static final int PHONE_NUMBER_MAX_LENGTH = 10;
+    private static final String FIREBASE_CHILD_USERS = "users";
     public static final int EDIT_TEXT_MIN_LENGTH = 0;
 
     /* ------------------------------------------------------------- *
@@ -105,7 +98,6 @@ public class Constants {
     private static final DatabaseReference CABS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CABS);
     public static final DatabaseReference PUBLIC_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
     private static final DatabaseReference DELIVERIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_DELIVERIES);
-    public static final DatabaseReference PRIVATE_DELIVERY_REFERENCE = DELIVERIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference PUBLIC_DELIVERIES_REFERENCE = DELIVERIES_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
     private static final DatabaseReference EMERGENCIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_EMERGENCIES);
     public static final DatabaseReference PUBLIC_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
@@ -154,28 +146,8 @@ public class Constants {
      * Font Types
      * ------------------------------------------------------------- */
 
-    public static Typeface setLatoBlackFont(Context c) {
-        return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-Black.ttf");
-    }
-
-    public static Typeface setLatoBlackItalicFont(Context c) {
-        return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-BlackItalic.ttf");
-    }
-
     public static Typeface setLatoBoldFont(Context c) {
         return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-Bold.ttf");
-    }
-
-    public static Typeface setLatoBoldItalicFont(Context c) {
-        return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-BoldItalic.ttf");
-    }
-
-    public static Typeface setLatoHairlineFont(Context c) {
-        return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-Hairline.ttf");
-    }
-
-    public static Typeface setLatoHairlineItalicFont(Context c) {
-        return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-HairlineItalic.ttf");
     }
 
     public static Typeface setLatoItalicFont(Context c) {
@@ -186,32 +158,28 @@ public class Constants {
         return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-Light.ttf");
     }
 
-    public static Typeface setLatoLightItalicFont(Context c) {
-        return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-LightItalic.ttf");
-    }
-
     public static Typeface setLatoRegularFont(Context c) {
         return Typeface.createFromAsset(c.getAssets(), "fonts/Lato-Regular.ttf");
     }
 
     public static String getGuestMessage(String guestName) {
-        return "Your Guest " + guestName + " wants to enter your society. Please confirm !";
+        return "Your Guest " + guestName + " wants to enter your society. Please confirm.";
     }
 
     public static String getDailyServiceMessage(String dailyServiceName) {
-        return "Your Daily Service " + dailyServiceName + " wants to enter your society. Please confirm !";
+        return "Your Daily Service " + dailyServiceName + " wants to enter your society. Please confirm.";
     }
 
     public static String getCabMessage(String cabNumber) {
-        return "Your Cab Number " + cabNumber + " wants to enter your society. Please confirm !";
+        return "Your Cab Numbered " + cabNumber + " wants to enter your society. Please confirm.";
     }
 
     public static String getPackageMessage(String packageVendor) {
-        return "Your Package Vendor " + packageVendor + " wants to enter your society. Please confirm !";
+        return "Your Package vendor " + packageVendor + " wants to enter your society. Please confirm.";
     }
 
     public static String getFamilyMemberMessage(String familyMemberName) {
-        return "Your Family Member " + familyMemberName + " wants to enter your society. Please confirm !";
+        return "Your Family Member " + familyMemberName + " wants to enter your society. Please confirm.";
     }
 
 }

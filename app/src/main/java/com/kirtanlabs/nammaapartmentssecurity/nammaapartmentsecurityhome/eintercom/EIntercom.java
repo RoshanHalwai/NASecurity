@@ -137,6 +137,10 @@ public class EIntercom extends BaseActivity {
             textCabOrVendorTitle.setVisibility(View.VISIBLE);
             cabNumberLayout.setVisibility(View.VISIBLE);
         } else {
+            if (eIntercomType.equals(PACKAGE)) {
+                textFullName.setText("Vendor");
+                circleImageView.setVisibility(View.GONE);
+            }
             /*Setting font for all the views*/
             textFullName.setTypeface(setLatoBoldFont(this));
             textErrorProfilePic.setTypeface(setLatoRegularFont(this));
