@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT;
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+public class FirebaseNotificationService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

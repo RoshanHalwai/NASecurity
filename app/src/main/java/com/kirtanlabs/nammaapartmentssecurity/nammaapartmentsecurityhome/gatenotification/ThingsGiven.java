@@ -80,7 +80,7 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.buttonVerifyThings:
                 mobileNumber = editMobileNumber.getText().toString().trim();
-                if (isValidPhone(mobileNumber)) {
+                if (isPhoneNumberValid(mobileNumber)) {
                     /*We need Progress Indicator in this screen*/
                     showProgressIndicator();
                     checkIsThingsGivenInFireBase();

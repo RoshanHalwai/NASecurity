@@ -194,7 +194,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param phone consists of string value of mobile number.
      * @return returns a boolean variable based on the context.
      */
-    public boolean isValidPhone(String phone) {
+    public boolean isPhoneNumberValid(String phone) {
         return !Pattern.matches("[a-zA-Z]+", phone) && phone.length() == PHONE_NUMBER_MAX_LENGTH;
     }
 
@@ -218,10 +218,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param name contains that particular editText of name
      * @throws NumberFormatException because if user tries to enter number in place of name.
      */
-    protected boolean isValidPersonName(String name) throws NumberFormatException {
-        boolean check;
-        check = !Pattern.matches("[a-zA-Z ]+", name);
-        return check;
+    protected boolean isPersonNameValid(String name) throws NumberFormatException {
+        return !Pattern.matches("[a-zA-Z0-9.@() ]+", name);
     }
 
     /**
