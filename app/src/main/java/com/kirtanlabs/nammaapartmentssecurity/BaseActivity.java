@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -78,6 +79,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         backButton.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * This method is invoked to hide keyboard from the screen which is calling this method
+     */
+    protected void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
     /* ------------------------------------------------------------- *
      * Overriding AppCompatActivity Methods
