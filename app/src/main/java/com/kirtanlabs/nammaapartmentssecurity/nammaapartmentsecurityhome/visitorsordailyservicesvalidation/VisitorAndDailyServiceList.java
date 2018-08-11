@@ -9,11 +9,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
-import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DAILYSERVICE_TYPE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DAILYSERVICE_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITOR_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_VISITORS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PUBLIC_DAILYSERVICES_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.SCREEN_TITLE;
 
 public class VisitorAndDailyServiceList extends BaseActivity {
 
@@ -44,7 +51,7 @@ public class VisitorAndDailyServiceList extends BaseActivity {
     protected int getActivityTitle() {
         /*We use a common class for Valid Visitors and Daily Services,
          *we set the title based on the user navigating to the screen*/
-        if (getIntent().getIntExtra(Constants.SCREEN_TITLE, 0) == R.string.visitors_validation) {
+        if (getIntent().getIntExtra(SCREEN_TITLE, 0) == R.string.visitors_validation) {
             validationStatusOf = R.string.visitor_validation_status;
         } else {
             validationStatusOf = R.string.daily_service_validation_status;
@@ -83,9 +90,9 @@ public class VisitorAndDailyServiceList extends BaseActivity {
      */
     private void retrieveDataFromFireBase() {
         if (validationStatusOf == R.string.visitor_validation_status) {
-            String visitorUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_VISITOR_UID);
+            String visitorUid = getIntent().getStringExtra(FIREBASE_CHILD_VISITOR_UID);
 
-            DatabaseReference visitorReference = Constants.PREAPPROVED_VISITORS_REFERENCE
+            DatabaseReference visitorReference = PRIVATE_VISITORS_REFERENCE
                     .child(visitorUid);
             /*Get data and add to the list for displaying in Visitor List*/
             visitorReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,9 +111,9 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                 }
             });
         } else {
-            serviceType = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICETYPE);
-            String dailyServiceUid = getIntent().getStringExtra(Constants.FIREBASE_CHILD_DAILYSERVICE_UID);
-            DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
+            serviceType = getIntent().getStringExtra(FIREBASE_CHILD_DAILYSERVICE_TYPE);
+            String dailyServiceUid = getIntent().getStringExtra(FIREBASE_CHILD_DAILYSERVICE_UID);
+            DatabaseReference dailyServiceReference = PUBLIC_DAILYSERVICES_REFERENCE
                     .child(serviceType)
                     .child(dailyServiceUid);
 
@@ -114,11 +121,11 @@ public class VisitorAndDailyServiceList extends BaseActivity {
             dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
-                    dailyServiceStatus = (String) dailyServiceDataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue();
+                    dailyServiceStatus = (String) dailyServiceDataSnapshot.child(FIREBASE_CHILD_STATUS).getValue();
                     hideProgressIndicator();
                     for (DataSnapshot ownersUidDataSnapshot : dailyServiceDataSnapshot.getChildren()) {
                         String ownersUid = ownersUidDataSnapshot.getKey();
-                        if (!Constants.FIREBASE_CHILD_STATUS.equals(ownersUid)) {
+                        if (!FIREBASE_CHILD_STATUS.equals(ownersUid)) {
                             /*Get data and add to the list for displaying in Daily Service List*/
                             dailyServiceReference.
                                     child(ownersUid).addListenerForSingleValueEvent(new ValueEventListener() {

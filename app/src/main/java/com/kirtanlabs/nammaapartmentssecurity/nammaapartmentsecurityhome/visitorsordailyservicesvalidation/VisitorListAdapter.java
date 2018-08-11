@@ -15,11 +15,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
-import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
+
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_VISITORS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
 
 
 public class VisitorListAdapter extends
@@ -117,7 +123,7 @@ public class VisitorListAdapter extends
      * @param textApartmentValue   - to display inviter apartment name in this view
      */
     private void getInviterDetailsFromFireBase(final TextView textFlatToVisitValue, final TextView textInvitedByValue, TextView textApartmentValue) {
-        DatabaseReference inviterReference = Constants.PRIVATE_USERS_REFERENCE
+        DatabaseReference inviterReference = PRIVATE_USERS_REFERENCE
                 .child(inviterUid);
         // Retrieving details of inviter from (Users->Private->InviterUID) in firebase.
         inviterReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -144,9 +150,9 @@ public class VisitorListAdapter extends
      * This method is invoked to change status of visitor
      */
     private void changeVisitorStatusInFirebase() {
-        DatabaseReference visitorStatusReference = Constants.PREAPPROVED_VISITORS_REFERENCE
+        DatabaseReference visitorStatusReference = PRIVATE_VISITORS_REFERENCE
                 .child(nammaApartmentVisitor.getUid())
-                .child(Constants.FIREBASE_CHILD_STATUS);
+                .child(FIREBASE_CHILD_STATUS);
         baseActivity.changeStatus(visitorStatus, visitorStatusReference);
     }
 
@@ -160,6 +166,7 @@ public class VisitorListAdapter extends
          * Private Members
          * ------------------------------------------------------------- */
 
+        private final de.hdodenhof.circleimageview.CircleImageView VisitorAndDailyServiceProfilePic;
         private TextView textVisitorOrDailyServiceName;
         private TextView textApartment;
         private TextView textFlatToVisit;
@@ -169,7 +176,6 @@ public class VisitorListAdapter extends
         private TextView textFlatToVisitValue;
         private TextView textInvitedByValue;
         private Button buttonAllowVisitorAndDailyService;
-        private final de.hdodenhof.circleimageview.CircleImageView VisitorAndDailyServiceProfilePic;
 
         /* ------------------------------------------------------------- *
          * Constructor
@@ -190,15 +196,15 @@ public class VisitorListAdapter extends
             buttonAllowVisitorAndDailyService = itemView.findViewById(R.id.buttonAllowVisitorAndDailyService);
 
             /*Setting fonts to the views*/
-            textVisitorOrDailyServiceName.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textApartment.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textFlatToVisit.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textInvitedBy.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textVisitorOrDailyServiceNameValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textApartmentValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textFlatToVisitValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textInvitedByValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            buttonAllowVisitorAndDailyService.setTypeface(Constants.setLatoLightFont(mCtx));
+            textVisitorOrDailyServiceName.setTypeface(setLatoRegularFont(mCtx));
+            textApartment.setTypeface(setLatoRegularFont(mCtx));
+            textFlatToVisit.setTypeface(setLatoRegularFont(mCtx));
+            textInvitedBy.setTypeface(setLatoRegularFont(mCtx));
+            textVisitorOrDailyServiceNameValue.setTypeface(setLatoBoldFont(mCtx));
+            textApartmentValue.setTypeface(setLatoBoldFont(mCtx));
+            textFlatToVisitValue.setTypeface(setLatoBoldFont(mCtx));
+            textInvitedByValue.setTypeface(setLatoBoldFont(mCtx));
+            buttonAllowVisitorAndDailyService.setTypeface(setLatoLightFont(mCtx));
         }
     }
 }

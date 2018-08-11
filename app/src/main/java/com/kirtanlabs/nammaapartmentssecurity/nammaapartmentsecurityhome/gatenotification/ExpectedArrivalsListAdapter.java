@@ -15,12 +15,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
-import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.Calendar;
 import java.util.List;
+
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAILED;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_BANGALURU;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_BRIGADEGATEWAY;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DELIVERIES;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_CABS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_DELIVERIES_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
 
 public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedArrivalsListAdapter.ExpectedArrivalsHolder> {
 
@@ -131,7 +144,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
     }
 
     private void getOwnerDetailsFromFireBase(final TextView textBookedByValue, final TextView textFlatNumberValue, final TextView textApartmentValue, final int validationStatusOf) {
-        DatabaseReference ownerReference = Constants.PRIVATE_USERS_REFERENCE
+        DatabaseReference ownerReference = PRIVATE_USERS_REFERENCE
                 .child(nammaApartmentExpectedArrivals.getInviterUID());
         ownerReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -199,19 +212,19 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             buttonAllowExpectedArrivals = itemView.findViewById(R.id.buttonAllowArrivals);
 
             /*Setting fonts to the views*/
-            textPackageVendor.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textBookedBy.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textApartment.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textFlatNumber.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textDateToVisit.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textTimeToVisit.setTypeface(Constants.setLatoRegularFont(mCtx));
-            textPackageVendorValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textBookedByValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textApartmentValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textFlatNumberValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textDateToVisitValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            textTimeToVisitValue.setTypeface(Constants.setLatoBoldFont(mCtx));
-            buttonAllowExpectedArrivals.setTypeface(Constants.setLatoLightFont(mCtx));
+            textPackageVendor.setTypeface(setLatoRegularFont(mCtx));
+            textBookedBy.setTypeface(setLatoRegularFont(mCtx));
+            textApartment.setTypeface(setLatoRegularFont(mCtx));
+            textFlatNumber.setTypeface(setLatoRegularFont(mCtx));
+            textDateToVisit.setTypeface(setLatoRegularFont(mCtx));
+            textTimeToVisit.setTypeface(setLatoRegularFont(mCtx));
+            textPackageVendorValue.setTypeface(setLatoBoldFont(mCtx));
+            textBookedByValue.setTypeface(setLatoBoldFont(mCtx));
+            textApartmentValue.setTypeface(setLatoBoldFont(mCtx));
+            textFlatNumberValue.setTypeface(setLatoBoldFont(mCtx));
+            textDateToVisitValue.setTypeface(setLatoBoldFont(mCtx));
+            textTimeToVisitValue.setTypeface(setLatoBoldFont(mCtx));
+            buttonAllowExpectedArrivals.setTypeface(setLatoLightFont(mCtx));
 
             /*Setting onClickListener for view*/
             buttonAllowExpectedArrivals.setOnClickListener(this);
@@ -228,7 +241,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
                 changeExpectedArrivalStatusInFirebase(position);
                 baseActivity.showNotificationSentDialog(mCtx.getString(R.string.expected_arrival_notification_title), notificationMessage);
             } else {
-                baseActivity.openValidationStatusDialog(Constants.FAILED, mCtx.getString(R.string.expected_time_of_arrival_is_finished));
+                baseActivity.openValidationStatusDialog(FAILED, mCtx.getString(R.string.expected_time_of_arrival_is_finished));
             }
         }
 
@@ -245,23 +258,23 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals = nammaApartmentExpectedArrivalsList.get(position);
             status = nammaApartmentExpectedArrivals.getStatus();
             if (validationStatusOf == R.string.cab_driver_validation_status) {
-                expectedArrivalsReference = Constants.PUBLIC_CABS_REFERENCE
+                expectedArrivalsReference = PRIVATE_CABS_REFERENCE
                         .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
             } else {
-                expectedArrivalsReference = Constants.PUBLIC_DELIVERIES_REFERENCE
+                expectedArrivalsReference = PRIVATE_DELIVERIES_REFERENCE
                         .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
 
                 if (status.equals(mCtx.getString(R.string.entered))) {
-                    DatabaseReference deliveryUID = Constants.PRIVATE_USER_DATA_REFERENCE
-                            .child(Constants.FIREBASE_CHILD_BANGALURU)
-                            .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
-                            .child(apartmentName).child(flatNumber).child(Constants.FIREBASE_CHILD_DELIVERIES).child(nammaApartmentExpectedArrivals.getInviterUID())
+                    DatabaseReference deliveryUID = PRIVATE_USER_DATA_REFERENCE
+                            .child(FIREBASE_CHILD_BANGALURU)
+                            .child(FIREBASE_CHILD_BRIGADEGATEWAY)
+                            .child(apartmentName).child(flatNumber).child(FIREBASE_CHILD_DELIVERIES).child(nammaApartmentExpectedArrivals.getInviterUID())
                             .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
                     deliveryUID.setValue(false);
                 }
 
             }
-            baseActivity.changeStatus(status, expectedArrivalsReference.child(Constants.FIREBASE_CHILD_STATUS));
+            baseActivity.changeStatus(status, expectedArrivalsReference.child(FIREBASE_CHILD_STATUS));
 
             if (status.equals(mCtx.getString(R.string.not_entered))) {
                 changeDateAndTime();
@@ -275,7 +288,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             String currentTime = baseActivity.getCurrentTime();
             String currentDate = baseActivity.getCurrentDate();
             String concatenatedDateAndTime = currentDate + "\t\t" + " " + currentTime;
-            expectedArrivalsReference.child(Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).setValue(concatenatedDateAndTime);
+            expectedArrivalsReference.child(FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL).setValue(concatenatedDateAndTime);
         }
 
         /**
