@@ -9,6 +9,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * DO NOT AUTO-FORMAT THIS FILE
+ */
 public class Constants {
 
     /* ------------------------------------------------------------- *
@@ -36,102 +39,105 @@ public class Constants {
     public static final String WARNING = "warning";
 
     /* ------------------------------------------------------------- *
-     * Firebase objects
+     * Firebase Keys
      * ------------------------------------------------------------- */
 
-    static final int PHONE_NUMBER_MAX_LENGTH = 10;
     public static final String FIREBASE_CHILD_APARTMENTS = "apartments";
     public static final String FIREBASE_CHILD_BANGALURU = "Bengaluru";
     public static final String FIREBASE_CHILD_BRIGADEGATEWAY = "Brigade Gateway";
     public static final String FIREBASE_CHILD_SALARPURIA_CAMBRIDGE = "Salarpuria Cambridge";
-    private static final String FIREBASE_CHILD_ALL = "all";
-    private static final String FIREBASE_CHILD_CABS = "cabs";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL = "dateAndTimeOfArrival";
     public static final String FIREBASE_CHILD_DELIVERIES = "deliveries";
-    private static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
     public static final String FIREBASE_CHILD_FLAT_MEMBERS = "flatMembers";
     public static final String FIREBASE_CHILD_GATE_NOTIFICATIONS = "gateNotifications";
     public static final String FIREBASE_CHILD_HANDED_THINGS = "handedThings";
-    private static final String FIREBASE_CHILD_EMERGENCIES = "emergencies";
-    private static final String FIREBASE_CHILD_PREAPPROVEDVISITORS = "preApprovedVisitors";
-    public static final String FIREBASE_CHILD_POSTAPPROVEDVISITORS = "postApprovedVisitors";
     public static final String FIREBASE_CHILD_PRIVATE = "private";
     public static final String FIREBASE_CHILD_PROFILE_PHOTO = "profilePhoto";
-    private static final String FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER = "preApprovedVisitorsMobileNumber";
-    public static final String FIREBASE_CHILD_DAILYSERVICETYPE = "dailyServiceType";
-    private static final String FIREBASE_CHILD_PUBLIC = "public";
+    public static final String FIREBASE_CHILD_DAILYSERVICE_TYPE = "dailyServiceType";
     public static final String FIREBASE_CHILD_SOCIETIES = "societies";
     public static final String FIREBASE_CHILD_STATUS = "status";
     public static final String FIREBASE_CHILD_TOKEN_ID = "tokenId";
-    private static final String FIREBASE_CHILD_SECURITY_GUARD = "securityGuard";
     public static final String FIREBASE_CHILD_USERDATA = "userData";
     public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
+    private static final String FIREBASE_CHILD_ALL = "all";
+    private static final String FIREBASE_CHILD_CABS = "cabs";
+    private static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
+    private static final String FIREBASE_CHILD_EMERGENCIES = "emergencies";
+    private static final String FIREBASE_CHILD_PUBLIC = "public";
+    private static final String FIREBASE_CHILD_SECURITY_GUARD = "securityGuard";
     private static final String FIREBASE_CHILD_USERS = "users";
-    public static final int EDIT_TEXT_MIN_LENGTH = 0;
+    private static final String FIREBASE_CHILD_CITIES = "cities";
+    private static final String FIREBASE_CHILD_CLIENTS = "clients";
 
     /* ------------------------------------------------------------- *
      * Firebase Database References
      * ------------------------------------------------------------- */
-    public static final int CAB_NUMBER_FIELD_LENGTH = 2;
-    public static final int CAMERA_PERMISSION_REQUEST_CODE = 4;
-    public static final String HYPHEN = "-";
-    public static final int RECENT_EMERGENCY_REQUEST_CODE = 0;
-    public static final int SEARCH_FLAT_NUMBER_REQUEST_CODE = 1;
-    public static final String EMERGENCY_TYPE_MEDICAL = "Medical";
-    public static final String EMERGENCY_TYPE_FIRE = "Fire";
-    public static final String EMERGENCY_TYPE_THEFT = "Theft";
-    private static final String FIREBASE_CHILD_CITIES = "cities";
-    private static final String FIREBASE_CHILD_CLIENTS = "clients";
+
     private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance();
     public static final DatabaseReference SECURITY_GUARD_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SECURITY_GUARD);
     private static final DatabaseReference USER_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_USERS);
     public static final DatabaseReference PRIVATE_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_ALL);
     private static final DatabaseReference VISITORS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_VISITORS);
-    public static final DatabaseReference PREAPPROVED_VISITORS_REFERENCE = VISITORS_REFERENCE.child(FIREBASE_CHILD_PREAPPROVEDVISITORS);
-    public static final DatabaseReference PREAPPROVED_VISITORS_MOBILE_REFERENCE = VISITORS_REFERENCE.child(FIREBASE_CHILD_PREAPPROVEDVISITORSMOBILENUMBER);
+    public static final DatabaseReference ALL_VISITORS_REFERENCE = VISITORS_REFERENCE.child(FIREBASE_CHILD_ALL);
+    public static final DatabaseReference PRIVATE_VISITORS_REFERENCE = VISITORS_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     private static final DatabaseReference DAILYSERVICES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_DAILYSERVICES);
     private static final DatabaseReference CABS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CABS);
-    public static final DatabaseReference PUBLIC_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
+    public static final DatabaseReference PRIVATE_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
+    public static final DatabaseReference ALL_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_ALL);
     private static final DatabaseReference DELIVERIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_DELIVERIES);
-    public static final DatabaseReference PUBLIC_DELIVERIES_REFERENCE = DELIVERIES_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
+    public static final DatabaseReference PRIVATE_DELIVERIES_REFERENCE = DELIVERIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     private static final DatabaseReference EMERGENCIES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_EMERGENCIES);
     public static final DatabaseReference PUBLIC_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
     private static final DatabaseReference PRIVATE_CLIENTS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_CLIENTS).child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference CITIES_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_CITIES);
     public static final DatabaseReference FLATS_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_FLATS);
-
-    /* ------------------------------------------------------------- *
-     * Validation Keys
-     * ------------------------------------------------------------- */
     public static final DatabaseReference APARTMENTS_REFERENCE = PRIVATE_CLIENTS_REFERENCE.child(FIREBASE_CHILD_APARTMENTS);
-    private static final DatabaseReference PRIVATE_CABS_REFERENCE = CABS_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
-    public static final DatabaseReference ALL_CABS_REFERENCE = PRIVATE_CABS_REFERENCE.child(FIREBASE_CHILD_ALL);
     private static final DatabaseReference ALL_DAILYSERVICES_REFERENCE = DAILYSERVICES_REFERENCE.child(FIREBASE_CHILD_ALL);
     public static final DatabaseReference PUBLIC_DAILYSERVICES_REFERENCE = ALL_DAILYSERVICES_REFERENCE.child(FIREBASE_CHILD_PUBLIC);
-
-    /* ------------------------------------------------------------- *
-     * Request Code
-     * ------------------------------------------------------------- */
     public static final DatabaseReference PRIVATE_DAILYSERVICES_REFERENCE = ALL_DAILYSERVICES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     private static final DatabaseReference USER_DATA_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_USERDATA);
-
-    /* ------------------------------------------------------------- *
-     * Emergency Type
-     * ------------------------------------------------------------- */
     public static final DatabaseReference PRIVATE_USER_DATA_REFERENCE = USER_DATA_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     private static final DatabaseReference PRIVATE_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_EMERGENCIES_REFERENCE = PRIVATE_EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_ALL);
 
+    /* ------------------------------------------------------------- *
+     * Application Specific
+     * ------------------------------------------------------------- */
+
+    public static final String HYPHEN = "-";
+    public static final String EMERGENCY_TYPE_MEDICAL = "Medical";
+    public static final String EMERGENCY_TYPE_FIRE = "Fire";
+    public static final String EMERGENCY_TYPE_THEFT = "Theft";
     public static final String GUEST = "guest";
     public static final String DAILY_SERVICE = "dailyService";
     public static final String CAB = "cab";
     public static final String PACKAGE = "package";
     public static final String FAMILY_MEMBER = "familyMember";
+
+    /* ------------------------------------------------------------- *
+     * Validation Keys
+     * ------------------------------------------------------------- */
+
+    public static final int CAB_NUMBER_FIELD_LENGTH = 2;
+    static final int PHONE_NUMBER_MAX_LENGTH = 10;
+    public static final int EDIT_TEXT_MIN_LENGTH = 0;
+
+    /* ------------------------------------------------------------- *
+     * Request Code
+     * ------------------------------------------------------------- */
+
+    public static final int RECENT_EMERGENCY_REQUEST_CODE = 0;
+    public static final int SEARCH_FLAT_NUMBER_REQUEST_CODE = 1;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 4;
+
+    /* ------------------------------------------------------------- *
+     * E-Intercom Type Map
+     * ------------------------------------------------------------- */
 
     public static final Map<String, String> EINTERCOM_TYPE_MAP = new LinkedHashMap<>();
     static {

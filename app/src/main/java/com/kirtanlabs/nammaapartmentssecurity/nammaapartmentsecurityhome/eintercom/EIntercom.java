@@ -42,7 +42,6 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE_MAP;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAMILY_MEMBER;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_GATE_NOTIFICATIONS;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_POSTAPPROVEDVISITORS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_PRIVATE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_PROFILE_PHOTO;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITORS;
@@ -302,7 +301,7 @@ public class EIntercom extends BaseActivity {
                             /*Getting the storage reference*/
                             StorageReference storageReference = FirebaseStorage.getInstance().getReference(FIREBASE_CHILD_VISITORS)
                                     .child(FIREBASE_CHILD_PRIVATE)
-                                    .child(FIREBASE_CHILD_POSTAPPROVEDVISITORS)
+                                    .child(FIREBASE_CHILD_VISITORS)
                                     .child(EINTERCOM_TYPE_MAP.get(eIntercomType))
                                     .child(notificationsReference.getKey());
 

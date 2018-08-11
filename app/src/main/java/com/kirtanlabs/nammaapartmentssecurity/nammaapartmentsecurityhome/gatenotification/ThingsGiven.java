@@ -113,7 +113,7 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
         if (givenThingsTo == R.string.things_given_to_guest) {
 
             // Retrieving Visitors UID (mapped with Mobile number) from preApprovedVisitorsMobileNumber in Firebase.
-            mobileNumberReference = Constants.PREAPPROVED_VISITORS_MOBILE_REFERENCE.child(mobileNumber);
+            mobileNumberReference = Constants.ALL_VISITORS_REFERENCE.child(mobileNumber);
             mobileNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -121,7 +121,7 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
                     if (dataSnapshot.exists()) {
                         visitorOrDailyServiceUid = (String) dataSnapshot.getValue();
                         assert visitorOrDailyServiceUid != null;
-                        visitorReference = Constants.PREAPPROVED_VISITORS_REFERENCE
+                        visitorReference = Constants.PRIVATE_VISITORS_REFERENCE
                                 .child(visitorOrDailyServiceUid);
                         visitorReference.child(Constants.FIREBASE_CHILD_HANDED_THINGS)
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -160,7 +160,7 @@ public class ThingsGiven extends BaseActivity implements View.OnClickListener {
                         // Getting the Daily Service Type and its corresponding details
                         DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE;
                         assert visitorOrDailyServiceUid != null;
-                        dailyServiceReference.child(Constants.FIREBASE_CHILD_DAILYSERVICETYPE)
+                        dailyServiceReference.child(Constants.FIREBASE_CHILD_DAILYSERVICE_TYPE)
                                 .child(visitorOrDailyServiceUid).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {

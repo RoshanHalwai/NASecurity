@@ -14,14 +14,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
-import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.Objects;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_CABS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_NUMBER_FIELD_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EXPECTED_ARRIVAL_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAILED;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_CABS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.SCREEN_TITLE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
 
 public class ExpectedCabArrival extends BaseActivity implements View.OnClickListener {
 
@@ -63,12 +71,12 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
         Button buttonVerifyCabNumberAndPackageVendor = findViewById(R.id.buttonVerifyCabNumberAndPackageVendor);
 
         /*Setting font for all the views*/
-        textCabNumber.setTypeface(Constants.setLatoBoldFont(this));
-        editCabStateCode.setTypeface(Constants.setLatoRegularFont(this));
-        editCabRtoNumber.setTypeface(Constants.setLatoRegularFont(this));
-        editCabSerialNumberOne.setTypeface(Constants.setLatoRegularFont(this));
-        editCabSerialNumberTwo.setTypeface(Constants.setLatoRegularFont(this));
-        buttonVerifyCabNumberAndPackageVendor.setTypeface(Constants.setLatoLightFont(this));
+        textCabNumber.setTypeface(setLatoBoldFont(this));
+        editCabStateCode.setTypeface(setLatoRegularFont(this));
+        editCabRtoNumber.setTypeface(setLatoRegularFont(this));
+        editCabSerialNumberOne.setTypeface(setLatoRegularFont(this));
+        editCabSerialNumberTwo.setTypeface(setLatoRegularFont(this));
+        buttonVerifyCabNumberAndPackageVendor.setTypeface(setLatoLightFont(this));
 
         /*Setting events for Cab Number edit text*/
         setEventsForEditText();
@@ -188,17 +196,17 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
      */
     private void checkDetailsInFirebase(String cabNumber) {
         // Getting Cab Driver UID (Mapped with Cab Number) in Firebase.
-        DatabaseReference cabNumberReference = Constants.ALL_CABS_REFERENCE
+        DatabaseReference cabNumberReference = ALL_CABS_REFERENCE
                 .child(cabNumber);
         cabNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 hideProgressIndicator();
                 if (dataSnapshot.exists()) {
-                    cabDriverUid = (String) dataSnapshot.getValue();
+                    cabDriverUid = dataSnapshot.getValue(String.class);
                     openExpectedArrivalList();
                 } else {
-                    openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
+                    openValidationStatusDialog(FAILED, getString(R.string.dont_allow_cab_to_enter));
                 }
             }
 
@@ -213,20 +221,20 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
      */
     private void openExpectedArrivalList() {
         // Retrieving Status of Cab driver from(Cab->Public->CabDriverUid) in Firebase.
-        DatabaseReference expectedArrivalStatusReference = Constants.PUBLIC_CABS_REFERENCE
+        DatabaseReference expectedArrivalStatusReference = PRIVATE_CABS_REFERENCE
                 .child(cabDriverUid);
         expectedArrivalStatusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String status = Objects.requireNonNull(dataSnapshot.child(Constants.FIREBASE_CHILD_STATUS).getValue()).toString();
+                String status = Objects.requireNonNull(dataSnapshot.child(FIREBASE_CHILD_STATUS).getValue(String.class));
                 if (!status.equals(getString(R.string.left))) {
                     Intent intentCabArrival = new Intent(ExpectedCabArrival.this, ExpectedArrivalsList.class);
-                    intentCabArrival.putExtra(Constants.SCREEN_TITLE, R.string.expected_cab_arrivals);
-                    intentCabArrival.putExtra(Constants.EXPECTED_ARRIVAL_UID, cabDriverUid);
+                    intentCabArrival.putExtra(SCREEN_TITLE, R.string.expected_cab_arrivals);
+                    intentCabArrival.putExtra(EXPECTED_ARRIVAL_UID, cabDriverUid);
                     startActivity(intentCabArrival);
                     finish();
                 } else {
-                    openValidationStatusDialog(Constants.FAILED, getString(R.string.dont_allow_cab_to_enter));
+                    openValidationStatusDialog(FAILED, getString(R.string.dont_allow_cab_to_enter));
                 }
             }
 
