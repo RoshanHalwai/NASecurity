@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".nammaapartmentsecurityhome.login.OTP">
+
+    <include layout="@layout/activity_base" />
+
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:gravity="center"
+        android:text="@string/enter_verification_code"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_view_default_size" />
+
+    <LinearLayout
+        android:id="@+id/otpLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textDescription"
+        android:layout_margin="20dp"
+        android:orientation="horizontal"
+        android:weightSum="6">
+
+        <EditText
+            android:id="@+id/editFirstOTPDigit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor">
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editSecondOTPDigit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/editThirdOTPDigit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/editFourthOTPDigit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/editFifthOTPDigit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/editSixthOTPDigit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/nmBlack"
+            android:textSize="@dimen/text_view_numbers_size"
+            tools:ignore="LabelFor" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonVerifyOTP"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/otpLayout"
+        android:layout_marginEnd="@dimen/button_right_margin"
+        android:layout_marginLeft="@dimen/button_left_margin"
+        android:layout_marginRight="@dimen/button_right_margin"
+        android:layout_marginStart="@dimen/button_left_margin"
+        android:background="@android:color/black"
+        android:text="@string/verify_otp"
+        android:textAllCaps="true"
+        android:textColor="@color/nmLightYellow"
+        android:textSize="@dimen/button_default_size"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/textResendOTPOrVerificationMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonVerifyOTP"
+        android:layout_marginEnd="@dimen/button_right_margin"
+        android:layout_marginLeft="@dimen/button_left_margin"
+        android:layout_marginRight="@dimen/button_right_margin"
+        android:layout_marginStart="@dimen/button_left_margin"
+        android:layout_marginTop="@dimen/button_top_margin"
+        android:gravity="center"
+        android:textColor="@color/nmBlack"
+        android:textSize="14sp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textChangeNumberOrTimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textResendOTPOrVerificationMessage"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/nmBlack"
+        android:textSize="14sp" />
+
+</RelativeLayout>

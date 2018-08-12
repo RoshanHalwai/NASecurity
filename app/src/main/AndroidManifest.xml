@@ -36,13 +36,7 @@
         <!-- Namma Apartments Security Home Screen -->
         <activity
             android:name=".nammaapartmentsecurityhome.NammaApartmentSecurityHome"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait" />
 
         <!-- E-Intercom Screen -->
         <activity
@@ -102,6 +96,25 @@
         <activity
             android:name=".nammaapartmentsecurityhome.emergency.RecentEmergencyDetails"
             android:screenOrientation="portrait" />
+
+        <!-- Sign In Screen -->
+        <activity
+            android:name=".nammaapartmentsecurityhome.login.SignIn"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- OTP Screen -->
+        <activity
+            android:name=".nammaapartmentsecurityhome.login.OTP"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

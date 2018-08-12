@@ -31,6 +31,12 @@ public class Constants {
     public static final String EINTERCOM_TYPE = "eIntercomType";
 
     /* ------------------------------------------------------------- *
+     * Login/OTP Constants
+     * ------------------------------------------------------------- */
+
+    public static final int OTP_TIMER = 60;
+
+    /* ------------------------------------------------------------- *
      * Dialog Types
      * ------------------------------------------------------------- */
 
@@ -49,6 +55,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL = "dateAndTimeOfArrival";
     public static final String FIREBASE_CHILD_DELIVERIES = "deliveries";
+    public static final String FIREBASE_CHILD_DATA = "data";
     public static final String FIREBASE_CHILD_FLATS = "flats";
     public static final String FIREBASE_CHILD_FLAT_NUMBER = "flatNumber";
     public static final String FIREBASE_CHILD_FLAT_MEMBERS = "flatMembers";
@@ -68,7 +75,8 @@ public class Constants {
     private static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     private static final String FIREBASE_CHILD_EMERGENCIES = "emergencies";
     private static final String FIREBASE_CHILD_PUBLIC = "public";
-    private static final String FIREBASE_CHILD_SECURITY_GUARD = "securityGuard";
+    private static final String FIREBASE_CHILD_SECURITY_GUARD = "guard";
+    private static final String FIREBASE_CHILD_SOCIETY_SERVICE = "societyServices";
     private static final String FIREBASE_CHILD_USERS = "users";
     private static final String FIREBASE_CHILD_CITIES = "cities";
     private static final String FIREBASE_CHILD_CLIENTS = "clients";
@@ -78,7 +86,6 @@ public class Constants {
      * ------------------------------------------------------------- */
 
     private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance();
-    public static final DatabaseReference SECURITY_GUARD_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SECURITY_GUARD);
     private static final DatabaseReference USER_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_USERS);
     public static final DatabaseReference PRIVATE_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_ALL);
@@ -104,6 +111,9 @@ public class Constants {
     public static final DatabaseReference PRIVATE_USER_DATA_REFERENCE = USER_DATA_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     private static final DatabaseReference PRIVATE_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_EMERGENCIES_REFERENCE = PRIVATE_EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_ALL);
+    private static final DatabaseReference SOCIETY_SERVICE_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SOCIETY_SERVICE);
+    public static final DatabaseReference ALL_SOCIETY_SERVICE_REFERENCE = SOCIETY_SERVICE_REFERENCE.child(FIREBASE_CHILD_ALL);
+    public static final DatabaseReference SECURITY_GUARD_REFERENCE = SOCIETY_SERVICE_REFERENCE.child(FIREBASE_CHILD_SECURITY_GUARD);
 
     /* ------------------------------------------------------------- *
      * Application Specific
@@ -126,6 +136,7 @@ public class Constants {
     public static final int CAB_NUMBER_FIELD_LENGTH = 2;
     static final int PHONE_NUMBER_MAX_LENGTH = 10;
     public static final int EDIT_TEXT_MIN_LENGTH = 0;
+    public static final String COUNTRY_CODE_IN = "+91";
 
     /* ------------------------------------------------------------- *
      * Request Code
@@ -140,6 +151,7 @@ public class Constants {
      * ------------------------------------------------------------- */
 
     public static final Map<String, String> EINTERCOM_TYPE_MAP = new LinkedHashMap<>();
+
     static {
         EINTERCOM_TYPE_MAP.put(GUEST, "guests");
         EINTERCOM_TYPE_MAP.put(DAILY_SERVICE, "dailyServices");

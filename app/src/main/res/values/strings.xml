@@ -149,4 +149,20 @@
     <string name="field_cant_be_empty">Field can\'t be Empty</string>
     <string name="default_notification_channel_id">01</string>
 
+    <!--Sign In Activity-->
+    <string name="login">LOGIN</string>
+
+    <!--OTP Activity-->
+    <string name="phone_verification">Phone Verification</string>
+    <string name="verify_otp">VERIFY OTP</string>
+    <string name="enter_verification_code">We need to verify your account. Please enter the 6 digit verification
+    code sent to your mobile number.</string>
+    <string name="auto_verification_completed">AutoVerification completed. Please wait while we check your Account in our system. . .</string>
+    <string name="check_network_connection">Please check your Network Connection</string>
+    <string name="wrong_otp_entered">Wrong OTP has been entered</string>
+    <string name="waiting_for_otp">Waiting for OTP. . .</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="change_mobile_number">Change Mobile Number</string>
+    <string name="verifying_account">Verifying Account</string>
+
 </resources>
