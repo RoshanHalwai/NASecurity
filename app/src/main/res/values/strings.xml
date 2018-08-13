@@ -3,6 +3,8 @@
 
     <!--Base Activity-->
     <string name="back_button_description">Back button to navigate previous activity</string>
+    <string name="logout">Logout</string>
+    <string name="menu_icon_description">Image of three dots Menu Icon</string>
 
     <!--NammaApartment security E-Intercom-->
     <string name="capture_photo">Capture Photo</string>

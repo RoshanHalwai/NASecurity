@@ -161,6 +161,14 @@ public class Constants {
     }
 
     /* ------------------------------------------------------------- *
+     * Shared Preference Keys
+     * ------------------------------------------------------------- */
+
+    public static final String NAMMA_APARTMENTS_SECURITY_PREFERENCE = "nammaApartmentsSecurityPreference";
+    public static final String LOGGED_IN = "loggedIn";
+    public static final String SECURITY_GUARD_UID = "securityGuardUid";
+
+    /* ------------------------------------------------------------- *
      * Font Types
      * ------------------------------------------------------------- */
 

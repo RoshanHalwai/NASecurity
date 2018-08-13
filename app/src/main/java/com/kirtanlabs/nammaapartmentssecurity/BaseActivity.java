@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +14,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.login.SignIn;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.text.DateFormatSymbols;
@@ -25,14 +28,17 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.LOGGED_IN;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.NAMMA_APARTMENTS_SECURITY_PREFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PHONE_NUMBER_MAX_LENGTH;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.SECURITY_GUARD_UID;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
-    private ImageView backButton;
+    private ImageView backButton, imageMenu;
     private View validationDialog;
     private AlertDialog dialog;
     private Calendar calendar;
@@ -59,16 +65,33 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void setBackButtonListener() {
         ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        backButton.setOnClickListener(v -> onBackPressed());
     }
 
     private void showBackButton() {
         backButton.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * This method is used to display a pop menu on click of menu icon and performs actions based on click of item in the list.
+     */
+    private void setMenuIconListener() {
+        imageMenu.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, imageMenu);
+            popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                /*Removing Security Guard Uid from Shared Preference and Updating Login value to false*/
+                SharedPreferences sharedPreferences = getSharedPreferences(NAMMA_APARTMENTS_SECURITY_PREFERENCE, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(LOGGED_IN, false);
+                editor.putString(SECURITY_GUARD_UID, null);
+                editor.apply();
+                startActivity(new Intent(this, SignIn.class));
+                finish();
+                return super.onOptionsItemSelected(item);
+            });
+            popupMenu.show();
+        });
     }
 
     /* ------------------------------------------------------------- *
@@ -77,6 +100,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void hideBackButton() {
         backButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * This method is used to display menu icon in title bar wherever its needed.
+     */
+    protected void showMenuIcon() {
+        imageMenu = findViewById(R.id.imageMenu);
+        imageMenu.setVisibility(View.VISIBLE);
+        setMenuIconListener();
     }
 
     /**
@@ -158,16 +190,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         /*Setting onClickListener for view*/
-        buttonEIntercom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                Intent intent = new Intent(BaseActivity.this, EIntercom.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
+        buttonEIntercom.setOnClickListener(v -> {
+            dialog.cancel();
+            Intent intent = new Intent(BaseActivity.this, EIntercom.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
         });
 
         /*This method is used to create ValidationDialog */
