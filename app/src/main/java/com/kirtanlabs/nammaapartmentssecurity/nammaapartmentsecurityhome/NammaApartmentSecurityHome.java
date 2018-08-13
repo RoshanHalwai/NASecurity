@@ -1,6 +1,7 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +24,12 @@ import java.util.Objects;
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
 
     /* ------------------------------------------------------------- *
+     * Private Members
+     * ------------------------------------------------------------- */
+
+    private String securityGuardUID;
+
+    /* ------------------------------------------------------------- *
      * Overriding BaseActivity Objects
      * ------------------------------------------------------------- */
 
@@ -40,9 +47,15 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*Checking if user data is already present in shared preference or not*/
+        checkSharedPreference();
+
         /*Since this is Namma Apartments Security Home Screen we wouldn't want the users to go back,
         hence hiding the back button from the Title Bar*/
         hideBackButton();
+
+        /*We want to display menu icon in Title bar, so that user can perform various actions from list*/
+        showMenuIcon();
 
         /*Getting for grid view*/
         GridView gridNammaApartmentsSecurity = findViewById(R.id.gridNammaApartmentSecurity);
@@ -54,7 +67,6 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
         gridNammaApartmentsSecurity.setOnItemClickListener(this);
 
         /*Storing Security Guard token_id in firebase so that User can send notification to guard*/
-        String securityGuardUID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         DatabaseReference securityGuardReference = Constants.SECURITY_GUARD_REFERENCE
                 .child(Constants.FIREBASE_CHILD_PRIVATE)
                 .child(Constants.FIREBASE_CHILD_DATA)
@@ -120,5 +132,23 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
                 getString(R.string.emergency)
         };
         return new NammaApartmentSecurityHomeAdapter(this, imageGuardServices, stringGuardServices);
+    }
+
+    /**
+     * Creates shared preferences and loads USER-UID if User has already logged in. Else
+     * store USER-UID in shared preference.
+     */
+    private void checkSharedPreference() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.NAMMA_APARTMENTS_SECURITY_PREFERENCE, MODE_PRIVATE);
+        /*If Security Guard is Logged In then, We take its Uid from Shared Preference*/
+        if (sharedPreferences.getBoolean(Constants.LOGGED_IN, false)) {
+            securityGuardUID = sharedPreferences.getString(Constants.SECURITY_GUARD_UID, null);
+        } else {
+            securityGuardUID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.LOGGED_IN, true);
+            editor.putString(Constants.SECURITY_GUARD_UID, securityGuardUID);
+            editor.apply();
+        }
     }
 }

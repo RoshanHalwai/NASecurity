@@ -1,6 +1,7 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +11,10 @@ import android.widget.TextView;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.LOGGED_IN;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.NAMMA_APARTMENTS_SECURITY_PREFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
@@ -40,6 +44,13 @@ public class SignIn extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*Here we check If User has Logged In or Not*/
+        SharedPreferences sharedPreferences = getSharedPreferences(NAMMA_APARTMENTS_SECURITY_PREFERENCE, MODE_PRIVATE);
+        if (sharedPreferences.getBoolean(LOGGED_IN, false)) {
+            startActivity(new Intent(SignIn.this, NammaApartmentSecurityHome.class));
+            finish();
+        }
 
          /*Since this is Login Screen we wouldn't want the users to go back,
         hence hiding the back button from the Title Bar*/
