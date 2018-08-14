@@ -223,7 +223,7 @@ public class EIntercom extends BaseActivity {
         String mobileNumber = editMobileNumber.getText().toString().trim();
         boolean fieldsFilled = isAllFieldsFilled(new EditText[]{editFullName, editMobileNumber});
 
-        if (profilePhotoPath == null) {
+        if (profilePhotoPath == null && !(eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE))) {
             textErrorProfilePic.setVisibility(View.VISIBLE);
             textErrorProfilePic.requestFocus();
             return false;
@@ -232,7 +232,7 @@ public class EIntercom extends BaseActivity {
         }
 
         if (!fieldsFilled) {
-            if (TextUtils.isEmpty(fullName)) {
+            if (TextUtils.isEmpty(fullName) && !(eIntercomType.equals(CAB))) {
                 editFullName.setError(getString(R.string.name_validation));
                 return false;
             }
