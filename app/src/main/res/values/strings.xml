@@ -167,4 +167,28 @@
     <string name="change_mobile_number">Change Mobile Number</string>
     <string name="verifying_account">Verifying Account</string>
 
+    <!--E-Intercom-->
+    <string name="daily_service_type">Daily Service Type</string>
+    <!--Apartment Services Activity-->
+    <string-array name="daily_services">
+        <item>@string/cook</item>
+        <item>@string/maid</item>
+        <item>@string/car_bike_cleaning</item>
+        <item>@string/child_day_care</item>
+        <item>@string/daily_newspaper</item>
+        <item>@string/milk_man</item>
+        <item>@string/laundry</item>
+        <item>@string/driver</item>
+    </string-array>
+    <string name="cook">Cook</string>
+    <string name="maid">Maid</string>
+    <string name="car_bike_cleaning">Car/Bike Cleaning</string>
+    <string name="child_day_care">Child Day Care</string>
+    <string name="daily_newspaper">Daily NewsPaper</string>
+    <string name="milk_man">Milk Man</string>
+    <string name="laundry">Laundry</string>
+    <string name="driver">Driver</string>
+    <string name="groceries">Groceries</string>
+    <style name="vendor">Vendor</style>
+
 </resources>
