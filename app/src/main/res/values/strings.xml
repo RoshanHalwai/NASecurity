@@ -189,6 +189,5 @@
     <string name="laundry">Laundry</string>
     <string name="driver">Driver</string>
     <string name="groceries">Groceries</string>
-    <style name="vendor">Vendor</style>
 
 </resources>

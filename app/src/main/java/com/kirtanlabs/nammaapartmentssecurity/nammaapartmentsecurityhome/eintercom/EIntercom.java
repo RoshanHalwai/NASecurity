@@ -131,7 +131,6 @@ public class EIntercom extends BaseActivity implements View.OnClickListener, Vie
             editFullName.setVisibility(View.GONE);
             circleImageView.setVisibility(View.GONE);
 
-
             /*Show Cab Number Layout*/
             textCabOrVendorTitle.setVisibility(View.VISIBLE);
             cabNumberLayout.setVisibility(View.VISIBLE);
