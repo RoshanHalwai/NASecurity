@@ -257,28 +257,47 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 		console.log("Flat Number: "+flatNumber);
 		console.log("Mobile Number:"+mobileNumber);
 		
-		return admin.database().ref('/securityGuard').once('value').then(queryResult =>{
-			const tokenId = queryResult.val().tokenId;
-			
-			console.log("Token Id: "+tokenId);
-			
-			const payload = {		
-				data: {
-					message: "A " + emergencyType + " has been raised by " + ownerName + " of " + flatNumber + " in " + apartmentName,
-					emergencyType: emergencyType,
-					ownerName: ownerName,
-					mobileNumber: mobileNumber,
-					apartmentName: apartmentName,
-					flatNumber: flatNumber
-				}
-			};		
-		
-			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
-			});
+		const guardReference = admin.database().ref('/societyServices').child("guard").child("private")
+					.child("data").on('value', function(snapshot){		
 
+						console.log("Entered guardReference Block");
+					
+						var tokenId;
+						snapshot.forEach(function(child){
+							
+							const adminReference = admin.database().ref('/societyServices').child("guard").child("private")
+							.child("data").child(child.key).on('value', function(snapshot){
+								var guardUIDMap = snapshot.val();
+								const isAdmin = guardUIDMap["admin"];
+								
+								if (isAdmin) {				
+								console.log("Entered IF Statement");
+								tokenId = guardUIDMap["tokenId"];									
+								}
+
+							});
+							
+						});						
+						
+						const payload = {		
+								data: {
+										message: "A " + emergencyType + " emergency has been raised by " + ownerName + " of " + flatNumber + " in " + apartmentName,
+										emergencyType: emergencyType,
+										ownerName: ownerName,
+										mobileNumber: mobileNumber,
+										apartmentName: apartmentName,
+										flatNumber: flatNumber
+									}
+								};
+							
+						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+							return console.log("Notification sent");
+						
+					});
+				
 		});
-		
+				
+		return console.log("End of Function");
 	});
 	
 });
