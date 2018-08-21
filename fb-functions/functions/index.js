@@ -170,6 +170,8 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
 		const societyServiceType = queryResult.val().societyServiceType;
 		const ownerUID = queryResult.val().userUID;
+		const eventDate = queryResult.val().eventDate;
+		const timeSlot = queryResult.val().timeSlot;
 
 		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
 			
@@ -182,7 +184,39 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				var mobileNumber;
 				var tokenId;
 				
-				const availableReference = admin.database().ref('/societyServices').child(societyServiceType).child("private")
+				if (societyServiceType === "eventManagement"){
+					
+					console.log("Entered Event Management Block");
+					
+					return admin.database().ref('/societyServices').child("admin").once('value').then(queryResult =>{		
+				
+						tokenId = queryResult.val().tokenId;
+						
+						console.log("Society Service Type : " + societyServiceType);
+						console.log("tokenId : " + tokenId);
+						console.log("Event Date : " + eventDate);
+						console.log("TimeSlot : " + timeSlot);
+						
+						const notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+" has requested for the hall, for "+ eventDate +" time slot "+ timeSlot +". Please confirm!";
+						const payload = {		
+								data: {
+									message: notificationMessage,
+									notificationUID: notificationUID,
+									societyServiceType : societyServiceType,
+									eventDate : eventDate,
+									timeSlot : timeSlot
+									}
+								};
+							
+						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+							return console.log("Notification sent");
+						
+					});
+				
+				});
+					
+				}else{
+					const availableReference = admin.database().ref('/societyServices').child(societyServiceType).child("private")
 					.child("available").on('value', function(snapshot){		
 
 						console.log("Entered availableReference Block");
@@ -228,6 +262,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 					});
 				
 				});
+				}
 				
 				return console.log("End Of Function");
 			});
