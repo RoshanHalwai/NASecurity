@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -42,7 +43,24 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, Constants.RECENT_EMERGENCY_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Notification notification = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        String channelId;
+
+        /*To support Android Oreo Devices and higher*/
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(
+                    getString(R.string.default_notification_channel_id), "Namma Apartments Security Channel", NotificationManager.IMPORTANCE_HIGH);
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build();
+            mChannel.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.emergency_alarm), attributes);
+            Objects.requireNonNull(notificationManager).createNotificationChannel(mChannel);
+            channelId = mChannel.getId();
+        } else {
+            channelId = getString(R.string.default_notification_channel_id);
+        }
+
+        Notification notification = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.medical_emergency)
                 .setAutoCancel(true)
                 .setContentTitle(getString(R.string.app_name))
@@ -54,15 +72,6 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
 
         /* Setting Push Notification Custom Sound */
         notification.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.emergency_alarm);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        /*To support Android Oreo Devices and higher*/
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel mChannel = new NotificationChannel(
-                    getString(R.string.default_notification_channel_id), "Namma Apartments Security Channel", NotificationManager.IMPORTANCE_HIGH);
-            Objects.requireNonNull(notificationManager).createNotificationChannel(mChannel);
-        }
 
         int notificationID = (int) System.currentTimeMillis();
         Objects.requireNonNull(notificationManager).notify(notificationID, notification);
