@@ -39,38 +39,6 @@
                 android:textColor="@android:color/holo_red_dark"
                 android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/layoutDailyServiceType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/textDailyServiceType"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/daily_service_type"
-                    android:textColor="@color/nmBlack"
-                    android:textSize="@dimen/text_view_default_size" />
-
-                <EditText
-                    android:id="@+id/editDailyServiceType"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:cursorVisible="false"
-                    android:inputType="textCapWords|textNoSuggestions"
-                    android:textColor="@color/nmBlack"
-                    android:textSize="@dimen/edit_text_default_size"
-                    tools:ignore="LabelFor" />
-
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/textFullName"
                 android:layout_width="match_parent"
