@@ -7,8 +7,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -65,7 +63,7 @@ import static com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.
 import static com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.ImagePicker.getByteArrayFromFile;
 import static pl.aprilapps.easyphotopicker.EasyImageConfig.REQ_TAKE_PICTURE;
 
-public class EIntercom extends BaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
+public class EIntercom extends BaseActivity implements View.OnClickListener {
 
     /*----------------------------------------------
      *Private Members
@@ -73,12 +71,10 @@ public class EIntercom extends BaseActivity implements View.OnClickListener, Vie
 
     EditText editCabStateCode, editCabRtoNumber, editCabSerialNumberOne, editCabSerialNumberTwo;
     private String eIntercomType;
-    private AlertDialog dailyServicesListDialog;
     private CircleImageView circleImageView;
     private File profilePhotoPath;
     private EditText editFullName;
     private EditText editMobileNumber;
-    private EditText editDailyServiceType;
     private TextView textErrorProfilePic;
 
     /* ------------------------------------------------------------- *
@@ -135,30 +131,9 @@ public class EIntercom extends BaseActivity implements View.OnClickListener, Vie
             textCabOrVendorTitle.setVisibility(View.VISIBLE);
             cabNumberLayout.setVisibility(View.VISIBLE);
         } else {
-            switch (eIntercomType) {
-                case PACKAGE:
-                    textFullName.setText(getString(R.string.vendor));
-                    circleImageView.setVisibility(View.GONE);
-                    break;
-                case DAILY_SERVICE:
-                    LinearLayout layoutDailyServiceType = findViewById(R.id.layoutDailyServiceType);
-                    TextView textDailyServiceType = findViewById(R.id.textDailyServiceType);
-                    editDailyServiceType = findViewById(R.id.editDailyServiceType);
-
-                    /*Setting font for all the views*/
-                    textDailyServiceType.setTypeface(setLatoBoldFont(this));
-                    editDailyServiceType.setTypeface(setLatoRegularFont(this));
-
-                    /*Show Daily Service Type Layout*/
-                    layoutDailyServiceType.setVisibility(View.VISIBLE);
-
-                    /*We don't want the keyboard to be displayed when user clicks edit views*/
-                    editDailyServiceType.setInputType(InputType.TYPE_NULL);
-
-                    /*Setting event for all button clicks */
-                    editDailyServiceType.setOnClickListener(this);
-                    editDailyServiceType.setOnFocusChangeListener(this);
-                    break;
+            if (eIntercomType.equals(PACKAGE)) {
+                textFullName.setText(getString(R.string.vendor));
+                circleImageView.setVisibility(View.GONE);
             }
             /*Setting font for all the views*/
             textFullName.setTypeface(setLatoBoldFont(this));
@@ -190,16 +165,6 @@ public class EIntercom extends BaseActivity implements View.OnClickListener, Vie
                     sendNotification();
                 }
                 break;
-            case R.id.editDailyServiceType:
-                createDailyServicesListDialog();
-                break;
-        }
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus) {
-            onClick(v);
         }
     }
 
@@ -269,23 +234,6 @@ public class EIntercom extends BaseActivity implements View.OnClickListener, Vie
     /*-------------------------------------------------------------------------------
      * Private Methods
      *-----------------------------------------------------------------------------*/
-
-    /**
-     * Creates a DailyServicesListDialog with a list view which contains the list of daily services.
-     */
-    private void createDailyServicesListDialog() {
-        /*Custom DialogBox with list of all daily services*/
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String[] dailyServices = getResources().getStringArray(R.array.daily_services);
-
-        builder.setItems(dailyServices, (dialog, which) -> {
-            dailyServicesListDialog.cancel();
-            editDailyServiceType.setText(dailyServices[which]);
-        });
-
-        dailyServicesListDialog = builder.create();
-        dailyServicesListDialog.show();
-    }
 
     /**
      * This method gets invoked to check all the validation fields of editTexts
