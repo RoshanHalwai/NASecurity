@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Namma Apartments Security</string>
+    <string name="app_name">Digi Gate</string>
 
     <!--Base Activity-->
     <string name="back_button_description">Back button to navigate previous activity</string>
