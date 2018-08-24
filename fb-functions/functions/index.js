@@ -337,6 +337,49 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 	
 });
 	
+//Notifications triggered when privilege value is set to true/false
+
+exports.activateAccountNotification = functions.database.ref('/users/private/{userUID}/privileges/verified')
+.onWrite((change, context) => {
+	const userUID = context.params.userUID;
+	
+	return admin.database().ref("/users").child("private").child(userUID).child("privileges").once('value').then(queryResult => {
+		const verified = queryResult.val().verified;
+		
+		if(verified === true) {
+			return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+				const tokenId = queryResult.val().tokenId;
+				const payload = {
+					data: {
+						message: "Welcome to Namma Apartments, Your Account has been Activated",
+						type: "userAccountNotification"
+					}
+				};
+
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});				
+				
+			});
+		} else {
+			return admin.database().ref("/societyServices").child("admin").once('value').then(queryResult => {
+				const tokenId = queryResult.val().tokenId;
+				const payload = {
+					data: {
+						message: "A new User Account has been created. Requires Authentication",
+						societyServiceType: "userAccountNotification"
+					}
+				};
+
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});				
+				
+			});
+		}
+	});
+});
+
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
 
 exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
