@@ -350,6 +350,12 @@ exports.activateAccountNotification = functions.database.ref('/users/private/{us
 			return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
 				const tokenId = queryResult.val().tokenId;
 				const payload = {
+						notification: {
+							title: "Namma Apartments",
+							body: "Welcome to Namma Apartments, Your Account has been Activated",
+							"sound": "default",
+							"badge": "1"
+						},
 					data: {
 						message: "Welcome to Namma Apartments, Your Account has been Activated",
 						type: "userAccountNotification"
