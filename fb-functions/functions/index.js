@@ -211,60 +211,50 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 							return console.log("Notification sent");
 						
-					});
+					    });
 				
-				});
+				    });
 					
-				}else{
-					const availableReference = admin.database().ref('/societyServices').child(societyServiceType).child("private")
-					.child("available").on('value', function(snapshot){		
+			    } else {
+					return admin.database().ref('/societyServices').child(societyServiceType).child("private").child("available").once('value')
+					.then(availablePlumbersUID => {
+					    var availablePlumbersUIDList = [];
+					    availablePlumbersUID.forEach((plumberUIDSnapshot) => {
+                            availablePlumbersUIDList.push(plumberUIDSnapshot.key);
+                        });
+                        return availablePlumbersUIDList;
+					})
+					.then(availablePlumbersUIDList => {
+					        var availablePlumbers = [];
+					        availablePlumbersUIDList.forEach(function (plumberUID) {
+                                    availablePlumbers.push(admin.database().ref('/societyServices').child(societyServiceType).child("private").child("data").child(plumberUID).once('value'));
+                            });
+					        return Promise.all(availablePlumbers);
+				    })
+				    .then(availablePlumbersPromises => {
+				        var availablePlumbers = [];
+				        availablePlumbersPromises.forEach(promises => {
+				            availablePlumbers.push(promises.val());
+				        });
+				        availablePlumbers.sort((a, b) => parseFloat(a.serviceCount) - parseFloat(b.serviceCount));
+                    	var tokenId = availablePlumbers[0].tokenId;
+                    	var mobileNumber = availablePlumbers[0].mobileNumber;
+                        const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
+                        const payload = {
+                                data: {
+                                    message: notificationMessage,
+                                    notificationUID: notificationUID,
+                                    mobileNumber : mobileNumber,
+                                    societyServiceType : societyServiceType
+                                    }
+                                };
 
-						console.log("Entered availableReference Block");
-					
-						var minimumServiceCount = -1;
-						snapshot.forEach(function(child){
-							
-							const mobileReference = admin.database().ref('/societyServices').child(societyServiceType).child("private")
-							.child("available").child(child.key).on('value', function(snapshot){
-								var mobileNumberMap = snapshot.val();
-								const serviceCount = mobileNumberMap["serviceCount"];
-								
-								if (minimumServiceCount === -1 || serviceCount < minimumServiceCount) {
-									
-									console.log("Entered IF Statement");
-									
-									minimumServiceCount = serviceCount;
-									tokenId = mobileNumberMap["tokenId"];
-									mobileNumber = child.key;
-								}
+                        return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+                            return console.log("Notification sent");
+                        });
 
-							});
-							
-						});
-						
-						console.log("Society Service Type : " + societyServiceType);
-						console.log("Mobile Number : " + mobileNumber);
-						console.log("tokenId : " + tokenId);
-						
-						const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
-						const payload = {		
-								data: {
-									message: notificationMessage,
-									notificationUID: notificationUID, 
-									mobileNumber : mobileNumber,
-									societyServiceType : societyServiceType
-									}
-								};
-							
-						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-							return console.log("Notification sent");
-						
-					});
-				
-				});
+				    });
 				}
-				
-				return console.log("End Of Function");
 			});
 		});
 	});
