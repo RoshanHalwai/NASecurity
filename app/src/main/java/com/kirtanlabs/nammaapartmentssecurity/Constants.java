@@ -123,6 +123,7 @@ public class Constants {
     public static final String EMERGENCY_TYPE_MEDICAL = "Medical";
     public static final String EMERGENCY_TYPE_FIRE = "Fire";
     public static final String EMERGENCY_TYPE_THEFT = "Theft";
+    public static final String EMERGENCY_TYPE_WATER = "Water";
     public static final String GUEST = "guest";
     public static final String DAILY_SERVICE = "dailyService";
     public static final String CAB = "cab";

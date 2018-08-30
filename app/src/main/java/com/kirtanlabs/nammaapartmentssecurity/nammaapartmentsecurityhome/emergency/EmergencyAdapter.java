@@ -67,6 +67,9 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
             case Constants.EMERGENCY_TYPE_THEFT:
                 holder.imageEmergencyType.setImageResource(R.drawable.theft_alarm);
                 break;
+            case Constants.EMERGENCY_TYPE_WATER:
+                holder.imageEmergencyType.setImageResource(R.drawable.water_emergency);
+                break;
         }
     }
 
