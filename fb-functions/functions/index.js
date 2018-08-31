@@ -13,6 +13,13 @@ dailyServiceLookup['carBikeCleaners'] = "Car/Bike Cleaner";
 dailyServiceLookup['drivers'] = "Driver";
 dailyServiceLookup['laundries'] = "Laundry";
 dailyServiceLookup['milkmen'] = "Milkman";
+
+/*Mapping Society Service Firebase Keys with Notification value*/
+const societyServiceLookup = {};
+societyServiceLookup['plumber'] = "Plumber";
+societyServiceLookup['carpenter'] = "Carpenter";
+societyServiceLookup['electrician'] = "Electrician";
+societyServiceLookup['garbageManagement'] = "Garbage Collector";
 		
 admin.initializeApp(functions.config().firebase);
 
@@ -471,6 +478,45 @@ exports.eventNotifications = functions.database.ref('/societyServiceNotification
 				data: {
 					message: notificationMesage,
 					type: "Event_Management"
+				}
+			};
+			
+			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+				return console.log("Notification sent");
+			});
+			
+		});
+	});
+	
+});
+
+// Notifications triggerd when society service accepts User's Society Service request
+
+exports.societyServiceResponseNotifications = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
+.onCreate((change, context) => {
+	
+	const notificationUID = context.params.notificationUID;
+	
+	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+		const userUID = queryResult.val().userUID;
+		const societyServiceType = queryResult.val().societyServiceType;
+		
+		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+			
+			const tokenId = queryResult.val().tokenId;
+			
+			console.log("Token id -> "+tokenId);
+			
+			const payload = {
+				notification: {
+                    title: "Namma Apartments",
+                    body: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
+                    "sound": "default",
+                    "badge": "1"
+				},
+				data: {
+				message: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
+					type: "Society_Service"
 				}
 			};
 			
