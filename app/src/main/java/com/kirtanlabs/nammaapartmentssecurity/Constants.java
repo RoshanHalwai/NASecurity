@@ -80,6 +80,8 @@ public class Constants {
     private static final String FIREBASE_CHILD_USERS = "users";
     private static final String FIREBASE_CHILD_CITIES = "cities";
     private static final String FIREBASE_CHILD_CLIENTS = "clients";
+    public static final String FIREBASE_CHILD_MESSAGE = "message";
+    public static final String FIREBASE_CHILD_UID = "uid";
 
     /* ------------------------------------------------------------- *
      * Firebase Database References
@@ -193,20 +195,12 @@ public class Constants {
         return "Your Guest " + guestName + " wants to enter your society. Please confirm.";
     }
 
-    public static String getDailyServiceMessage(String dailyServiceName) {
-        return "Your Daily Service " + dailyServiceName + " wants to enter your society. Please confirm.";
-    }
-
     public static String getCabMessage(String cabNumber) {
         return "Your Cab Numbered " + cabNumber + " wants to enter your society. Please confirm.";
     }
 
     public static String getPackageMessage(String packageVendor) {
         return "Your Package vendor " + packageVendor + " wants to enter your society. Please confirm.";
-    }
-
-    public static String getFamilyMemberMessage(String familyMemberName) {
-        return "Your Family Member " + familyMemberName + " wants to enter your society. Please confirm.";
     }
 
 }

@@ -23,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
+import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.UserFlatDetails;
@@ -37,13 +38,13 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAMERA_PERMISSION_REQUEST_CODE;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.DAILY_SERVICE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE_MAP;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAMILY_MEMBER;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_GATE_NOTIFICATIONS;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_MESSAGE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_PRIVATE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_PROFILE_PHOTO;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_UID;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITORS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
@@ -51,8 +52,6 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.getCabMessage;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.getDailyServiceMessage;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.getFamilyMemberMessage;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.getGuestMessage;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.getPackageMessage;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
@@ -70,10 +69,11 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
      *-----------------------------------------------*/
 
     EditText editCabStateCode, editCabRtoNumber, editCabSerialNumberOne, editCabSerialNumberTwo;
-    private String eIntercomType;
+    private String eIntercomType, visitorMobileNumber;
     private CircleImageView circleImageView;
     private File profilePhotoPath;
     private EditText editFullName;
+    private EditText editVisitorMobileNumber;
     private EditText editMobileNumber;
     private TextView textErrorProfilePic;
 
@@ -99,6 +99,10 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         circleImageView = findViewById(R.id.visitorProfilePic);
         TextView textFullName = findViewById(R.id.textFullName);
         TextView textMobileNumber = findViewById(R.id.textMobileNumber);
+        TextView textVisitorMobileNumber = findViewById(R.id.textVisitorMobileNumber);
+        TextView textVisitorCountryCode = findViewById(R.id.textVisitorCountryCode);
+        editVisitorMobileNumber = findViewById(R.id.editVisitorMobileNumber);
+        LinearLayout layoutVisitorMobileNumber = findViewById(R.id.layoutVisitorMobileNumber);
         TextView textCountryCode = findViewById(R.id.textCountryCode);
         editFullName = findViewById(R.id.editFullName);
         editMobileNumber = findViewById(R.id.editMobileNumber);
@@ -126,6 +130,8 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             textFullName.setVisibility(View.GONE);
             editFullName.setVisibility(View.GONE);
             circleImageView.setVisibility(View.GONE);
+            layoutVisitorMobileNumber.setVisibility(View.GONE);
+            textVisitorMobileNumber.setVisibility(View.GONE);
 
             /*Show Cab Number Layout*/
             textCabOrVendorTitle.setVisibility(View.VISIBLE);
@@ -134,6 +140,8 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             if (eIntercomType.equals(PACKAGE)) {
                 textFullName.setText(getString(R.string.vendor));
                 circleImageView.setVisibility(View.GONE);
+                layoutVisitorMobileNumber.setVisibility(View.GONE);
+                textVisitorMobileNumber.setVisibility(View.GONE);
             }
             /*Setting font for all the views*/
             textFullName.setTypeface(setLatoBoldFont(this));
@@ -144,6 +152,9 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         textMobileNumber.setTypeface(setLatoBoldFont(this));
         textCountryCode.setTypeface(setLatoItalicFont(this));
         buttonSendNotification.setTypeface(setLatoLightFont(this));
+        textVisitorMobileNumber.setTypeface(setLatoBoldFont(this));
+        textVisitorCountryCode.setTypeface(setLatoItalicFont(this));
+        editVisitorMobileNumber.setTypeface(setLatoRegularFont(this));
 
         /*Setting event for all button clicks */
         circleImageView.setOnClickListener(this);
@@ -213,9 +224,6 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             case GUEST:
                 notificationMessage = getGuestMessage(editFullName.getText().toString());
                 break;
-            case DAILY_SERVICE:
-                notificationMessage = getDailyServiceMessage(editFullName.getText().toString());
-                break;
             case CAB:
                 String cabNumber = editCabStateCode.getText().toString().trim() + HYPHEN + editCabRtoNumber.getText().toString().trim() + HYPHEN
                         + editCabSerialNumberOne.getText().toString().trim() + HYPHEN + editCabSerialNumberTwo.getText().toString().trim();
@@ -223,9 +231,6 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                 break;
             case PACKAGE:
                 notificationMessage = getPackageMessage(editFullName.getText().toString());
-                break;
-            case FAMILY_MEMBER:
-                notificationMessage = getFamilyMemberMessage(editFullName.getText().toString());
                 break;
         }
         storeGateNotificationDetails(notificationMessage);
@@ -241,7 +246,8 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
     private boolean validateFields() {
         String fullName = editFullName.getText().toString().trim();
         String mobileNumber = editMobileNumber.getText().toString().trim();
-        boolean fieldsFilled = isAllFieldsFilled(new EditText[]{editFullName, editMobileNumber});
+        visitorMobileNumber = editVisitorMobileNumber.getText().toString().trim();
+        boolean fieldsFilled = isAllFieldsFilled(new EditText[]{editFullName, editMobileNumber, editVisitorMobileNumber});
 
         if (profilePhotoPath == null && !(eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE))) {
             textErrorProfilePic.setVisibility(View.VISIBLE);
@@ -258,6 +264,10 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             }
             if (TextUtils.isEmpty(mobileNumber)) {
                 editMobileNumber.setError(getString(R.string.mobile_number_validation));
+                return false;
+            }
+            if (TextUtils.isEmpty(visitorMobileNumber) && !(eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE))) {
+                editVisitorMobileNumber.setError(getString(R.string.mobile_number_validation));
                 return false;
             }
         } else {
@@ -311,8 +321,8 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                         /*If E-Intercom Type is Cab or Package, we would not have any Image to be stored in firebase*/
                         if (eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE)) {
                             notificationsReference.child(FIREBASE_CHILD_PROFILE_PHOTO).setValue("");
-                            notificationsReference.child("uid").setValue(notificationUID);
-                            notificationsReference.child("message").setValue(notificationMessage);
+                            notificationsReference.child(FIREBASE_CHILD_UID).setValue(notificationUID);
+                            notificationsReference.child(FIREBASE_CHILD_MESSAGE).setValue(notificationMessage);
                             hideProgressDialog();
                             callAwaitingResponseActivity(userUID, notificationUID);
                         } else {
@@ -333,8 +343,9 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                                 notificationsReference.child(FIREBASE_CHILD_PROFILE_PHOTO).setValue(Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString())
                                         .addOnCompleteListener(task -> {
                                             /*Store UID and Message of Notification in Firebase*/
-                                            notificationsReference.child("uid").setValue(notificationUID);
-                                            notificationsReference.child("message").setValue(notificationMessage);
+                                            notificationsReference.child(FIREBASE_CHILD_UID).setValue(notificationUID);
+                                            notificationsReference.child(FIREBASE_CHILD_MESSAGE).setValue(notificationMessage);
+                                            notificationsReference.child(Constants.MOBILE_NUMBER).setValue(visitorMobileNumber);
 
                                             //dismissing the progress dialog
                                             hideProgressDialog();

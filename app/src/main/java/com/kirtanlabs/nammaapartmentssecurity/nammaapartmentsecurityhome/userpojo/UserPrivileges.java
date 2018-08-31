@@ -9,7 +9,7 @@ public class UserPrivileges {
 
     private boolean admin;
     private boolean grantedAccess;
-    private boolean verified;
+    private int verified;
 
     /* ------------------------------------------------------------- *
      * Constructors
@@ -18,7 +18,7 @@ public class UserPrivileges {
     public UserPrivileges() {
     }
 
-    public UserPrivileges(boolean admin, boolean grantedAccess, boolean verified) {
+    public UserPrivileges(boolean admin, boolean grantedAccess, int verified) {
         this.admin = admin;
         this.grantedAccess = grantedAccess;
         this.verified = verified;
@@ -36,7 +36,7 @@ public class UserPrivileges {
         return grantedAccess;
     }
 
-    public boolean isVerified() {
+    public int getVerified() {
         return verified;
     }
 
