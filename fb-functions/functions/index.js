@@ -244,6 +244,61 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				            availablePlumbers.push(promises.val());
 				        });
 				        availablePlumbers.sort((a, b) => parseFloat(a.serviceCount) - parseFloat(b.serviceCount));
+
+				        var i = 0, l = availablePlumbers.length;
+				        return (function iterator() {
+
+				            admin.database().ref('/societyServiceNotifications')
+                            .child("all")
+                            .child(notificationUID)
+                            .child("takenBy")
+                            .once('value', function(snapshot) {
+                              if (snapshot.exists()) {
+                                console.log("Some Staff has taken this request, so we stop sending request to other staffs");
+                              } else {
+                                console.log("None of the staff has taken this request, so we start sending request to other staffs");
+
+                                console.log(availablePlumbers[i]);
+
+                                var tokenId = availablePlumbers[i].tokenId;
+                                var mobileNumber = availablePlumbers[i].mobileNumber;
+                                const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
+                                const payload = {
+                                        data: {
+                                            message: notificationMessage,
+                                            notificationUID: notificationUID,
+                                            mobileNumber : mobileNumber,
+                                            societyServiceType : societyServiceType
+                                            }
+                                        };
+
+                                //Update the service count of the staff to whom request is sent
+                                admin.database().ref('/societyServices')
+                                .child(societyServiceType)
+                                .child("private")
+                                .child("data")
+                                .child(availablePlumbers[i].uid)
+                                .child("serviceCount")
+                                .set(availablePlumbers[i].serviceCount + 1);
+
+                                admin.messaging().sendToDevice(tokenId, payload)
+                                .then(result => {
+                                    return console.log("Notification sent");
+                                })
+                                .catch(error => {console.log("Notification Error")});
+
+                              }
+
+                              if(++i<l) {
+                                  setTimeout(iterator, 15000);
+                              }
+
+                              return 0;
+
+                            });
+
+                        })();
+/*
                     	var tokenId = availablePlumbers[0].tokenId;
                     	var mobileNumber = availablePlumbers[0].mobileNumber;
                         const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
@@ -256,9 +311,18 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
                                     }
                                 };
 
-                        return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+                        admin.messaging().sendToDevice(tokenId, payload).then(result => {
+                            //Update the service count of the staff to whom request is sent
+                            admin.database().ref('/societyServices')
+                            .child(societyServiceType)
+                            .child("private")
+                            .child("data")
+                            .child(availablePlumbers[0].uid)
+                            .child("serviceCount")
+                            .set(availablePlumbers[0].serviceCount + 1);
+
                             return console.log("Notification sent");
-                        });
+                        });*/
 
 				    });
 				}
@@ -343,18 +407,26 @@ exports.activateAccountNotification = functions.database.ref('/users/private/{us
 	return admin.database().ref("/users").child("private").child(userUID).child("privileges").once('value').then(queryResult => {
 		const verified = queryResult.val().verified;
 		
-		if(verified === true) {
+		if(verified === 1 || verified === 2) {
 			return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+
+				var message;
+				if (verified === 1) {
+				    message = "Welcome to Namma Apartments, Your Account has been Activated";
+				} else {
+				    message = "Sorry, Your Account Activation has been rejected by Admin";
+				}
+
 				const tokenId = queryResult.val().tokenId;
 				const payload = {
 						notification: {
 							title: "Namma Apartments",
-							body: "Welcome to Namma Apartments, Your Account has been Activated",
+							body: message,
 							"sound": "default",
 							"badge": "1"
 						},
 					data: {
-						message: "Welcome to Namma Apartments, Your Account has been Activated",
+						message: message,
 						type: "userAccountNotification"
 					}
 				};
