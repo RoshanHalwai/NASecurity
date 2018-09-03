@@ -60,8 +60,24 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
             channelId = getString(R.string.default_notification_channel_id);
         }
 
+        int icon;
+        switch (emergencyType) {
+            case "Medical":
+                icon = R.drawable.medical_emergency;
+                break;
+            case "Fire":
+                icon = R.drawable.fire_alarm;
+                break;
+            case "Theft":
+                icon = R.drawable.theft_alarm;
+                break;
+            default:
+                icon = R.drawable.water_emergency;
+                break;
+        }
+
         Notification notification = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.medical_emergency)
+                .setSmallIcon(icon)
                 .setAutoCancel(true)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(message)

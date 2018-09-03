@@ -9,6 +9,8 @@ import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
+import java.util.Objects;
+
 public class RecentEmergencyDetails extends BaseActivity {
 
     /* ------------------------------------------------------------- *
@@ -103,7 +105,7 @@ public class RecentEmergencyDetails extends BaseActivity {
         textResidentFlatNumberValue.setText(flatNumber);
 
         /* Here we are setting image in cardView according to the emergency type */
-        switch (emergencyType) {
+        switch (Objects.requireNonNull(emergencyType)) {
             case Constants.EMERGENCY_TYPE_MEDICAL:
                 imageEmergencyType.setImageResource(R.drawable.medical_emergency);
                 break;
@@ -112,6 +114,9 @@ public class RecentEmergencyDetails extends BaseActivity {
                 break;
             case Constants.EMERGENCY_TYPE_THEFT:
                 imageEmergencyType.setImageResource(R.drawable.theft_alarm);
+                break;
+            case Constants.EMERGENCY_TYPE_WATER:
+                imageEmergencyType.setImageResource(R.drawable.water_emergency);
                 break;
         }
     }

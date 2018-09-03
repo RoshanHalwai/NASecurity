@@ -67,13 +67,11 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
         gridNammaApartmentsSecurity.setOnItemClickListener(this);
 
         /*Storing Security Guard token_id in firebase so that User can send notification to guard*/
-        DatabaseReference securityGuardReference = Constants.SECURITY_GUARD_REFERENCE
-                .child(Constants.FIREBASE_CHILD_PRIVATE)
-                .child(Constants.FIREBASE_CHILD_DATA)
+        DatabaseReference securityGuardTokenReference = Constants.SECURITY_GUARDS_PRIVATE_DATA_REFERENCE
                 .child(securityGuardUID)
                 .child(Constants.FIREBASE_CHILD_TOKEN_ID);
         String token_id = FirebaseInstanceId.getInstance().getToken();
-        securityGuardReference.setValue(token_id);
+        securityGuardTokenReference.setValue(token_id);
     }
 
     /* ------------------------------------------------------------- *

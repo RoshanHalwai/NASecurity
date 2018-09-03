@@ -139,6 +139,48 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textVisitorMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/visitor_mobile_number"
+                android:textColor="@color/nmBlack"
+                android:textSize="@dimen/text_view_default_size" />
+
+            <LinearLayout
+                android:id="@+id/layoutVisitorMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/textVisitorCountryCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:text="@string/_91"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="@dimen/text_view_default_size" />
+
+                <EditText
+                    android:id="@+id/editVisitorMobileNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="20sp"
+                    tools:ignore="LabelFor" />
+
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/textMobileNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

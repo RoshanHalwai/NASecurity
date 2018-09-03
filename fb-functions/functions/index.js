@@ -13,6 +13,13 @@ dailyServiceLookup['carBikeCleaners'] = "Car/Bike Cleaner";
 dailyServiceLookup['drivers'] = "Driver";
 dailyServiceLookup['laundries'] = "Laundry";
 dailyServiceLookup['milkmen'] = "Milkman";
+
+/*Mapping Society Service Firebase Keys with Notification value*/
+const societyServiceLookup = {};
+societyServiceLookup['plumber'] = "Plumber";
+societyServiceLookup['carpenter'] = "Carpenter";
+societyServiceLookup['electrician'] = "Electrician";
+societyServiceLookup['garbageManagement'] = "Garbage Collector";
 		
 admin.initializeApp(functions.config().firebase);
 
@@ -24,6 +31,12 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 		const visitorUID = context.params.visitorUID;
 		
 		return admin.database().ref("/visitors").child("private").child(visitorUID).once('value').then(queryResult => {
+
+		    /*Exit the API if snapshot does not exist, more likely Delete Operation has been triggered*/
+            if ( ! queryResult.exists()) {
+                return 0;
+            }
+
 			const guestName = queryResult.val().fullName;
 			const status = queryResult.val().status;
 			const inviterUID = queryResult.val().inviterUID;
@@ -60,6 +73,12 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 		const promises = [];
 		
 		return admin.database().ref("/dailyServices").child("all").child("public").child(dailyServiceType).child(dailyServiceUID).once('value').then(queryResult => {
+
+			/*Exit the API if snapshot does not exist, more likely Delete Operation has been triggered*/
+            if ( ! queryResult.exists()) {
+                return 0;
+            }
+
 			const status = queryResult.val().status;
 			if(status.localeCompare("Not Entered") === 0)
 				return null;
@@ -154,8 +173,14 @@ exports.noticeBoardNotification = functions.database.ref('/noticeBoard/{noticeBo
 exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status')
 .onWrite((change, context) => {
 	const cabUID = context.params.cabUID;
-	
+
 	return admin.database().ref("/cabs").child("private").child(cabUID).once('value').then(queryResult => {
+
+	    /*Exit the API if snapshot does not exist, more likely Delete Operation has been triggered*/
+        if ( ! queryResult.exists()) {
+            return 0;
+        }
+
 		const status = queryResult.val().status;
 		const inviterUID = queryResult.val().inviterUID;
 		
@@ -195,6 +220,12 @@ exports.packageNotifications = functions.database.ref('/deliveries/private/{deli
 	const deliveryUID = context.params.deliveryUID;
 	
 	return admin.database().ref("/deliveries").child("private").child(deliveryUID).once('value').then(queryResult => {
+
+	    /*Exit the API if snapshot does not exist, more likely Delete Operation has been triggered*/
+	    if ( ! queryResult.exists()) {
+	        return 0;
+	    }
+
 		const status = queryResult.val().status;
 		const reference = queryResult.val().reference;
 		const inviterUID = queryResult.val().inviterUID;
@@ -277,6 +308,21 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				    });
 					
 			    } else {
+
+			        /*
+			        1. Function starts with collecting all Available Staff Details and sort them based
+			            their service count.
+			        2. Iterate over each of the staff and sends them User service request.
+			        3. Since they receive a request we also increase their service count.
+			        4. We give 15 seconds for the staff to respond to the request.
+			        5. After 15 seconds we check the user notification (takenBy) property.
+			        6. If it is present it indicates the staff has accepted the request, so we stop sending
+			            request to other staffs.
+			        7. Else we send request to next available staff and repeat step 3.
+			        8. After iterating over all of the available staffs if the user notification (takenBy) property
+			        is still not present, then it indicates none of the staff has accepted to user request.
+			        9. We update User UI accordingly (//TODO)
+			        */
 					return admin.database().ref('/societyServices').child(societyServiceType).child("private").child("available").once('value')
 					.then(availablePlumbersUID => {
 					    var availablePlumbersUIDList = [];
@@ -298,21 +344,60 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				            availablePlumbers.push(promises.val());
 				        });
 				        availablePlumbers.sort((a, b) => parseFloat(a.serviceCount) - parseFloat(b.serviceCount));
-                    	var tokenId = availablePlumbers[0].tokenId;
-                    	var mobileNumber = availablePlumbers[0].mobileNumber;
-                        const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
-                        const payload = {
-                                data: {
-                                    message: notificationMessage,
-                                    notificationUID: notificationUID,
-                                    mobileNumber : mobileNumber,
-                                    societyServiceType : societyServiceType
-                                    }
-                                };
 
-                        return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-                            return console.log("Notification sent");
-                        });
+				        var i = 0, l = availablePlumbers.length;
+				        return (function iterator() {
+
+				            admin.database().ref('/societyServiceNotifications')
+                            .child("all")
+                            .child(notificationUID)
+                            .child("takenBy")
+                            .once('value', function(snapshot) {
+                              if (snapshot.exists()) {
+                                console.log("Some Staff has taken this request, so we stop sending request to other staffs");
+                              } else {
+                                console.log("None of the staff has taken this request, so we start sending request to other staffs");
+
+                                console.log(availablePlumbers[i]);
+
+                                var tokenId = availablePlumbers[i].tokenId;
+                                var mobileNumber = availablePlumbers[i].mobileNumber;
+                                const notificationMessage = userFullName + " needs your service at " + apartmentName + " , " + flatNumber + ". Please confirm! ";
+                                const payload = {
+                                        data: {
+                                            message: notificationMessage,
+                                            notificationUID: notificationUID,
+                                            mobileNumber : mobileNumber,
+                                            societyServiceType : societyServiceType
+                                            }
+                                        };
+
+                                //Update the service count of the staff to whom request is sent
+                                admin.database().ref('/societyServices')
+                                .child(societyServiceType)
+                                .child("private")
+                                .child("data")
+                                .child(availablePlumbers[i].uid)
+                                .child("serviceCount")
+                                .set(availablePlumbers[i].serviceCount + 1);
+
+                                admin.messaging().sendToDevice(tokenId, payload)
+                                .then(result => {
+                                    return console.log("Notification sent");
+                                })
+                                .catch(error => {console.log("Notification Error")});
+
+                              }
+
+                              if(++i<l) {
+                                  setTimeout(iterator, 15000);
+                              }
+
+                              return 0;
+
+                            });
+
+                        })();
 
 				    });
 				}
@@ -336,79 +421,72 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 		const apartmentName = queryResult.val().apartmentName;
 		const flatNumber = queryResult.val().flatNumber;
 		const mobileNumber = queryResult.val().phoneNumber;
-		
-		console.log("Owners Name: "+ownerName);
-		console.log("Emergency Type: "+emergencyType);
-		console.log("Apartment Name: "+apartmentName);
-		console.log("Flat Number: "+flatNumber);
-		console.log("Mobile Number:"+mobileNumber);
-		
-		const guardReference = admin.database().ref('/societyServices').child("guard").child("private")
-					.child("data").on('value', function(snapshot){		
 
-						console.log("Entered guardReference Block");
-					
-						var tokenId;
-						snapshot.forEach(function(child){
-							
-							const adminReference = admin.database().ref('/societyServices').child("guard").child("private")
-							.child("data").child(child.key).on('value', function(snapshot){
-								var guardUIDMap = snapshot.val();
-								const isAdmin = guardUIDMap["admin"];
-								
-								if (isAdmin) {				
-								console.log("Entered IF Statement");
-								tokenId = guardUIDMap["tokenId"];									
-								}
+		const guardAdminReference = admin.database().ref('/guards').child("private")
+            .child("admin").on('value', function(snapshot){
+                const adminGuardUID = snapshot.val();
 
-							});
-							
-						});						
-						
-						const payload = {		
-								data: {
-										message: "A " + emergencyType + " emergency has been raised by " + ownerName + " of " + flatNumber + " in " + apartmentName,
-										emergencyType: emergencyType,
-										ownerName: ownerName,
-										mobileNumber: mobileNumber,
-										apartmentName: apartmentName,
-										flatNumber: flatNumber
-									}
-								};
-							
-						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-							return console.log("Notification sent");
-						
-					});
-				
+                const adminReference = admin.database().ref('/guards').child("private")
+                    .child("data").child(adminGuardUID).child("tokenId").on('value', function(snapshot){
+                        const tokenId = snapshot.val();
+
+                        const payload = {
+                            data: {
+                                    message: "A " + emergencyType + " emergency has been raised by " + ownerName + " of " + flatNumber + " in " + apartmentName,
+                                    emergencyType: emergencyType,
+                                    ownerName: ownerName,
+                                    mobileNumber: mobileNumber,
+                                    apartmentName: apartmentName,
+                                    flatNumber: flatNumber
+                                }
+                            };
+
+                            return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+                                return console.log("Notification sent");
+                    });
+
+             });
+
 		});
-				
 		return console.log("End of Function");
 	});
 	
 });
-	
-//Notifications triggered when privilege value is set to true/false
+
+//Notifications triggered when privilege value is set to 0,1 or 2
 
 exports.activateAccountNotification = functions.database.ref('/users/private/{userUID}/privileges/verified')
 .onWrite((change, context) => {
 	const userUID = context.params.userUID;
-	
+
 	return admin.database().ref("/users").child("private").child(userUID).child("privileges").once('value').then(queryResult => {
+
+        /*Exit the API if snapshot does not exist, more likely Delete Operation has been triggered*/
+	    if( ! queryResult.exists()) {
+	        return 0;
+	    }
+
 		const verified = queryResult.val().verified;
-		
-		if(verified === true) {
+		if(verified === 1 || verified === 2) {
 			return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+
+				var message;
+				if (verified === 1) {
+				    message = "Welcome to Namma Apartments, Your Account has been Activated";
+				} else {
+				    message = "Sorry, Your Account Activation has been rejected by Admin";
+				}
+
 				const tokenId = queryResult.val().tokenId;
 				const payload = {
 						notification: {
 							title: "Namma Apartments",
-							body: "Welcome to Namma Apartments, Your Account has been Activated",
+							body: message,
 							"sound": "default",
 							"badge": "1"
 						},
 					data: {
-						message: "Welcome to Namma Apartments, Your Account has been Activated",
+						message: message,
 						type: "userAccountNotification"
 					}
 				};
@@ -532,6 +610,45 @@ exports.eventNotifications = functions.database.ref('/societyServiceNotification
 				data: {
 					message: notificationMesage,
 					type: "Event_Management"
+				}
+			};
+			
+			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+				return console.log("Notification sent");
+			});
+			
+		});
+	});
+	
+});
+
+// Notifications triggered when society service accepts User's Society Service request
+
+exports.societyServiceResponseNotifications = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
+.onCreate((change, context) => {
+	
+	const notificationUID = context.params.notificationUID;
+	
+	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+		const userUID = queryResult.val().userUID;
+		const societyServiceType = queryResult.val().societyServiceType;
+		
+		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+			
+			const tokenId = queryResult.val().tokenId;
+			
+			console.log("Token id -> "+tokenId);
+			
+			const payload = {
+				notification: {
+                    title: "Namma Apartments",
+                    body: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
+                    "sound": "default",
+                    "badge": "1"
+				},
+				data: {
+				message: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
+					type: "Society_Service"
 				}
 			};
 			
