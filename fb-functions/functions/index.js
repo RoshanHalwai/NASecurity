@@ -361,11 +361,11 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 		const flatNumber = queryResult.val().flatNumber;
 		const mobileNumber = queryResult.val().phoneNumber;
 
-		const guardAdminReference = admin.database().ref('/societyServices').child("guard").child("private")
+		const guardAdminReference = admin.database().ref('/guards').child("private")
             .child("admin").on('value', function(snapshot){
                 const adminGuardUID = snapshot.val();
 
-                const adminReference = admin.database().ref('/societyServices').child("guard").child("private")
+                const adminReference = admin.database().ref('/guards').child("private")
                     .child("data").child(adminGuardUID).child("tokenId").on('value', function(snapshot){
                         const tokenId = snapshot.val();
 
