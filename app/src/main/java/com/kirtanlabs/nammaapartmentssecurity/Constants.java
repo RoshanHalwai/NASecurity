@@ -114,9 +114,9 @@ public class Constants {
     private static final DatabaseReference PRIVATE_EMERGENCIES_REFERENCE = EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_EMERGENCIES_REFERENCE = PRIVATE_EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_ALL);
     private static final DatabaseReference SOCIETY_SERVICE_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SOCIETY_SERVICE);
-    public static final DatabaseReference ALL_SOCIETY_SERVICE_REFERENCE = SOCIETY_SERVICE_REFERENCE.child(FIREBASE_CHILD_ALL);
     private static final DatabaseReference SECURITY_GUARDS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SECURITY_GUARDS);
     public static final DatabaseReference SECURITY_GUARDS_PRIVATE_DATA_REFERENCE = SECURITY_GUARDS_REFERENCE.child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA);
+    public static final DatabaseReference ALL_SECURITY_GUARDS_REFERENCE = SECURITY_GUARDS_REFERENCE.child(FIREBASE_CHILD_ALL);
 
     /* ------------------------------------------------------------- *
      * Application Specific
