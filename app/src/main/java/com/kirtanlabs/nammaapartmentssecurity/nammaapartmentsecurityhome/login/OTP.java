@@ -233,7 +233,7 @@ public class OTP extends BaseActivity implements View.OnClickListener {
                 .addOnCompleteListener(this, (task) -> {
                     if (task.isSuccessful()) {
                         hideProgressDialog();
-                        DatabaseReference guardReference = Constants.ALL_SOCIETY_SERVICE_REFERENCE.child(userMobileNumber);
+                        DatabaseReference guardReference = Constants.ALL_SECURITY_GUARDS_REFERENCE.child(userMobileNumber);
                         guardReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
