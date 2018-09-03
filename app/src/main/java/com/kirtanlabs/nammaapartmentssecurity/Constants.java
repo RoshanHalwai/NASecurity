@@ -75,7 +75,7 @@ public class Constants {
     private static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     private static final String FIREBASE_CHILD_EMERGENCIES = "emergencies";
     private static final String FIREBASE_CHILD_PUBLIC = "public";
-    private static final String FIREBASE_CHILD_SECURITY_GUARD = "guard";
+    private static final String FIREBASE_CHILD_SECURITY_GUARDS = "guards";
     private static final String FIREBASE_CHILD_SOCIETY_SERVICE = "societyServices";
     private static final String FIREBASE_CHILD_USERS = "users";
     private static final String FIREBASE_CHILD_CITIES = "cities";
@@ -115,7 +115,8 @@ public class Constants {
     public static final DatabaseReference ALL_EMERGENCIES_REFERENCE = PRIVATE_EMERGENCIES_REFERENCE.child(FIREBASE_CHILD_ALL);
     private static final DatabaseReference SOCIETY_SERVICE_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SOCIETY_SERVICE);
     public static final DatabaseReference ALL_SOCIETY_SERVICE_REFERENCE = SOCIETY_SERVICE_REFERENCE.child(FIREBASE_CHILD_ALL);
-    public static final DatabaseReference SECURITY_GUARD_REFERENCE = SOCIETY_SERVICE_REFERENCE.child(FIREBASE_CHILD_SECURITY_GUARD);
+    private static final DatabaseReference SECURITY_GUARDS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SECURITY_GUARDS);
+    public static final DatabaseReference SECURITY_GUARDS_PRIVATE_DATA_REFERENCE = SECURITY_GUARDS_REFERENCE.child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA);
 
     /* ------------------------------------------------------------- *
      * Application Specific
