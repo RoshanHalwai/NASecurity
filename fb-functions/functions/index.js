@@ -112,6 +112,60 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 	});
 	
 });
+
+//Notifications triggered when Admin adds a Notice
+
+exports.noticeBoardNotification = functions.database.ref('/noticeBoard/{noticeBoardUID}')
+	.onCreate((change, context) => {
+		
+		const noticeBoardUID = context.params.noticeBoardUID;
+		console.log("Notice Board UID is:" + noticeBoardUID);
+		const promises = [];
+		
+		return admin.database().ref("/noticeBoard").child(noticeBoardUID).once('value').then(queryResult => {
+			const dateAndTime = queryResult.val().dateAndTime;
+			const title = queryResult.val().title;	
+			console.log("Title is:" + title);
+			
+			
+			return admin.database().ref("users").child("private").once('value').then(queryResult => {
+		
+			return queryResult.forEach((userSnap) => {
+				var userUID = userSnap.key;
+				console.log("User is:" + userUID);
+				
+				const userDataReference = admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+						const tokenId = queryResult.val().tokenId;
+						const payload = {
+							data: {
+								message: "A notice has been added by your Society Admin. Please check your Notice Board.",
+								type: "Notice_Board_Notification"
+							},
+							notification: {
+                                title: "Namma Apartments",
+                                body: "A notice has been added by your Society Admin. Please check your Notice Board.",
+                                "sound": "default",
+                                "badge": "1"
+							}
+						};
+
+						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+							return console.log("Notification sent");	
+					
+						});
+					});
+					promises.push(userDataReference);
+				
+				});
+			
+			}).then(()=> {
+				return Promise.all(promises);
+			
+		});
+		
+	});
+	
+});
 	
 	
 //Notifications triggered when Cabs either Enters or Leaves the User Society
@@ -136,6 +190,12 @@ exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status
 		return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			const payload = {
+				notification: {
+                                title: "Namma Apartments",
+                                body: "Your Cab has " + status + " your society.",
+                                "sound": "default",
+                                "badge": "1"
+                },
 				data: {
 					message: "Your Cab has " + status + " your society.",
 					type: "Cab_Notification"
@@ -156,6 +216,7 @@ exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status
 
 exports.packageNotifications = functions.database.ref('/deliveries/private/{deliveryUID}/status')
 .onWrite((change, context) => {
+	
 	const deliveryUID = context.params.deliveryUID;
 	
 	return admin.database().ref("/deliveries").child("private").child(deliveryUID).once('value').then(queryResult => {
