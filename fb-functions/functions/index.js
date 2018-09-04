@@ -541,8 +541,10 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 
 		const message = queryResult.val().message;
 		const profilePhoto = queryResult.val().profilePhoto;
+		const mobileNumber = queryResult.val().mobileNumber; 
 		
 		console.log("NotificationUID:" + profilePhoto);
+		console.log("Visitor's Mobile Number:" + mobileNumber);
 		
 		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
 			
@@ -557,6 +559,7 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 					user_uid : userUID,
 					visitor_type : visitorType,
 					profile_photo : profilePhoto,
+					mobile_number : mobileNumber,
 					type: "E-Intercom"
 				}
             };
