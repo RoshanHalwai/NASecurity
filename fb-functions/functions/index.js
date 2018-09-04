@@ -541,7 +541,13 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 
 		const message = queryResult.val().message;
 		const profilePhoto = queryResult.val().profilePhoto;
-		const mobileNumber = queryResult.val().mobileNumber; 
+		var mobileNumber;
+		
+			if(visitorType === "guests"){
+				mobileNumber = queryResult.val().mobileNumber;
+			} else {
+				mobileNumber = "";
+			}			
 		
 		console.log("NotificationUID:" + profilePhoto);
 		console.log("Visitor's Mobile Number:" + mobileNumber);
