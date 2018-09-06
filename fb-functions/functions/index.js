@@ -46,13 +46,39 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 			
 			return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 				const tokenId = queryResult.val().tokenId;
-				const payload = {
-					data: {
-						message: "Your Guest " + guestName + " has " + status + " your society.",
-						type: "Guest_Notification"
-					}
-				};
-
+				const guestNotificationSound = queryResult.child("otherDetails").child("notificationSound").val().guest;
+				var payload;
+				
+				if (guestNotificationSound) {
+					payload = {
+						notification: {
+									title: "Namma Apartments",
+									body: "Your Guest " + guestName + " has " + status + " your society.",
+									"sound": "default",
+									"badge": "1" 
+						},
+						data: {
+							message: "Your Guest " + guestName + " has " + status + " your society.",
+							"sound": "default",
+							type: "Guest_Notification"
+						}
+					};
+				} else {
+					payload = {
+						notification: {
+									title: "Namma Apartments",
+									body: "Your Guest " + guestName + " has " + status + " your society.",
+									"sound": "",
+									"badge": "1" 
+						},
+						data: {
+							message: "Your Guest " + guestName + " has " + status + " your society.",
+							"sound": "",
+							type: "Guest_Notification"
+						}
+					};
+				}
+		
 				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 					return console.log("Notification sent");
 				});				
@@ -90,12 +116,40 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 				
 					const userDataReference = admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
 						const tokenId = queryResult.val().tokenId;
-						const payload = {
-							data: {
-								message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
-								type: "Daily_Service_Notification"
-							}
-						};
+						const dailyServiceNotificationSound = queryResult.child("otherDetails").child("notificationSound").val().dailyService;
+						var payload;
+						
+						if (dailyServiceNotificationSound) {
+							payload = {
+								notification: {
+									title: "Namma Apartments",
+									body: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+									"sound": "default",
+									"badge": "1" 
+								},
+								data: {
+									message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+									"sound": "default",
+									type: "Daily_Service_Notification"
+								}
+							};
+						}
+						else {
+							payload = {
+								notification: {
+									title: "Namma Apartments",
+									body: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+									"sound": "",
+									"badge": "1" 
+								},
+								data: {
+									message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+									"sound": "",
+									type: "Daily_Service_Notification"
+								}
+							};
+						}
+						
 
 						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 							return console.log("Notification sent");	
@@ -126,7 +180,6 @@ exports.noticeBoardNotification = functions.database.ref('/noticeBoard/{noticeBo
 			const dateAndTime = queryResult.val().dateAndTime;
 			const title = queryResult.val().title;	
 			console.log("Title is:" + title);
-			
 			
 			return admin.database().ref("users").child("private").once('value').then(queryResult => {
 		
@@ -189,19 +242,41 @@ exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status
 		
 		return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
-			const payload = {
-				notification: {
-                                title: "Namma Apartments",
-                                body: "Your Cab has " + status + " your society.",
-                                "sound": "default",
-                                "badge": "1"
-                },
-				data: {
-					message: "Your Cab has " + status + " your society.",
-					type: "Cab_Notification"
-				}
-			};
-
+			const cabNotificationSound = queryResult.child("otherDetails").child("notificationSound").val().cab;
+			console.log("Cab Notification Sound is: ", cabNotificationSound);
+			var payload;
+			
+			if (cabNotificationSound) {
+				payload = {
+					notification: {
+									title: "Namma Apartments",
+									body: "Your Cab has " + status + " your society.",
+									"sound": "default",
+									"badge": "1"
+					},
+					data: {
+						message: "Your Cab has " + status + " your society.",
+						"sound": "default",
+						type: "Cab_Notification"
+					}
+				};
+			}
+			else {
+				payload = {
+					notification: {
+									title: "Namma Apartments",
+									body: "Your Cab has " + status + " your society.",
+									"sound": "",
+									"badge": "1"
+					},
+					data: {
+						message: "Your Cab has " + status + " your society.",
+						"sound": "",
+						type: "Cab_Notification"
+					}
+				};
+			}
+			
 			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 				return console.log("Notification sent");
 			});				
@@ -235,13 +310,41 @@ exports.packageNotifications = functions.database.ref('/deliveries/private/{deli
 		
 		return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
-			const payload = {
-				data: {
-					message: "Your Package from " + reference + " has " + status + " your society.",
-					type: "Package_Notification"
-				}
-			};
-
+			const packageNotificationSound = queryResult.child("otherDetails").child("notificationSound").val().package;
+			var payload;
+			
+			if (packageNotificationSound) {
+				payload = {
+					notification: {
+									title: "Namma Apartments",
+									body: "Your Package has " + status + " your society.",
+									"sound": "default",
+									"badge": "1"
+					},
+					data: {
+						message: "Your Package from " + reference + " has " + status + " your society.",
+						"sound": "default",
+						type: "Package_Notification"
+					}
+				};
+				
+			} else {
+				payload = {
+					notification: {
+									title: "Namma Apartments",
+									body: "Your Package has " + status + " your society.",
+									"sound": "",
+									"badge": "1"
+					},
+					data: {
+						message: "Your Package from " + reference + " has " + status + " your society.",
+						"sound": "",
+						type: "Package_Notification"
+					}
+				};
+				
+			}
+		
 			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 				return console.log("Notification sent");
 			});				
@@ -559,6 +662,13 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			console.log("Token Id : " + tokenId);
 			
 			const payload = {
+				notification: {
+									title: "Namma Apartments",
+									body: message,
+									"sound": "default",
+									"badge": "1",
+									"click_action": "actionCategory"
+				},
 				data: {
 					message: message,
 					notification_uid : notificationUID,
