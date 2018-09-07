@@ -19,7 +19,7 @@ const societyServiceLookup = {};
 societyServiceLookup['plumber'] = "Plumber";
 societyServiceLookup['carpenter'] = "Carpenter";
 societyServiceLookup['electrician'] = "Electrician";
-societyServiceLookup['garbageManagement'] = "Garbage Collector";
+societyServiceLookup['garbageCollection'] = "Garbage Collection";
 		
 admin.initializeApp(functions.config().firebase);
 
@@ -189,23 +189,35 @@ exports.noticeBoardNotification = functions.database.ref('/noticeBoard/{noticeBo
 				
 				const userDataReference = admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
 						const tokenId = queryResult.val().tokenId;
-						const payload = {
-							data: {
-								message: "A notice has been added by your Society Admin. Please check your Notice Board.",
-								type: "Notice_Board_Notification"
-							},
-							notification: {
-                                title: "Namma Apartments",
-                                body: "A notice has been added by your Society Admin. Please check your Notice Board.",
-                                "sound": "default",
-                                "badge": "1"
-							}
-						};
+						const verified = queryResult.child("privileges").val().verified;
+						console.log("Verified Value is -> "+ verified);
+						
+						if(verified === 1){
+						
+							const payload = {
+								data: {
+									message: "A notice has been added by your Society Admin. Please check your Notice Board.",
+									type: "Notice_Board_Notification"
+								},
+								notification: {
+									title: "Namma Apartments",
+									body: "A notice has been added by your Society Admin. Please check your Notice Board.",
+									"sound": "default",
+									"badge": "1"
+								}
+							};
 
-						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-							return console.log("Notification sent");	
-					
-						});
+							return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+								
+								return console.log("Notification sent");	
+								
+							});
+							
+						} else {
+							
+								return null;
+							
+							}
 					});
 					promises.push(userDataReference);
 				
