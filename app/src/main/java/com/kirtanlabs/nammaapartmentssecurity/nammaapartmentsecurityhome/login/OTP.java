@@ -1,5 +1,7 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.login;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -231,8 +233,8 @@ public class OTP extends BaseActivity implements View.OnClickListener {
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
         fbAuth.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, (task) -> {
+                    hideProgressDialog();
                     if (task.isSuccessful()) {
-                        hideProgressDialog();
                         DatabaseReference guardReference = Constants.ALL_SECURITY_GUARDS_REFERENCE.child(userMobileNumber);
                         guardReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -242,8 +244,7 @@ public class OTP extends BaseActivity implements View.OnClickListener {
                                     startActivity(new Intent(OTP.this, NammaApartmentSecurityHome.class));
                                     finish();
                                 } else {
-                                    //TODO: Display Error dialog here.
-                                    Toast.makeText(OTP.this, "Mobile Number not found, Request Admin to add Mobile Number", Toast.LENGTH_LONG).show();
+                                    showNotificationDialog(getString(R.string.login_error_message), getString(R.string.mobile_number_found));
                                 }
                             }
 
@@ -453,4 +454,23 @@ public class OTP extends BaseActivity implements View.OnClickListener {
         });
     }
 
+    /**
+     * Shows message box with title, message when Security Guard's mobile mobile number
+     * is not present in Firebase
+     *
+     * @param title   - Title of the message
+     * @param message - Body of the message
+     */
+    public void showNotificationDialog(String title, String message) {
+        AlertDialog.Builder alertNotifyGateDialog = new AlertDialog.Builder(this);
+        alertNotifyGateDialog.setCancelable(false);
+        alertNotifyGateDialog.setTitle(title);
+        alertNotifyGateDialog.setMessage(message);
+        alertNotifyGateDialog.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+            startActivity(new Intent(OTP.this, SignIn.class));
+            finish();
+        });
+        new Dialog(this);
+        alertNotifyGateDialog.show();
+    }
 }
