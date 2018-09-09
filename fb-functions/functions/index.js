@@ -679,13 +679,6 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			console.log("Token Id : " + tokenId);
 			
 			const payload = {
-				notification: {
-									title: "Namma Apartments",
-									body: message,
-									"sound": "default",
-									"badge": "1",
-									"click_action": "actionCategory"
-				},
 				data: {
 					message: message,
 					notification_uid : notificationUID,
@@ -694,7 +687,14 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 					profile_photo : profilePhoto,
 					mobile_number : mobileNumber,
 					type: "E-Intercom"
-				}
+				},
+				notification: {
+                    title: "Namma Apartments",
+                    body: message,
+                    "sound": "default",
+                    "badge": "1",
+                    "click_action": "actionCategory"
+                }
             };
 			
 			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
