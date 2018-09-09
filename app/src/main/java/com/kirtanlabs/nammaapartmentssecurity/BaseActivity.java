@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercomType;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.login.SignIn;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -192,7 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         /*Setting onClickListener for view*/
         buttonEIntercom.setOnClickListener(v -> {
             dialog.cancel();
-            Intent intent = new Intent(BaseActivity.this, EIntercom.class);
+            Intent intent = new Intent(BaseActivity.this, EIntercomType.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -244,10 +245,10 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param statusReference - Database Reference of Visitors, Daily Services and Expected Arrivals
      */
     public void changeStatus(final String status, final DatabaseReference statusReference) {
-        if (status.equals(getString(R.string.not_entered))) {
-            statusReference.setValue(getString(R.string.entered));
-        } else if (status.equals(getString(R.string.entered))) {
+        if (status.equals(getString(R.string.entered))) {
             statusReference.setValue(getString(R.string.left));
+        } else {
+            statusReference.setValue(getString(R.string.entered));
         }
     }
 
