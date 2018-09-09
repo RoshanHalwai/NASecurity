@@ -522,8 +522,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 	
 });
 					
-
-// Notifications triggered when User Raises an Emergency Alarm to Security Guard
+// Notifications triggered when User Raises an Emergency Alarm. The Security Guard Admin and the Society Admin gets notified.
 
 exports.emergencyNotifications = functions.database.ref('/emergencies/public/{emergencyUID}')
 .onCreate((change, context) => {
@@ -543,7 +542,11 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 
                 const adminReference = admin.database().ref('/guards').child("private")
                     .child("data").child(adminGuardUID).child("tokenId").on('value', function(snapshot){
-                        const tokenId = snapshot.val();
+                        const guardTokenId = snapshot.val();
+						
+						return admin.database().ref("/societyServices").child("admin").once('value').then(queryResult => {
+							const adminTokenId = queryResult.val().tokenId;
+							console.log("Admin token is:", adminTokenId);
 
                         const payload = {
                             data: {
@@ -552,16 +555,18 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
                                     ownerName: ownerName,
                                     mobileNumber: mobileNumber,
                                     apartmentName: apartmentName,
-                                    flatNumber: flatNumber
+                                    flatNumber: flatNumber,
+									societyServiceType: "emergency"
                                 }
                             };
+							
+							var tokenId = [guardTokenId, adminTokenId];
 
                             return admin.messaging().sendToDevice(tokenId, payload).then(result => {
                                 return console.log("Notification sent");
                     });
-
-             });
-
+				});
+            });
 		});
 		return console.log("End of Function");
 	});
