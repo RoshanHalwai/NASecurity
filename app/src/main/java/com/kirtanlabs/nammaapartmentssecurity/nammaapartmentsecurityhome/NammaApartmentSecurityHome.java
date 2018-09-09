@@ -114,12 +114,12 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
 
     private NammaApartmentSecurityHomeAdapter getAdapter() {
         int[] imageGuardServices = {
-                R.drawable.e_intercom,
-                R.drawable.otp_valdation,
-                R.drawable.daily_service,
-                R.drawable.notify_gate,
-                R.drawable.society_member,
-                R.drawable.emergency
+                R.drawable.phone,
+                R.drawable.my_visitor_list_na,
+                R.drawable.daily_service_na,
+                R.drawable.notify_digi_gate_na,
+                R.drawable.invite_visitors_na,
+                R.drawable.emergency_na
         };
 
         String[] stringGuardServices = {getString(R.string.e_intercom),
