@@ -278,6 +278,33 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Shows message box with title, message and activity to be called when user
+     * clicks on Ok button
+     *
+     * @param title   - Title of the message
+     * @param message - Body of the message
+     * @param intent  - If null then on click of Ok, the dialog will disappear
+     *                else intent activity will be called
+     */
+    public void showNotificationDialog(String title, String message, Intent intent) {
+        android.app.AlertDialog.Builder alertNotifyGateDialog = new android.app.AlertDialog.Builder(this);
+        alertNotifyGateDialog.setCancelable(false);
+        alertNotifyGateDialog.setTitle(title);
+        alertNotifyGateDialog.setMessage(message);
+        if (intent == null) {
+            alertNotifyGateDialog.setPositiveButton(getString(R.string.ok), (dialog, which) -> dialog.cancel());
+        } else {
+            alertNotifyGateDialog.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        new Dialog(this);
+        alertNotifyGateDialog.show();
+    }
+
+    /**
      * This method is invoked to get Current date
      */
     public String getCurrentDate() {
