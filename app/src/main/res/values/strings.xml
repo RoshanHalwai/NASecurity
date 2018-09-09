@@ -33,6 +33,8 @@
     <string name="family_member">Family Member Approval</string>
     <string name="cab">Cab Approval</string>
     <string name="package_vendor">Package Approval</string>
+    <string name="invalid_user_title">Invalid User Message</string>
+    <string name="invalid_user_message">No record found for entered User\'s mobile number.</string>
 
     <!--NammaApartment security Home Activity-->
     <string name="e_intercom">E - Intercom</string>

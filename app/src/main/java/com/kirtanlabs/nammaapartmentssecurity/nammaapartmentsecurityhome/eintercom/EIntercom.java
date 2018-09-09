@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +39,9 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_NUMBER_FIELD_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAMERA_PERMISSION_REQUEST_CODE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE_MAP;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_GATE_NOTIFICATIONS;
@@ -136,6 +140,9 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             /*Show Cab Number Layout*/
             textCabOrVendorTitle.setVisibility(View.VISIBLE);
             cabNumberLayout.setVisibility(View.VISIBLE);
+
+            /*Setting events for Cab Number edit text*/
+            setEventsForEditText();
         } else {
             if (eIntercomType.equals(PACKAGE)) {
                 textFullName.setText(getString(R.string.vendor));
@@ -293,75 +300,81 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         userMobileReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String userUID = dataSnapshot.getValue(String.class);
+                if (dataSnapshot.exists()) {
+                    String userUID = dataSnapshot.getValue(String.class);
 
-                /*We get user information by their UID*/
-                DatabaseReference userPrivateReference = PRIVATE_USERS_REFERENCE.child(Objects.requireNonNull(userUID));
-                userPrivateReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
+                    /*We get user information by their UID*/
+                    DatabaseReference userPrivateReference = PRIVATE_USERS_REFERENCE.child(Objects.requireNonNull(userUID));
+                    userPrivateReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
 
-                        /*We store Notification under FlatDetails->Notification->userUID*/
-                        UserFlatDetails userFlatDetails = Objects.requireNonNull(nammaApartmentUser).getFlatDetails();
-                        DatabaseReference userDataReference = PRIVATE_USER_DATA_REFERENCE
-                                .child(userFlatDetails.getCity())
-                                .child(userFlatDetails.getSocietyName())
-                                .child(userFlatDetails.getApartmentName())
-                                .child(userFlatDetails.getFlatNumber());
+                            /*We store Notification under FlatDetails->Notification->userUID*/
+                            UserFlatDetails userFlatDetails = Objects.requireNonNull(nammaApartmentUser).getFlatDetails();
+                            DatabaseReference userDataReference = PRIVATE_USER_DATA_REFERENCE
+                                    .child(userFlatDetails.getCity())
+                                    .child(userFlatDetails.getSocietyName())
+                                    .child(userFlatDetails.getApartmentName())
+                                    .child(userFlatDetails.getFlatNumber());
 
-                        /*We create a unique ID for every push notifications*/
-                        DatabaseReference notificationsReference = userDataReference
-                                .child(FIREBASE_CHILD_GATE_NOTIFICATIONS)
-                                .child(userUID)
-                                .child(EINTERCOM_TYPE_MAP.get(eIntercomType))
-                                .push();
-                        String notificationUID = notificationsReference.getKey();
-
-                        /*If E-Intercom Type is Cab or Package, we would not have any Image to be stored in firebase*/
-                        if (eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE)) {
-                            notificationsReference.child(FIREBASE_CHILD_PROFILE_PHOTO).setValue("");
-                            notificationsReference.child(FIREBASE_CHILD_UID).setValue(notificationUID);
-                            notificationsReference.child(FIREBASE_CHILD_MESSAGE).setValue(notificationMessage);
-                            hideProgressDialog();
-                            callAwaitingResponseActivity(userUID, notificationUID);
-                        } else {
-                            /* Else we need to store Image of Guest, Daily Service or Family Member*/
-
-                            /*Getting the storage reference*/
-                            StorageReference storageReference = FirebaseStorage.getInstance().getReference(FIREBASE_CHILD_VISITORS)
-                                    .child(FIREBASE_CHILD_PRIVATE)
-                                    .child(FIREBASE_CHILD_VISITORS)
+                            /*We create a unique ID for every push notifications*/
+                            DatabaseReference notificationsReference = userDataReference
+                                    .child(FIREBASE_CHILD_GATE_NOTIFICATIONS)
+                                    .child(userUID)
                                     .child(EINTERCOM_TYPE_MAP.get(eIntercomType))
-                                    .child(notificationsReference.getKey());
+                                    .push();
+                            String notificationUID = notificationsReference.getKey();
 
-                            UploadTask uploadTask = storageReference.putBytes(getByteArrayFromFile(EIntercom.this, profilePhotoPath));
+                            /*If E-Intercom Type is Cab or Package, we would not have any Image to be stored in firebase*/
+                            if (eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE)) {
+                                notificationsReference.child(FIREBASE_CHILD_PROFILE_PHOTO).setValue("");
+                                notificationsReference.child(FIREBASE_CHILD_UID).setValue(notificationUID);
+                                notificationsReference.child(FIREBASE_CHILD_MESSAGE).setValue(notificationMessage);
+                                hideProgressDialog();
+                                callAwaitingResponseActivity(userUID, notificationUID);
+                            } else {
+                                /* Else we need to store Image of Guest, Daily Service or Family Member*/
 
-                            /*Adding the profile photo to storage reference and notification data to real time database under Flat Detail*/
-                            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                                //creating the upload object to store uploaded image details and notification data
-                                notificationsReference.child(FIREBASE_CHILD_PROFILE_PHOTO).setValue(Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString())
-                                        .addOnCompleteListener(task -> {
-                                            /*Store UID and Message of Notification in Firebase*/
-                                            notificationsReference.child(FIREBASE_CHILD_UID).setValue(notificationUID);
-                                            notificationsReference.child(FIREBASE_CHILD_MESSAGE).setValue(notificationMessage);
-                                            notificationsReference.child(Constants.MOBILE_NUMBER).setValue(visitorMobileNumber);
+                                /*Getting the storage reference*/
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReference(FIREBASE_CHILD_VISITORS)
+                                        .child(FIREBASE_CHILD_PRIVATE)
+                                        .child(FIREBASE_CHILD_VISITORS)
+                                        .child(EINTERCOM_TYPE_MAP.get(eIntercomType))
+                                        .child(notificationsReference.getKey());
 
-                                            //dismissing the progress dialog
-                                            hideProgressDialog();
-                                            callAwaitingResponseActivity(userUID, notificationUID);
-                                        });
+                                UploadTask uploadTask = storageReference.putBytes(getByteArrayFromFile(EIntercom.this, profilePhotoPath));
 
-                            }).addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show());
+                                /*Adding the profile photo to storage reference and notification data to real time database under Flat Detail*/
+                                uploadTask.addOnSuccessListener(taskSnapshot -> {
+                                    //creating the upload object to store uploaded image details and notification data
+                                    notificationsReference.child(FIREBASE_CHILD_PROFILE_PHOTO).setValue(Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString())
+                                            .addOnCompleteListener(task -> {
+                                                /*Store UID and Message of Notification in Firebase*/
+                                                notificationsReference.child(FIREBASE_CHILD_UID).setValue(notificationUID);
+                                                notificationsReference.child(FIREBASE_CHILD_MESSAGE).setValue(notificationMessage);
+                                                notificationsReference.child(Constants.MOBILE_NUMBER).setValue(visitorMobileNumber);
+
+                                                //dismissing the progress dialog
+                                                hideProgressDialog();
+                                                callAwaitingResponseActivity(userUID, notificationUID);
+                                            });
+
+                                }).addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show());
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
+                        }
 
-                });
+                    });
+                } else {
+                    /*dismissing the progress dialog*/
+                    hideProgressDialog();
+                    showNotificationDialog(getString(R.string.invalid_user_title), getString(R.string.invalid_user_message), null);
+                }
             }
 
             @Override
@@ -390,11 +403,96 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
     /**
      * This method gets invoked when the Guard presses the profilePic image to capture a photo
      */
-    protected void launchCamera() {
+    private void launchCamera() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         else {
             EasyImage.openCamera(this, 0);
         }
+    }
+
+    /**
+     * Once user enters details in one edit text we move the cursor to next edit text
+     */
+    private void setEventsForEditText() {
+        editCabStateCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    editCabRtoNumber.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        editCabRtoNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == EDIT_TEXT_MIN_LENGTH) {
+                    editCabStateCode.requestFocus();
+                } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    editCabSerialNumberOne.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editCabSerialNumberOne.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == EDIT_TEXT_MIN_LENGTH) {
+                    editCabRtoNumber.requestFocus();
+                } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    editCabSerialNumberTwo.requestFocus();
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editCabSerialNumberTwo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == EDIT_TEXT_MIN_LENGTH) {
+                    editCabSerialNumberOne.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }
