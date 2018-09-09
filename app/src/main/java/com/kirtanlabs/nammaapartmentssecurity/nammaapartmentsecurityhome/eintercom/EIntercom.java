@@ -25,8 +25,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
-import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.pojo.Notification;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.UserFlatDetails;
 
@@ -348,13 +348,9 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                                 /*Adding the profile photo to storage reference and notification data to real time database under Flat Detail*/
                                 uploadTask.addOnSuccessListener(taskSnapshot -> {
                                     //creating the upload object to store uploaded image details and notification data
-                                    notificationsReference.child(FIREBASE_CHILD_PROFILE_PHOTO).setValue(Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString())
+                                    String profilePhoto = taskSnapshot.getDownloadUrl().toString();
+                                    notificationsReference.setValue(new Notification(notificationMessage, visitorMobileNumber, profilePhoto, notificationUID))
                                             .addOnCompleteListener(task -> {
-                                                /*Store UID and Message of Notification in Firebase*/
-                                                notificationsReference.child(FIREBASE_CHILD_UID).setValue(notificationUID);
-                                                notificationsReference.child(FIREBASE_CHILD_MESSAGE).setValue(notificationMessage);
-                                                notificationsReference.child(Constants.MOBILE_NUMBER).setValue(visitorMobileNumber);
-
                                                 //dismissing the progress dialog
                                                 hideProgressDialog();
                                                 callAwaitingResponseActivity(userUID, notificationUID);
