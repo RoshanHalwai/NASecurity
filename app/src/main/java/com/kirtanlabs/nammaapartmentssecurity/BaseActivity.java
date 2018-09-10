@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
-import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercom;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.eintercom.EIntercomType;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.login.SignIn;
 import com.wang.avi.AVLoadingIndicatorView;
