@@ -119,41 +119,59 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 						const dailyServiceNotificationSound = queryResult.child("otherDetails").child("notificationSound").val().dailyService;
 						var payload;
 						
-						if (dailyServiceNotificationSound) {
-							payload = {
-								notification: {
-									title: "Namma Apartments",
-									body: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
-									"sound": "default",
-									"badge": "1" 
-								},
-								data: {
-									message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
-									"sound": "default",
-									type: "Daily_Service_Notification"
-								}
-							};
-						}
-						else {
-							payload = {
-								notification: {
-									title: "Namma Apartments",
-									body: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
-									"sound": "",
-									"badge": "1" 
-								},
-								data: {
-									message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
-									"sound": "",
-									type: "Daily_Service_Notification"
-								}
-							};
-						}
+						const userSocietyName = queryResult.child("flatDetails").val().societyName;
+						const userCity = queryResult.child("flatDetails").val().city;
+						const userApartmentName = queryResult.child("flatDetails").val().apartmentName;
+						const userFlatNumber = queryResult.child("flatDetails").val().flatNumber;
+						console.log("Flat Number is: "+userFlatNumber);
 						
-
-						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-							return console.log("Notification sent");	
-					
+						return admin.database().ref("/userData").child("private")
+							.child(userCity).child(userSocietyName).child(userApartmentName).child(userFlatNumber).child("dailyServices").child(dailyServiceType).child(dailyServiceUID)
+							.once('value').then(queryResult => {
+								
+							const isDailyServiceWorking = queryResult.val();
+							
+							console.log("Value -> ", isDailyServiceWorking);
+				
+							if (!isDailyServiceWorking) {
+								return null;
+							}
+							
+							if (dailyServiceNotificationSound) {
+								payload = {
+									notification: {
+										title: "Namma Apartments",
+										body: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+										"sound": "default",
+										"badge": "1" 
+									},
+									data: {
+										message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+										"sound": "default",
+										type: "Daily_Service_Notification"
+									}
+								};
+							}
+							else {
+								payload = {
+									notification: {
+										title: "Namma Apartments",
+										body: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+										"sound": "",
+										"badge": "1" 
+									},
+									data: {
+										message: "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.",
+										"sound": "",
+										type: "Daily_Service_Notification"
+									}
+								};
+							}
+						
+							return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+								return console.log("Notification sent");	
+						
+							});
 						});
 					});
 					promises.push(userDataReference);
