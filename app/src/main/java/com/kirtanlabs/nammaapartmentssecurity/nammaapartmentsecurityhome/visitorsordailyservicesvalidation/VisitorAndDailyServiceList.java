@@ -13,6 +13,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DAILYSERVICE_TYPE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DAILYSERVICE_UID;
@@ -35,7 +36,6 @@ public class VisitorAndDailyServiceList extends BaseActivity {
     private DailyServiceListAdapter dailyServiceListAdapter;
     private NammaApartmentDailyService nammaApartmentDailyService;
     private int validationStatusOf;
-    private String serviceType;
     private String dailyServiceStatus;
 
     /* ------------------------------------------------------------- *
@@ -111,49 +111,64 @@ public class VisitorAndDailyServiceList extends BaseActivity {
                 }
             });
         } else {
-            serviceType = getIntent().getStringExtra(FIREBASE_CHILD_DAILYSERVICE_TYPE);
             String dailyServiceUid = getIntent().getStringExtra(FIREBASE_CHILD_DAILYSERVICE_UID);
-            DatabaseReference dailyServiceReference = PUBLIC_DAILYSERVICES_REFERENCE
-                    .child(serviceType)
+            DatabaseReference dailyServiceTypeReference = PUBLIC_DAILYSERVICES_REFERENCE
+                    .child(FIREBASE_CHILD_DAILYSERVICE_TYPE)
                     .child(dailyServiceUid);
 
-            /*Retrieving Each Owners UID of that particular Daily Service */
-            dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            dailyServiceTypeReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
-                    dailyServiceStatus = (String) dailyServiceDataSnapshot.child(FIREBASE_CHILD_STATUS).getValue();
-                    hideProgressIndicator();
-                    for (DataSnapshot ownersUidDataSnapshot : dailyServiceDataSnapshot.getChildren()) {
-                        String ownersUid = ownersUidDataSnapshot.getKey();
-                        if (!FIREBASE_CHILD_STATUS.equals(ownersUid)) {
-                            /*Get data and add to the list for displaying in Daily Service List*/
-                            dailyServiceReference.
-                                    child(ownersUid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
-                                    assert nammaApartmentDailyService != null;
-                                    nammaApartmentDailyService.setOwnerUid(ownersUid);
-                                    nammaApartmentDailyService.setDailyServiceType(serviceType);
-                                    nammaApartmentDailyService.setStatus(dailyServiceStatus);
-                                    nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
-                                    dailyServiceListAdapter.notifyDataSetChanged();
-                                }
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String serviceType = dataSnapshot.getValue(String.class);
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                    DatabaseReference dailyServiceReference = PUBLIC_DAILYSERVICES_REFERENCE
+                            .child(Objects.requireNonNull(serviceType))
+                            .child(dailyServiceUid);
+                    dailyServiceReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dailyServiceDataSnapshot) {
+                            dailyServiceStatus = (String) dailyServiceDataSnapshot.child(FIREBASE_CHILD_STATUS).getValue();
+                            hideProgressIndicator();
+                            /*Retrieving Each Owners UID of that particular Daily Service */
+                            for (DataSnapshot ownersUidDataSnapshot : dailyServiceDataSnapshot.getChildren()) {
+                                String ownersUid = ownersUidDataSnapshot.getKey();
+                                if (!FIREBASE_CHILD_STATUS.equals(ownersUid)) {
+                                    /*Get data and add to the list for displaying in Daily Service List*/
+                                    dailyServiceReference.
+                                            child(ownersUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            nammaApartmentDailyService = dataSnapshot.getValue(NammaApartmentDailyService.class);
+                                            assert nammaApartmentDailyService != null;
+                                            nammaApartmentDailyService.setOwnerUid(ownersUid);
+                                            nammaApartmentDailyService.setDailyServiceType(serviceType);
+                                            nammaApartmentDailyService.setStatus(dailyServiceStatus);
+                                            nammaApartmentDailyServiceList.add(0, nammaApartmentDailyService);
+                                            dailyServiceListAdapter.notifyDataSetChanged();
+                                        }
 
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
                                 }
-                            });
+                                break;
+                            }
+                            //Setting adapter to recycler view
+                            recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
                         }
-                        break;
-                    }
-                    //Setting adapter to recycler view
-                    recyclerViewVisitorAndDailyServiceList.setAdapter(dailyServiceListAdapter);
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+
                 }
             });
         }

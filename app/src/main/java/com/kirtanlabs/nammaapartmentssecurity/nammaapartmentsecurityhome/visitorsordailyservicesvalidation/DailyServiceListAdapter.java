@@ -20,6 +20,7 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpojo.NammaApartmentUser;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceListAdapter.DailyServiceHolder> implements View.OnClickListener {
 
@@ -104,7 +105,12 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
     @Override
     public void onClick(View v) {
-        changeDailyServiceStatus();
+        if (dailyServiceStatus.equals(mCtx.getString(R.string.not_entered))) {
+            /*Checking daily service is Post approved Visitor or Not*/
+            checkDailyServiceMobileNumberInVisitorList();
+        } else {
+            changeDailyServiceStatus(dailyServiceStatus);
+        }
         baseActivity.showNotificationSentDialog(mCtx.getString(R.string.daily_service_notification_title), notificationMessage);
     }
 
@@ -156,11 +162,47 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
     /**
      * This method is invoked to change status of daily service
      */
-    private void changeDailyServiceStatus() {
+    private void changeDailyServiceStatus(String dailyServiceStatus) {
         DatabaseReference dailyServiceReference = Constants.PUBLIC_DAILYSERVICES_REFERENCE
                 .child(nammaApartmentDailyService.getDailyServiceType())
-                .child(nammaApartmentDailyService.getUid());
-        baseActivity.changeStatus(dailyServiceStatus, dailyServiceReference.child(Constants.FIREBASE_CHILD_STATUS));
+                .child(nammaApartmentDailyService.getUid())
+                .child(Constants.FIREBASE_CHILD_STATUS);
+        baseActivity.changeStatus(dailyServiceStatus, dailyServiceReference);
+    }
+
+    /**
+     * This method is invoked when Daily Service status is "Not Entered"
+     * we check if daily service mobile number present in visitors mobile number list or not
+     * and change daily service status accordingly.
+     */
+    private void checkDailyServiceMobileNumberInVisitorList() {
+        String mobileNumber = nammaApartmentDailyService.getPhoneNumber();
+        /*Checking Daily Service Mobile Number is Visitors mobile number list*/
+        DatabaseReference postApprovedVisitorsReference = Constants.ALL_VISITORS_REFERENCE.child(mobileNumber);
+        postApprovedVisitorsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String visitorUid = dataSnapshot.getValue(String.class);
+                    /*Changing visitor status from "Entered to "Left"*/
+                    DatabaseReference visitorStatusReference = Constants.PRIVATE_VISITORS_REFERENCE
+                            .child(Objects.requireNonNull(visitorUid))
+                            .child(Constants.FIREBASE_CHILD_STATUS);
+                    baseActivity.changeStatus(mCtx.getString(R.string.entered), visitorStatusReference);
+
+                    /*Changing Daily Service status from "Not Entered to "Left"*/
+                    changeDailyServiceStatus(mCtx.getString(R.string.entered));
+                } else {
+                    /*Changing Daily Service status from "Not Entered to "Entered"*/
+                    changeDailyServiceStatus(mCtx.getString(R.string.not_entered));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /* ------------------------------------------------------------- *
