@@ -689,6 +689,7 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 		
 		console.log("NotificationUID:" + profilePhoto);
 		console.log("Visitor's Mobile Number:" + mobileNumber);
+		console.log("Visitor's Message:" + message);
 		
 		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
 			
@@ -696,7 +697,13 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			
 			console.log("Token Id : " + tokenId);
 			
-			const payload = {
+			const deviceType = queryResult.child("otherDetails").val().deviceType;
+			
+			console.log("Device Type is:"+deviceType);
+			
+			if (deviceType === "android") {
+				console.log("If condition entered");
+				const payload = {
 				data: {
 					message: message,
 					notification_uid : notificationUID,
@@ -705,26 +712,37 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 					profile_photo : profilePhoto,
 					mobile_number : mobileNumber,
 					type: "E-Intercom"
-				},
+					}
+				};
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});
+			} else {
+				console.log("Else condition entered");
+				const payload = {
 				notification: {
                     title: "Namma Apartments",
                     body: message,
                     "sound": "default",
                     "badge": "1",
                     "click_action": "actionCategory"
-                }
-            };
-			
-			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-				return console.log("Notification sent");
-			});
-			
+					},
+				data: {
+					message: message,
+					notification_uid : notificationUID,
+					user_uid : userUID,
+					visitor_type : visitorType,
+					profile_photo : profilePhoto,
+					mobile_number : mobileNumber,
+					type: "E-Intercom"
+					}
+				};
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});
+			}
 		});
-		
-		
 	});
-
-	
 });
 
 // Notifications triggered when Society Admin responds to User's Event Request
