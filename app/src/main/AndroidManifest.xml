@@ -63,7 +63,7 @@
             android:name=".nammaapartmentsecurityhome.gatenotification.GateNotificationHome"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".nammaapartmentsecurityhome.gatenotification.ExpectedCabArrival"
+            android:name=".nammaapartmentsecurityhome.gatenotification.VehicleValidation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -114,6 +114,11 @@
             android:name=".nammaapartmentsecurityhome.login.OTP"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+
+        <!--Vehicle details Screen -->
+        <activity
+            android:name=".nammaapartmentsecurityhome.vehiclevalidation.VehicleDetails"
+            android:screenOrientation="portrait" />
 
     </application>
 

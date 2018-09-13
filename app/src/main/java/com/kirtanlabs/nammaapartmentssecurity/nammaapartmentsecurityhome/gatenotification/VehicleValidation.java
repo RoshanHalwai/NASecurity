@@ -14,11 +14,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
+import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
+import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.vehiclevalidation.VehicleDetails;
 
 import java.util.Objects;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_CABS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_VEHICLES_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_NUMBER_FIELD_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EXPECTED_ARRIVAL_UID;
@@ -31,17 +34,17 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoBoldFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
 
-public class ExpectedCabArrival extends BaseActivity implements View.OnClickListener {
+public class VehicleValidation extends BaseActivity implements View.OnClickListener {
 
     /* ------------------------------------------------------------- *
      * Private Members
      * ------------------------------------------------------------- */
 
-    private EditText editCabStateCode;
-    private EditText editCabRtoNumber;
-    private EditText editCabSerialNumberOne;
-    private EditText editCabSerialNumberTwo;
-    private String cabDriverUid;
+    private EditText editVehicleStateCode;
+    private EditText editVehicleRtoNumber;
+    private EditText editVehicleSerialNumberOne;
+    private EditText editVehicleSerialNumberTwo;
+    private String vehicleUid;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -49,12 +52,12 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
 
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.activity_expected_cab_arrivals;
+        return R.layout.activity_vehicle_validation;
     }
 
     @Override
     protected int getActivityTitle() {
-        return R.string.expected_cab_arrivals;
+        return R.string.vehicle_validation;
     }
 
     @Override
@@ -62,27 +65,26 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
 
         /*Getting Id's for all the views*/
-        TextView textCabNumber = findViewById(R.id.textCabNumber);
-        editCabStateCode = findViewById(R.id.editCabStateCode);
-        editCabRtoNumber = findViewById(R.id.editCabRtoNumber);
-        editCabSerialNumberOne = findViewById(R.id.editCabSerialNumberOne);
-        editCabSerialNumberTwo = findViewById(R.id.editCabSerialNumberTwo);
-
-        Button buttonVerifyCabNumberAndPackageVendor = findViewById(R.id.buttonVerifyCabNumberAndPackageVendor);
+        TextView textVehicleNumber = findViewById(R.id.textVehicleNumber);
+        editVehicleStateCode = findViewById(R.id.editVehicleStateCode);
+        editVehicleRtoNumber = findViewById(R.id.editVehicleRtoNumber);
+        editVehicleSerialNumberOne = findViewById(R.id.editVehicleSerialNumberOne);
+        editVehicleSerialNumberTwo = findViewById(R.id.editVehicleSerialNumberTwo);
+        Button buttonVerifyVehicleNumber = findViewById(R.id.buttonVerifyVehicleNumber);
 
         /*Setting font for all the views*/
-        textCabNumber.setTypeface(setLatoBoldFont(this));
-        editCabStateCode.setTypeface(setLatoRegularFont(this));
-        editCabRtoNumber.setTypeface(setLatoRegularFont(this));
-        editCabSerialNumberOne.setTypeface(setLatoRegularFont(this));
-        editCabSerialNumberTwo.setTypeface(setLatoRegularFont(this));
-        buttonVerifyCabNumberAndPackageVendor.setTypeface(setLatoLightFont(this));
+        textVehicleNumber.setTypeface(setLatoBoldFont(this));
+        editVehicleStateCode.setTypeface(setLatoRegularFont(this));
+        editVehicleRtoNumber.setTypeface(setLatoRegularFont(this));
+        editVehicleSerialNumberOne.setTypeface(setLatoRegularFont(this));
+        editVehicleSerialNumberTwo.setTypeface(setLatoRegularFont(this));
+        buttonVerifyVehicleNumber.setTypeface(setLatoLightFont(this));
 
         /*Setting events for Cab Number edit text*/
         setEventsForEditText();
 
         /*Setting onClickListener for view*/
-        buttonVerifyCabNumberAndPackageVendor.setOnClickListener(this);
+        buttonVerifyVehicleNumber.setOnClickListener(this);
     }
 
     /* ------------------------------------------------------------- *
@@ -91,12 +93,12 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if (isAllFieldsFilled(new EditText[]{editCabStateCode, editCabRtoNumber, editCabSerialNumberOne, editCabSerialNumberTwo})) {
-            String cabNumber = editCabStateCode.getText().toString().trim() + HYPHEN + editCabRtoNumber.getText().toString().trim()
-                    + HYPHEN + editCabSerialNumberOne.getText().toString().trim() + HYPHEN + editCabSerialNumberTwo.getText().toString().trim();
+        if (isAllFieldsFilled(new EditText[]{editVehicleStateCode, editVehicleRtoNumber, editVehicleSerialNumberOne, editVehicleSerialNumberTwo})) {
+            String vehicleNumber = editVehicleStateCode.getText().toString().trim() + HYPHEN + editVehicleRtoNumber.getText().toString().trim()
+                    + HYPHEN + editVehicleSerialNumberOne.getText().toString().trim() + HYPHEN + editVehicleSerialNumberTwo.getText().toString().trim();
             //We need Progress Indicator in this screen
             showProgressIndicator();
-            checkDetailsInFirebase(cabNumber);
+            checkDetailsInFirebase(vehicleNumber);
         }
     }
 
@@ -108,7 +110,7 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
      * Once user enters details in one edit text we move the cursor to next edit text
      */
     private void setEventsForEditText() {
-        editCabStateCode.addTextChangedListener(new TextWatcher() {
+        editVehicleStateCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -117,7 +119,7 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
-                    editCabRtoNumber.requestFocus();
+                    editVehicleRtoNumber.requestFocus();
                 }
             }
 
@@ -126,7 +128,7 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
             }
         });
 
-        editCabRtoNumber.addTextChangedListener(new TextWatcher() {
+        editVehicleRtoNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -135,9 +137,9 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == EDIT_TEXT_MIN_LENGTH) {
-                    editCabStateCode.requestFocus();
+                    editVehicleStateCode.requestFocus();
                 } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
-                    editCabSerialNumberOne.requestFocus();
+                    editVehicleSerialNumberOne.requestFocus();
                 }
             }
 
@@ -147,7 +149,7 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
             }
         });
 
-        editCabSerialNumberOne.addTextChangedListener(new TextWatcher() {
+        editVehicleSerialNumberOne.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -156,9 +158,9 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == EDIT_TEXT_MIN_LENGTH) {
-                    editCabRtoNumber.requestFocus();
+                    editVehicleRtoNumber.requestFocus();
                 } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
-                    editCabSerialNumberTwo.requestFocus();
+                    editVehicleSerialNumberTwo.requestFocus();
 
                 }
             }
@@ -169,7 +171,7 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
             }
         });
 
-        editCabSerialNumberTwo.addTextChangedListener(new TextWatcher() {
+        editVehicleSerialNumberTwo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -178,7 +180,7 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == EDIT_TEXT_MIN_LENGTH) {
-                    editCabSerialNumberOne.requestFocus();
+                    editVehicleSerialNumberOne.requestFocus();
                 }
             }
 
@@ -192,21 +194,22 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
     /**
      * This method is used to check whether User has booked this cab or not
      *
-     * @param cabNumber - that need to check in firebase whether it is valid or not.
+     * @param vehicleNumber - that need to check in firebase whether it is valid or not.
      */
-    private void checkDetailsInFirebase(String cabNumber) {
+    private void checkDetailsInFirebase(String vehicleNumber) {
         // Getting Cab Driver UID (Mapped with Cab Number) in Firebase.
         DatabaseReference cabNumberReference = ALL_CABS_REFERENCE
-                .child(cabNumber);
+                .child(vehicleNumber);
         cabNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 hideProgressIndicator();
                 if (dataSnapshot.exists()) {
-                    cabDriverUid = dataSnapshot.getValue(String.class);
+                    vehicleUid = dataSnapshot.getValue(String.class);
                     openExpectedArrivalList();
                 } else {
-                    openValidationStatusDialog(FAILED, getString(R.string.dont_allow_cab_to_enter));
+                    /*Checking if vehicle number is added by User in vehicle list or not*/
+                    checkDetailsInVehicleList(vehicleNumber);
                 }
             }
 
@@ -217,24 +220,53 @@ public class ExpectedCabArrival extends BaseActivity implements View.OnClickList
     }
 
     /**
+     * This method is used to check whether User has entered his/her Vehicle Details in firebase or not
+     *
+     * @param vehicleNumber - that need to check in firebase whether it is valid or not.
+     */
+    private void checkDetailsInVehicleList(String vehicleNumber) {
+        DatabaseReference vehicleNumberReference = ALL_VEHICLES_REFERENCE.
+                child(vehicleNumber);
+        vehicleNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    vehicleUid = dataSnapshot.getValue(String.class);
+                    Intent intent = new Intent(VehicleValidation.this, VehicleDetails.class);
+                    intent.putExtra(Constants.VEHICLE_UID, vehicleUid);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    openValidationStatusDialog(FAILED, getString(R.string.dont_allow_vehicle_to_enter));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
      * This method is used to open Expected Arrivals List Activity.
      */
     private void openExpectedArrivalList() {
         // Retrieving Status of Cab driver from(Cab->Public->CabDriverUid) in Firebase.
         DatabaseReference expectedArrivalStatusReference = PRIVATE_CABS_REFERENCE
-                .child(cabDriverUid);
+                .child(vehicleUid);
         expectedArrivalStatusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String status = Objects.requireNonNull(dataSnapshot.child(FIREBASE_CHILD_STATUS).getValue(String.class));
                 if (!status.equals(getString(R.string.left))) {
-                    Intent intentCabArrival = new Intent(ExpectedCabArrival.this, ExpectedArrivalsList.class);
-                    intentCabArrival.putExtra(SCREEN_TITLE, R.string.expected_cab_arrivals);
-                    intentCabArrival.putExtra(EXPECTED_ARRIVAL_UID, cabDriverUid);
+                    Intent intentCabArrival = new Intent(VehicleValidation.this, ExpectedArrivalsList.class);
+                    intentCabArrival.putExtra(SCREEN_TITLE, R.string.vehicle_validation);
+                    intentCabArrival.putExtra(EXPECTED_ARRIVAL_UID, vehicleUid);
                     startActivity(intentCabArrival);
                     finish();
                 } else {
-                    openValidationStatusDialog(FAILED, getString(R.string.dont_allow_cab_to_enter));
+                    openValidationStatusDialog(FAILED, getString(R.string.dont_allow_vehicle_to_enter));
                 }
             }
 

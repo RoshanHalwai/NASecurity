@@ -44,6 +44,7 @@
     <string name="gate_notification">Gate Notification</string>
     <string name="society_member">Society Member</string>
     <string name="emergency">Emergency</string>
+    <string name="vehicle_validation">Vehicle Validation</string>
     <string name="images_of_nammaapartment_security_services">Images of Namma Apartment Security Services</string>
 
     <!--Visitors And Daily Services Validation Activities-->
@@ -94,7 +95,7 @@
     <string name="date_to_visit">Date To Visit:</string>
     <string name="time_to_visit">Time To Visit:</string>
     <string name="allow_cab_driver">Allow Cab Driver</string>
-    <string name="dont_allow_cab_to_enter">Don\'t allow Cab to enter into Society</string>
+    <string name="dont_allow_vehicle_to_enter">Don\'t allow this vehicle to enter into Society</string>
     <string name="cab_left_society">Cab has already Left the Society</string>
     <string name="ordered_by">Ordered By:</string>
     <string name="allow_package_vendor">Allow Package Vendor</string>
@@ -194,5 +195,14 @@
     <string name="laundry">Laundry</string>
     <string name="driver">Driver</string>
     <string name="groceries">Groceries</string>
+
+    <!--Vehicle Validation Activity-->
+    <string name="vehicle_number">Vehicle Number</string>
+    <string name="verify_vehicle">Verify Vehicle</string>
+
+    <!--Vehicle Details Activity-->
+    <string name="vehicle_details">Vehicle Details</string>
+    <string name="owner_name">Owner Name:</string>
+    <string name="vehicle_type">Vehicle Type:</string>
 
 </resources>
