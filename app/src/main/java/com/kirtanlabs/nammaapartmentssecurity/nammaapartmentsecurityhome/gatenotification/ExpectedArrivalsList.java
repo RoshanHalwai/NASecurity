@@ -51,7 +51,7 @@ public class ExpectedArrivalsList extends BaseActivity {
     protected int getActivityTitle() {
         /*We use a common class for Cab Driver and Package Vendor Validation Status,
          *we set the title based on the user navigating to the screen*/
-        if (getIntent().getIntExtra(SCREEN_TITLE, 0) == R.string.expected_cab_arrivals) {
+        if (getIntent().getIntExtra(SCREEN_TITLE, 0) == R.string.vehicle_validation) {
             validationStatusOf = R.string.cab_driver_validation_status;
         } else {
             validationStatusOf = R.string.package_vendor_validation_status;

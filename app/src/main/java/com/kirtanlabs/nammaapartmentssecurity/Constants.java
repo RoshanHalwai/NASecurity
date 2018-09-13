@@ -29,6 +29,7 @@ public class Constants {
     public static final String APARTMENT_NAME = "apartmentName";
     public static final String MESSAGE = "message";
     public static final String EINTERCOM_TYPE = "eIntercomType";
+    public static final String VEHICLE_UID = "vehicleUID";
 
     /* ------------------------------------------------------------- *
      * Login/OTP Constants
@@ -82,6 +83,10 @@ public class Constants {
     private static final String FIREBASE_CHILD_CLIENTS = "clients";
     public static final String FIREBASE_CHILD_MESSAGE = "message";
     public static final String FIREBASE_CHILD_UID = "uid";
+    private static final String FIREBASE_CHILD_VEHICLES = "vehicles";
+    public static final String FIREBASE_CHILD_VEHICLE_NUMBER = "vehicleNumber";
+    public static final String FIREBASE_CHILD_OWNER_NAME = "ownerName";
+    public static final String FIREBASE_CHILD_VEHICLE_TYPE = "vehicleType";
 
     /* ------------------------------------------------------------- *
      * Firebase Database References
@@ -117,6 +122,9 @@ public class Constants {
     private static final DatabaseReference SECURITY_GUARDS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SECURITY_GUARDS);
     public static final DatabaseReference SECURITY_GUARDS_PRIVATE_DATA_REFERENCE = SECURITY_GUARDS_REFERENCE.child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA);
     public static final DatabaseReference ALL_SECURITY_GUARDS_REFERENCE = SECURITY_GUARDS_REFERENCE.child(FIREBASE_CHILD_ALL);
+    private static final DatabaseReference VEHICLES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_VEHICLES);
+    public static final DatabaseReference ALL_VEHICLES_REFERENCE = VEHICLES_REFERENCE.child(FIREBASE_CHILD_ALL);
+    public static final DatabaseReference PRIVATE_VEHICLES_REFERENCE = VEHICLES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
 
     /* ------------------------------------------------------------- *
      * Application Specific

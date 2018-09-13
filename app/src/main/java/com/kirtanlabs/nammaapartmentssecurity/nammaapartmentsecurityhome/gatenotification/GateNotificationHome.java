@@ -49,7 +49,7 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                startActivity(new Intent(GateNotificationHome.this, ExpectedCabArrival.class));
+                startActivity(new Intent(GateNotificationHome.this, VehicleValidation.class));
                 break;
             case 1:
                 Intent intent = new Intent(GateNotificationHome.this, SocietyMemberAndExpectedPackageArrival.class);
@@ -75,13 +75,13 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
 
     private GateNotificationHomeAdapter getAdapter() {
         int[] imageGateNotificationServices = {
-                R.drawable.taxi,
+                R.drawable.vehicle_na,
                 R.drawable.delivery_man,
                 R.drawable.gift,
                 R.drawable.delivery
         };
 
-        String[] stringGateNotificationServices = {getString(R.string.expected_cab_arrivals),
+        String[] stringGateNotificationServices = {getString(R.string.vehicle_validation),
                 getString(R.string.expected_package_arrivals),
                 getString(R.string.things_given_to_guest),
                 getString(R.string.things_given_to_daily_services)

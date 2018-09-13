@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".nammaapartmentsecurityhome.gatenotification.ExpectedCabArrival">
+    tools:context=".nammaapartmentsecurityhome.gatenotification.VehicleValidation">
 
     <include layout="@layout/activity_base" />
 
@@ -19,28 +19,28 @@
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
     <TextView
-        android:id="@+id/textCabNumber"
+        android:id="@+id/textVehicleNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="@string/cab_number"
+        android:text="@string/vehicle_number"
         android:textAllCaps="true"
         android:textColor="@color/nmBlack"
         android:textSize="18sp" />
 
     <LinearLayout
-        android:id="@+id/layoutCabNumber"
+        android:id="@+id/layoutVehicleNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textCabNumber"
+        android:layout_below="@id/textVehicleNumber"
         android:layout_margin="20dp"
         android:orientation="horizontal"
         android:weightSum="4">
 
         <EditText
-            android:id="@+id/editCabStateCode"
+            android:id="@+id/editVehicleStateCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -53,7 +53,7 @@
             tools:ignore="LabelFor" />
 
         <EditText
-            android:id="@+id/editCabRtoNumber"
+            android:id="@+id/editVehicleRtoNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -66,7 +66,7 @@
             tools:ignore="LabelFor" />
 
         <EditText
-            android:id="@+id/editCabSerialNumberOne"
+            android:id="@+id/editVehicleSerialNumberOne"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,7 +79,7 @@
             tools:ignore="LabelFor,TextFields" />
 
         <EditText
-            android:id="@+id/editCabSerialNumberTwo"
+            android:id="@+id/editVehicleSerialNumberTwo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -94,13 +94,13 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/buttonVerifyCabNumberAndPackageVendor"
+        android:id="@+id/buttonVerifyVehicleNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutCabNumber"
+        android:layout_below="@+id/layoutVehicleNumber"
         android:layout_margin="20dp"
         android:background="@color/nmBlack"
-        android:text="@string/verify_cab"
+        android:text="@string/verify_vehicle"
         android:textAllCaps="true"
         android:textColor="@color/nmLightYellow"
         android:textSize="@dimen/button_default_size" />
