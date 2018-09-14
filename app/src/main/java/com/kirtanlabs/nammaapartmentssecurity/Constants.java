@@ -3,6 +3,7 @@ package com.kirtanlabs.nammaapartmentssecurity;
 import android.content.Context;
 import android.graphics.Typeface;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -13,6 +14,13 @@ import java.util.Map;
  * DO NOT AUTO-FORMAT THIS FILE
  */
 public class Constants {
+
+    /* ------------------------------------------------------------- *
+     * Environment
+     * ------------------------------------------------------------- */
+
+    public static final String BETA_ENV = "beta_env";
+    public static final String DEV_ENV = "dev_env";
 
     /* ------------------------------------------------------------- *
      * Intent Keys
@@ -91,7 +99,7 @@ public class Constants {
      * Firebase Database References
      * ------------------------------------------------------------- */
 
-    private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance();
+    private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance(FirebaseApp.getInstance(DEV_ENV));
     private static final DatabaseReference USER_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_USERS);
     public static final DatabaseReference PRIVATE_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_ALL);

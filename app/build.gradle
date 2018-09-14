@@ -17,6 +17,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "env"
+    productFlavors {
+        dev {
+            dimension "env"
+            applicationId "com.kirtanlabs.nammaapartmentssecurity"
+        }
+        beta {
+            dimension "env"
+            applicationId "com.kirtanlabs.nammaapartmentssecurity.beta"
+        }
+    }
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8

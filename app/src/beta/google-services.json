@@ -1,0 +1,110 @@
+{
+  "project_info": {
+    "project_number": "896005326129",
+    "firebase_url": "https://nammaapartments-beta.firebaseio.com",
+    "project_id": "nammaapartments-beta",
+    "storage_bucket": "nammaapartments-beta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896005326129:android:6ff623e10a2664c5",
+        "android_client_info": {
+          "package_name": "com.kirtanlabs.nammaapartments.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896005326129-g45tqkm489d7qrh3mjbhru214olhq5pg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kirtanlabs.nammaapartments.beta",
+            "certificate_hash": "98d08f4c15952f73ae8a367ecb75337c19c5f0b2"
+          }
+        },
+        {
+          "client_id": "896005326129-flrvki9jk2himljugfutljkqhgqam1s2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kirtanlabs.nammaapartments.beta",
+            "certificate_hash": "fa8bb840de116afaf4e36246ecb0b5e33fcbe010"
+          }
+        },
+        {
+          "client_id": "896005326129-anh93h0dn4lvmv70f4umfba9dpto5p3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kirtanlabs.nammaapartments.beta",
+            "certificate_hash": "35352bfd108cf6b8a973b1a29179ac3335c7c067"
+          }
+        },
+        {
+          "client_id": "896005326129-1ass5uq2mhptuiufsp2ed599i0kr7dj5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kirtanlabs.nammaapartments.beta",
+            "certificate_hash": "105ae319c77151d25227b6f8dd439d32480e2bc0"
+          }
+        },
+        {
+          "client_id": "896005326129-1dul4c7j34lootvncinsrqh2llc126sj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3Ar2J0gJ8AiL8s0BVlkWP3PXbux3bvKU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896005326129-1dul4c7j34lootvncinsrqh2llc126sj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896005326129:android:72b193004667c7c9",
+        "android_client_info": {
+          "package_name": "com.kirtanlabs.nammaapartmentssecurity.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896005326129-1dul4c7j34lootvncinsrqh2llc126sj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3Ar2J0gJ8AiL8s0BVlkWP3PXbux3bvKU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
