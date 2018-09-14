@@ -24,7 +24,7 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
-    private List<NammaApartmentUser> nammaApartmentFamilyMemberList;
+    private final List<NammaApartmentUser> nammaApartmentFamilyMemberList;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -72,7 +72,7 @@ public class FamilyMemberListAdapter extends RecyclerView.Adapter<FamilyMemberLi
          * Private Members
          * ------------------------------------------------------------- */
 
-        private TextView textFamilyMemberNameValue;
+        private final TextView textFamilyMemberNameValue;
         private final de.hdodenhof.circleimageview.CircleImageView familyMemberProfilePic;
 
         /* ------------------------------------------------------------- *

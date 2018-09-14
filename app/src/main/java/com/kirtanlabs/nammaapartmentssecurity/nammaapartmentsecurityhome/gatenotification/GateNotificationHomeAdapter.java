@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
-public class GateNotificationHomeAdapter extends BaseAdapter {
+class GateNotificationHomeAdapter extends BaseAdapter {
 
     /* ------------------------------------------------------------- *
      * Private Members

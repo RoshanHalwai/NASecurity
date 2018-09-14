@@ -7,7 +7,6 @@
     <string name="menu_icon_description">Image of three dots Menu Icon</string>
 
     <!--NammaApartment security E-Intercom-->
-    <string name="capture_photo">Capture Photo</string>
     <string name="send_notification">Send Notification</string>
     <string name="mobile_number">User\'s Mobile Number</string>
     <string name="visitor_mobile_number">Visitor Mobile Number</string>
@@ -15,22 +14,10 @@
     <string name="mobile_number_validation">Please Enter Mobile Number</string>
     <string name="accept_alphabets">Accept Alphabets Only.</string>
     <string name="upload_image">Please Upload Image</string>
-    <string name="e_intercom_type">E-Intercom Type:</string>
     <string name="notifying_user">Notifying User</string>
     <string name="please_wait_a_moment">Please wait a moment</string>
-    <string-array name="e_intercom_type_list">
-        <item>@string/select_any_one</item>
-        <item>@string/guest</item>
-        <item>@string/daily_service</item>
-        <item>@string/family_member</item>
-        <item>@string/cab</item>
-        <item>@string/package_vendor</item>
-    </string-array>
 
-    <string name="select_any_one">Select any one</string>
     <string name="guest">Guest Approval</string>
-    <string name="daily_service">Daily Service Approval</string>
-    <string name="family_member">Family Member Approval</string>
     <string name="cab">Cab Approval</string>
     <string name="package_vendor">Package Approval</string>
     <string name="invalid_user_title">Invalid User Message</string>
@@ -63,10 +50,8 @@
     <string name="not_entered">Not Entered</string>
     <string name="entered">Entered</string>
     <string name="left">Left</string>
-    <string name="visitor_has_left_society">Visitor has already Left the Society</string>
     <string name="service_type">Type:</string>
     <string name="allow_daily_service">Allow Daily Service</string>
-    <string name="daily_service_has_left_society">Daily Service has already Left the Society</string>
     <string name="visitor_left">Visitor Left</string>
     <string name="daily_service_left">Daily Service Left</string>
     <string name="visitor_notification_title">Visitor Notification</string>
@@ -76,10 +61,8 @@
     <string name="daily_service_arrival_notification_message">Daily service arrival notification has been sent to user.</string>
     <string name="daily_service_left_notification_message">Daily service left notification has been sent to user.</string>
     <string name="visitor_record_not_found">Visitor record not found.</string>
-    <string name="daily_service_record_not_found">Daily Service record not found.</string>
 
     <!--Gate Notification Screen Activity-->
-    <string name="expected_cab_arrivals">Expected Cab Arrivals</string>
     <string name="expected_package_arrivals">Expected Package Arrivals</string>
     <string name="things_given_to_guest">Things Given To Guest</string>
     <string name="things_given_to_daily_services">Things Given To Daily Services</string>
@@ -87,8 +70,6 @@
 
     <!--Expected Arrivals Activity-->
     <string name="cab_number">Cab Number</string>
-    <string name="resident_mobile_number">Resident Mobile Number</string>
-    <string name="verify_cab">Verify Cab</string>
     <string name="verify_package_vendor">Verify Package Vendor</string>
     <string name="booked_by">Booked By:</string>
     <string name="flat_number">Flat Number</string>
@@ -96,11 +77,8 @@
     <string name="time_to_visit">Time To Visit:</string>
     <string name="allow_cab_driver">Allow Cab Driver</string>
     <string name="dont_allow_vehicle_to_enter">Don\'t allow this vehicle to enter into Society</string>
-    <string name="cab_left_society">Cab has already Left the Society</string>
     <string name="ordered_by">Ordered By:</string>
     <string name="allow_package_vendor">Allow Package Vendor</string>
-    <string name="dont_allow_package_vendor">Don\'t allow Package Vendor to enter into Society</string>
-    <string name="package_vendor_left_society">Cab has already Left the Society</string>
     <string name="expected_time_of_arrival_is_finished">Expected time of this arrival is finished</string>
     <string name="cab_state_code_hint">KA</string>
     <string name="cab_rto_number_hint">01</string>
@@ -115,7 +93,6 @@
     <string name="resident_has_not_given_things_to_visitor">Resident has not given anything to Visitor</string>
     <string name="resident_has_given_things_to_visitor">Resident has given things to Visitor</string>
     <string name="resident_has_given_things_to_daily_service">Resident has given things to Daily Service</string>
-    <string name="resident_has_not_given_things_to_daily_service">Resident has not given anything to Daily Service</string>
     <string name="ok">OK</string>
 
     <!--Society Member-->
@@ -152,7 +129,6 @@
 
     <!--Validation-->
     <string name="number_10digit_validation">Please Enter a valid 10 digit mobile number</string>
-    <string name="field_cant_be_empty">Field can\'t be Empty</string>
     <string name="default_notification_channel_id">03</string>
 
     <!--Sign In Activity-->
@@ -174,27 +150,7 @@
     <string name="mobile_number_found">Mobile Number not found. Contact \'Admin\' to add your Mobile Number.</string>
 
     <!--E-Intercom-->
-    <string name="daily_service_type">Daily Service Type</string>
     <!--Apartment Services Activity-->
-    <string-array name="daily_services">
-        <item>@string/cook</item>
-        <item>@string/maid</item>
-        <item>@string/car_bike_cleaning</item>
-        <item>@string/child_day_care</item>
-        <item>@string/daily_newspaper</item>
-        <item>@string/milk_man</item>
-        <item>@string/laundry</item>
-        <item>@string/driver</item>
-    </string-array>
-    <string name="cook">Cook</string>
-    <string name="maid">Maid</string>
-    <string name="car_bike_cleaning">Car/Bike Cleaning</string>
-    <string name="child_day_care">Child Day Care</string>
-    <string name="daily_newspaper">Daily NewsPaper</string>
-    <string name="milk_man">Milk Man</string>
-    <string name="laundry">Laundry</string>
-    <string name="driver">Driver</string>
-    <string name="groceries">Groceries</string>
 
     <!--Vehicle Validation Activity-->
     <string name="vehicle_number">Vehicle Number</string>

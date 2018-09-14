@@ -10,14 +10,12 @@
         android:layout_margin="10dp">
 
         <LinearLayout
-            android:id="@+id/row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
             android:weightSum="2">
 
             <RelativeLayout
-                android:id="@+id/layoutFamilyMemberProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -25,7 +23,6 @@
                 android:gravity="center">
 
                 <com.wang.avi.AVLoadingIndicatorView
-                    android:id="@+id/animationWaitingForCustomers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

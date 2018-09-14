@@ -30,7 +30,7 @@ public class SearchFlatNumber extends BaseActivity implements SearchView.OnQuery
      * ------------------------------------------------------------- */
 
     private ArrayAdapter<String> flatNumberAdapter;
-    private List<String> itemsInList = new ArrayList<>();
+    private final List<String> itemsInList = new ArrayList<>();
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods

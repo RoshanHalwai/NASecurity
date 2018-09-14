@@ -21,7 +21,7 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
-    private List<NammaApartmentEmergency> nammaApartmentEmergencyList;
+    private final List<NammaApartmentEmergency> nammaApartmentEmergencyList;
 
     /* ------------------------------------------------------------- *
      * Constructor
@@ -88,17 +88,17 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
          * Private Members
          * ------------------------------------------------------------- */
 
-        private TextView textResidentApartment;
-        private TextView textResidentFlatNumber;
-        private TextView textEmergencyType;
-        private TextView textResidentName;
-        private TextView textResidentMobileNumber;
-        private TextView textResidentApartmentValue;
-        private TextView textResidentFlatNumberValue;
-        private TextView textEmergencyTypeValue;
-        private TextView textResidentNameValue;
-        private TextView textResidentMobileNumberValue;
-        private ImageView imageEmergencyType;
+        private final TextView textResidentApartment;
+        private final TextView textResidentFlatNumber;
+        private final TextView textEmergencyType;
+        private final TextView textResidentName;
+        private final TextView textResidentMobileNumber;
+        private final TextView textResidentApartmentValue;
+        private final TextView textResidentFlatNumberValue;
+        private final TextView textEmergencyTypeValue;
+        private final TextView textResidentNameValue;
+        private final TextView textResidentMobileNumberValue;
+        private final ImageView imageEmergencyType;
 
         /* ------------------------------------------------------------- *
          * Constructor

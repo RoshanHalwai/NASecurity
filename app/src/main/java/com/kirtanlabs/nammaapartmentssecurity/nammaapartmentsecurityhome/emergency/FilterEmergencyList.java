@@ -32,7 +32,7 @@ public class FilterEmergencyList extends BaseActivity implements View.OnClickLis
      * ------------------------------------------------------------- */
 
     private ArrayAdapter<String> adapter;
-    private List<String> itemsInList = new ArrayList<>();
+    private final List<String> itemsInList = new ArrayList<>();
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods

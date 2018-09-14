@@ -6,7 +6,6 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.Constants;
@@ -17,11 +16,11 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpoj
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EINTERCOM_TYPE_MAP;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_GATE_NOTIFICATIONS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_USERDATA;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
 
 public class AwaitingResponse extends BaseActivity {
 
-    TextView textUserResponse;
+    private TextView textUserResponse;
 
     @Override
     protected int getLayoutResourceId() {
@@ -48,8 +47,7 @@ public class AwaitingResponse extends BaseActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserFlatDetails userFlatDetails = dataSnapshot.getValue(NammaApartmentUser.class).getFlatDetails();
-                    DatabaseReference userDataReference = FirebaseDatabase.getInstance().getReference().child(FIREBASE_CHILD_USERDATA)
-                            .child(Constants.FIREBASE_CHILD_PRIVATE)
+                    DatabaseReference userDataReference = PRIVATE_USER_DATA_REFERENCE
                             .child(userFlatDetails.getCity())
                             .child(userFlatDetails.getSocietyName())
                             .child(userFlatDetails.getApartmentName())
@@ -62,7 +60,7 @@ public class AwaitingResponse extends BaseActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 hideProgressIndicator();
-                                textUserResponse.setText(dataSnapshot.getValue().toString());
+                                textUserResponse.setText(dataSnapshot.getValue(String.class));
                             }
                         }
 

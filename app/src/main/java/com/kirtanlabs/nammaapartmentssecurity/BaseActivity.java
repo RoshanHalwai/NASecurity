@@ -203,13 +203,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         createValidationStatusDialog();
     }
 
-    public void showProgressIndicator() {
+    protected void showProgressIndicator() {
         progressIndicator = findViewById(R.id.animationWaitingToLoadData);
         progressIndicator.setVisibility(View.VISIBLE);
         progressIndicator.smoothToShow();
     }
 
-    public void hideProgressIndicator() {
+    protected void hideProgressIndicator() {
         if (progressIndicator == null)
             progressIndicator = findViewById(R.id.animationWaitingToLoadData);
         progressIndicator.smoothToHide();
@@ -233,7 +233,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param phone consists of string value of mobile number.
      * @return returns a boolean variable based on the context.
      */
-    public boolean isPhoneNumberValid(String phone) {
+    protected boolean isPhoneNumberValid(String phone) {
         return !Pattern.matches("[a-zA-Z]+", phone) && phone.length() == PHONE_NUMBER_MAX_LENGTH;
     }
 
@@ -286,7 +286,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param intent  - If null then on click of Ok, the dialog will disappear
      *                else intent activity will be called
      */
-    public void showNotificationDialog(String title, String message, Intent intent) {
+    protected void showNotificationDialog(String title, String message, Intent intent) {
         android.app.AlertDialog.Builder alertNotifyGateDialog = new android.app.AlertDialog.Builder(this);
         alertNotifyGateDialog.setCancelable(false);
         alertNotifyGateDialog.setTitle(title);

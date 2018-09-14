@@ -23,7 +23,6 @@
                 android:src="@drawable/success" />
 
             <LinearLayout
-                android:id="@+id/row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -32,7 +31,6 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/layoutTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -99,7 +97,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layoutTitleValues"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
