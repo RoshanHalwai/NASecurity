@@ -68,7 +68,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_SOCIETIES = "societies";
     public static final String FIREBASE_CHILD_STATUS = "status";
     public static final String FIREBASE_CHILD_TOKEN_ID = "tokenId";
-    public static final String FIREBASE_CHILD_USERDATA = "userData";
+    private static final String FIREBASE_CHILD_USERDATA = "userData";
     public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
     private static final String FIREBASE_CHILD_ALL = "all";

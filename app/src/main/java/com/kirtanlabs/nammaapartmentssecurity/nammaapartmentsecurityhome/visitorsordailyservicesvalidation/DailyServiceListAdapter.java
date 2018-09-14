@@ -30,7 +30,7 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
 
     private final Context mCtx;
     private final BaseActivity baseActivity;
-    private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
+    private final List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private NammaApartmentDailyService nammaApartmentDailyService;
     private String dailyServiceStatus;
     private String notificationMessage;
@@ -215,17 +215,17 @@ public class DailyServiceListAdapter extends RecyclerView.Adapter<DailyServiceLi
          * Private Members
          * ------------------------------------------------------------- */
 
-        private TextView textVisitorOrDailyServiceName;
-        private TextView textServiceType;
-        private TextView textApartment;
-        private TextView textFlatToVisit;
-        private TextView textInvitedBy;
-        private TextView textVisitorOrDailyServiceNameValue;
-        private TextView textServiceTypeValue;
-        private TextView textApartmentValue;
-        private TextView textFlatToVisitValue;
-        private TextView textInvitedByValue;
-        private Button buttonAllowVisitorAndDailyService;
+        private final TextView textVisitorOrDailyServiceName;
+        private final TextView textServiceType;
+        private final TextView textApartment;
+        private final TextView textFlatToVisit;
+        private final TextView textInvitedBy;
+        private final TextView textVisitorOrDailyServiceNameValue;
+        private final TextView textServiceTypeValue;
+        private final TextView textApartmentValue;
+        private final TextView textFlatToVisitValue;
+        private final TextView textInvitedByValue;
+        private final Button buttonAllowVisitorAndDailyService;
         private final de.hdodenhof.circleimageview.CircleImageView VisitorAndDailyServiceProfilePic;
 
         /* ------------------------------------------------------------- *

@@ -4,7 +4,7 @@ package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.einter
  * KirtanLabs Pvt. Ltd.
  * Created by Roshan Halwai on 8/5/2018
  */
-public class Type {
+class Type {
 
     /* ------------------------------------------------------------- *
      * Private Members

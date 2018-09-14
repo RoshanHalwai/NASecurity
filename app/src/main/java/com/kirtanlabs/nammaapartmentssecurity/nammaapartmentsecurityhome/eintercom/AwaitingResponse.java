@@ -20,7 +20,7 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA
 
 public class AwaitingResponse extends BaseActivity {
 
-    TextView textUserResponse;
+    private TextView textUserResponse;
 
     @Override
     protected int getLayoutResourceId() {

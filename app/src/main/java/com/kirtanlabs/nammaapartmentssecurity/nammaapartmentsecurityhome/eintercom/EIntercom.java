@@ -72,7 +72,10 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
      *Private Members
      *-----------------------------------------------*/
 
-    EditText editCabStateCode, editCabRtoNumber, editCabSerialNumberOne, editCabSerialNumberTwo;
+    private EditText editCabStateCode;
+    private EditText editCabRtoNumber;
+    private EditText editCabSerialNumberOne;
+    private EditText editCabSerialNumberTwo;
     private String eIntercomType, visitorMobileNumber;
     private CircleImageView circleImageView;
     private File profilePhotoPath;

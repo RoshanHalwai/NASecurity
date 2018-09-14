@@ -1,6 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation;
 
-public class NammaApartmentVisitor {
+class NammaApartmentVisitor {
 
     /* ------------------------------------------------------------- *
      * Private Members

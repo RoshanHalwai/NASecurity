@@ -37,7 +37,7 @@ public class VisitorListAdapter extends
 
     private final Context mCtx;
     private final BaseActivity baseActivity;
-    private List<NammaApartmentVisitor> nammaApartmentVisitorList;
+    private final List<NammaApartmentVisitor> nammaApartmentVisitorList;
     private NammaApartmentVisitor nammaApartmentVisitor;
     private String fullName;
     private String flatNumber;
@@ -167,15 +167,15 @@ public class VisitorListAdapter extends
          * ------------------------------------------------------------- */
 
         private final de.hdodenhof.circleimageview.CircleImageView VisitorAndDailyServiceProfilePic;
-        private TextView textVisitorOrDailyServiceName;
-        private TextView textApartment;
-        private TextView textFlatToVisit;
-        private TextView textInvitedBy;
-        private TextView textVisitorOrDailyServiceNameValue;
-        private TextView textApartmentValue;
-        private TextView textFlatToVisitValue;
-        private TextView textInvitedByValue;
-        private Button buttonAllowVisitorAndDailyService;
+        private final TextView textVisitorOrDailyServiceName;
+        private final TextView textApartment;
+        private final TextView textFlatToVisit;
+        private final TextView textInvitedBy;
+        private final TextView textVisitorOrDailyServiceNameValue;
+        private final TextView textApartmentValue;
+        private final TextView textFlatToVisitValue;
+        private final TextView textInvitedByValue;
+        private final Button buttonAllowVisitorAndDailyService;
 
         /* ------------------------------------------------------------- *
          * Constructor

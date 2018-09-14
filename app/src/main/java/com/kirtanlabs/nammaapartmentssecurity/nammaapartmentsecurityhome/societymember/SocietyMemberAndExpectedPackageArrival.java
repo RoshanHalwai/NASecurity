@@ -42,7 +42,7 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
     private ListView listView;
     private DatabaseReference flatReference;
     private ArrayAdapter<String> adapter;
-    private List<String> itemsInList = new ArrayList<>();
+    private final List<String> itemsInList = new ArrayList<>();
     private int screenTitle;
     private String apartment;
     private String flat;

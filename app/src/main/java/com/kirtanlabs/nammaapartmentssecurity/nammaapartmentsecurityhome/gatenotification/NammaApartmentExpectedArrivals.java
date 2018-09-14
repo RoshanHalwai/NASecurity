@@ -1,6 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification;
 
-public class NammaApartmentExpectedArrivals {
+class NammaApartmentExpectedArrivals {
 
     /* ------------------------------------------------------------- *
      * Private Members

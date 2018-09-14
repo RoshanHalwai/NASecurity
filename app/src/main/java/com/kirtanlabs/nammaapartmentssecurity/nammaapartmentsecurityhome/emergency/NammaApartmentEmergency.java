@@ -1,6 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.emergency;
 
-public class NammaApartmentEmergency {
+class NammaApartmentEmergency {
 
     /* ------------------------------------------------------------- *
      * Private Members

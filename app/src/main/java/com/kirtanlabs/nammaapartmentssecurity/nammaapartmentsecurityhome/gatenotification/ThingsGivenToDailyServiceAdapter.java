@@ -29,7 +29,7 @@ public class ThingsGivenToDailyServiceAdapter extends RecyclerView.Adapter<Thing
      * ------------------------------------------------------------- */
 
     private final Context mCtx;
-    private List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
+    private final List<NammaApartmentDailyService> nammaApartmentDailyServiceList;
     private NammaApartmentDailyService nammaApartmentDailyService;
 
     /* ------------------------------------------------------------- *
@@ -123,12 +123,12 @@ public class ThingsGivenToDailyServiceAdapter extends RecyclerView.Adapter<Thing
          * Private Members
          * ------------------------------------------------------------- */
 
-        private TextView textApartment;
-        private TextView textFlat;
-        private TextView textApartmentValue;
-        private TextView textFlatValue;
-        private TextView textHasGivenThings;
-        private Button buttonOk;
+        private final TextView textApartment;
+        private final TextView textFlat;
+        private final TextView textApartmentValue;
+        private final TextView textFlatValue;
+        private final TextView textHasGivenThings;
+        private final Button buttonOk;
 
         /* ------------------------------------------------------------- *
          * Constructor

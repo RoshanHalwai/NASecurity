@@ -44,9 +44,9 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
     private final Context mCtx;
     private final BaseActivity baseActivity;
     private NammaApartmentExpectedArrivals nammaApartmentExpectedArrivals;
-    private List<NammaApartmentExpectedArrivals> nammaApartmentExpectedArrivalsList;
+    private final List<NammaApartmentExpectedArrivals> nammaApartmentExpectedArrivalsList;
     private DatabaseReference expectedArrivalsReference;
-    private int validationStatusOf;
+    private final int validationStatusOf;
     private String status;
     private String notificationMessage;
     private String flatNumber, apartmentName;
@@ -175,19 +175,19 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
          * Private Members
          * ------------------------------------------------------------- */
 
-        private TextView textPackageVendor;
-        private TextView textBookedBy;
-        private TextView textApartment;
-        private TextView textFlatNumber;
-        private TextView textDateToVisit;
-        private TextView textTimeToVisit;
-        private TextView textPackageVendorValue;
-        private TextView textBookedByValue;
-        private TextView textApartmentValue;
-        private TextView textFlatNumberValue;
-        private TextView textDateToVisitValue;
-        private TextView textTimeToVisitValue;
-        private Button buttonAllowExpectedArrivals;
+        private final TextView textPackageVendor;
+        private final TextView textBookedBy;
+        private final TextView textApartment;
+        private final TextView textFlatNumber;
+        private final TextView textDateToVisit;
+        private final TextView textTimeToVisit;
+        private final TextView textPackageVendorValue;
+        private final TextView textBookedByValue;
+        private final TextView textApartmentValue;
+        private final TextView textFlatNumberValue;
+        private final TextView textDateToVisitValue;
+        private final TextView textTimeToVisitValue;
+        private final Button buttonAllowExpectedArrivals;
 
         /* ------------------------------------------------------------- *
          * Constructor
