@@ -832,3 +832,43 @@ exports.societyServiceResponseNotifications = functions.database.ref('/societySe
 	});
 	
 });
+
+// Notifications triggered when user cancels society service request
+
+exports.userCancelsSocietyServiceRequest = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/status')
+.onUpdate((change, context) => {
+	
+		const notificationUID = context.params.notificationUID;
+	
+		return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+			
+			const status = queryResult.val().status;
+			const societyServiceType = queryResult.val().societyServiceType;
+			const societyServiceUID = queryResult.val().takenBy;
+			
+			if (status === "Cancelled"){
+				
+					return admin.database().ref("/societyServices").child(societyServiceType).child("private").child("data").child(societyServiceUID).once('value').then(queryResult => {
+					
+						const tokenId = queryResult.val().tokenId;
+					
+						const payload = {
+										data: {
+											message: "Service has been Cancelled by a User",
+											societyServiceType: "cancelledServiceRequest"
+											}
+										};
+					
+						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+						
+							return console.log("Notification sent");
+						
+						});
+					});
+			} else {
+				
+				return null;
+				
+			}
+		});
+});
