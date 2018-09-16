@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "nammaapartments-development"
+    "default": "nammaapartments-development",
+    "beta": "nammaapartments-beta"
   }
 }

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Typeface;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -99,7 +101,10 @@ public class Constants {
      * Firebase Database References
      * ------------------------------------------------------------- */
 
-    private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance(FirebaseApp.getInstance(DEV_ENV));
+    private static final FirebaseApp FIREBASE_APP = FirebaseApp.getInstance(DEV_ENV);
+    private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance(FIREBASE_APP);
+    public static final FirebaseStorage FIREBASE_STORAGE = FirebaseStorage.getInstance(FIREBASE_APP);
+    public static final FirebaseAuth FIREBASE_AUTH = FirebaseAuth.getInstance(FIREBASE_APP);
     private static final DatabaseReference USER_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_USERS);
     public static final DatabaseReference PRIVATE_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
     public static final DatabaseReference ALL_USERS_REFERENCE = USER_REFERENCE.child(FIREBASE_CHILD_ALL);

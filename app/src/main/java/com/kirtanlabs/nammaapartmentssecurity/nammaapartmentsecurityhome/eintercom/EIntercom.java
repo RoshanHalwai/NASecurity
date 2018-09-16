@@ -21,7 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
@@ -50,6 +49,7 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_PR
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_PROFILE_PHOTO;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_UID;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITORS;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_STORAGE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE;
@@ -340,7 +340,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                                 /* Else we need to store Image of Guest, Daily Service or Family Member*/
 
                                 /*Getting the storage reference*/
-                                StorageReference storageReference = FirebaseStorage.getInstance().getReference(FIREBASE_CHILD_VISITORS)
+                                StorageReference storageReference = FIREBASE_STORAGE.getReference(FIREBASE_CHILD_VISITORS)
                                         .child(FIREBASE_CHILD_PRIVATE)
                                         .child(FIREBASE_CHILD_VISITORS)
                                         .child(EINTERCOM_TYPE_MAP.get(eIntercomType))
