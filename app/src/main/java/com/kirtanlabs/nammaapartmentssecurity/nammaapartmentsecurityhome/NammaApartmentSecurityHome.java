@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
@@ -20,6 +19,8 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.society
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation.VisitorsAndDailyServicesValidation;
 
 import java.util.Objects;
+
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_AUTH;
 
 public class NammaApartmentSecurityHome extends BaseActivity implements AdapterView.OnItemClickListener {
 
@@ -142,7 +143,7 @@ public class NammaApartmentSecurityHome extends BaseActivity implements AdapterV
         if (sharedPreferences.getBoolean(Constants.LOGGED_IN, false)) {
             securityGuardUID = sharedPreferences.getString(Constants.SECURITY_GUARD_UID, null);
         } else {
-            securityGuardUID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            securityGuardUID = Objects.requireNonNull(FIREBASE_AUTH.getCurrentUser()).getUid();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(Constants.LOGGED_IN, true);
             editor.putString(Constants.SECURITY_GUARD_UID, securityGuardUID);
