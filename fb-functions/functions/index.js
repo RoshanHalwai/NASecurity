@@ -23,6 +23,102 @@ societyServiceLookup['garbageCollection'] = "Garbage Collection";
 		
 admin.initializeApp(functions.config().firebase);
 
+// Nofications related to Namma Apartments App (where user's action is required)
+
+//Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
+
+exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
+.onCreate((change,context)=>{
+	const city = context.params.city;
+	const society = context.params.society;
+	const apartment = context.params.apartment;
+	const flat = context.params.flat;
+	const userUID = context.params.userUID;
+	const notificationUID = context.params.notificationUID;
+	const visitorType = context.params.visitorType;
+	
+	console.log("City:" + city);
+	console.log("Society:" + society);
+	console.log("Apartment:" + apartment);
+	console.log("Flat:" + flat);
+	console.log("UserUID:" + userUID);
+	console.log("NotificationUID:" + notificationUID);
+	
+	return admin.database().ref("/userData").child("private")
+	.child(city).child(society).child(apartment).child(flat)
+	.child("gateNotifications").child(userUID).child(visitorType).child(notificationUID)
+	.once('value').then(queryResult => {
+
+		const message = queryResult.val().message;
+		const profilePhoto = queryResult.val().profilePhoto;
+		var mobileNumber;
+		
+			if(visitorType === "guests"){
+				mobileNumber = queryResult.val().mobileNumber;
+			} else {
+				mobileNumber = "";
+			}			
+		
+		console.log("NotificationUID:" + profilePhoto);
+		console.log("Visitor's Mobile Number:" + mobileNumber);
+		console.log("Visitor's Message:" + message);
+		
+		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
+			
+			const tokenId = queryResult.val().tokenId;
+			
+			console.log("Token Id : " + tokenId);
+			
+			const deviceType = queryResult.child("otherDetails").val().deviceType;
+			
+			console.log("Device Type is:"+deviceType);
+			
+			if (deviceType === "android") {
+				console.log("If condition entered");
+				const payload = {
+				data: {
+					message: message,
+					notification_uid : notificationUID,
+					user_uid : userUID,
+					visitor_type : visitorType,
+					profile_photo : profilePhoto,
+					mobile_number : mobileNumber,
+					type: "E-Intercom"
+					}
+				};
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});
+			} else {
+				console.log("Else condition entered");
+				const payload = {
+				notification: {
+                    title: "Namma Apartments",
+                    body: message,
+                    "sound": "default",
+                    "badge": "1",
+                    "click_action": "actionCategory"
+					},
+				data: {
+					message: message,
+					notification_uid : notificationUID,
+					user_uid : userUID,
+					visitor_type : visitorType,
+					profile_photo : profilePhoto,
+					mobile_number : mobileNumber,
+					type: "E-Intercom"
+					}
+				};
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});
+			}
+		});
+	});
+});
+
+// Nofications related to Namma Apartments App (where user's action is  not required)
+
 //Notifications triggered when Guests either Enters or Leaves the User Society
 
 exports.guestNotifications = functions.database.ref('/visitors/private/{visitorUID}/status')
@@ -385,6 +481,158 @@ exports.packageNotifications = functions.database.ref('/deliveries/private/{deli
 	
 });
 
+//Notifications triggered when privilege value is set to 0,1 or 2
+
+exports.activateAccountNotification = functions.database.ref('/users/private/{userUID}/privileges/verified')
+.onWrite((change, context) => {
+	const userUID = context.params.userUID;
+
+	return admin.database().ref("/users").child("private").child(userUID).child("privileges").once('value').then(queryResult => {
+
+        /*Exit the API if snapshot does not exist, more likely Delete Operation has been triggered*/
+	    if( ! queryResult.exists()) {
+	        return 0;
+	    }
+
+		const verified = queryResult.val().verified;
+		if(verified === 1 || verified === 2) {
+			return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+
+				var message;
+				if (verified === 1) {
+				    message = "Welcome to Namma Apartments, Your Account has been Activated";
+				} else {
+				    message = "Sorry, Your Account Activation has been rejected by Admin";
+				}
+
+				const tokenId = queryResult.val().tokenId;
+				const payload = {
+						notification: {
+							title: "Namma Apartments",
+							body: message,
+							"sound": "default",
+							"badge": "1"
+						},
+					data: {
+						message: message,
+						type: "userAccountNotification"
+					}
+				};
+
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});				
+				
+			});
+		} else {
+			return admin.database().ref("/societyServices").child("admin").once('value').then(queryResult => {
+				const tokenId = queryResult.val().tokenId;
+				const payload = {
+					data: {
+						message: "A new User Account has been created. Requires Authentication",
+						societyServiceType: "userAccountNotification"
+					}
+				};
+
+				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+					return console.log("Notification sent");
+				});				
+				
+			});
+		}
+	});
+});
+
+// Notifications triggered when Society Admin responds to User's Event Request
+
+exports.eventNotifications = functions.database.ref('/societyServiceNotifications/eventManagement/{notificationUID}')
+.onUpdate((change, context) => {
+	
+	const notificationUID = context.params.notificationUID;
+	
+	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+		const status = queryResult.val().status;
+		const userUID = queryResult.val().userUID;
+		const eventTitle = queryResult.val().eventTitle;
+		const eventDate = queryResult.val().eventDate;
+		const timeSlot = queryResult.val().timeSlot;
+		var notificationMesage;
+
+		if(status === "Booking Accepted"){
+			notificationMesage = "Your request for the Event, "+eventTitle+", on "+eventDate+", "+timeSlot+" has been accepted";
+		} else{
+			notificationMesage = "Your request for the Event, "+eventTitle+", on "+eventDate+", "+timeSlot+" has been rejected";
+		}			
+		
+		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+			
+			const tokenId = queryResult.val().tokenId;
+			
+			console.log("Token id -> "+tokenId);
+			
+			const payload = {
+				notification: {
+                    title: "Namma Apartments",
+                    body: notificationMesage,
+                    "sound": "default",
+                    "badge": "1"
+				},
+				data: {
+					message: notificationMesage,
+					type: "Event_Management"
+				}
+			};
+			
+			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+				return console.log("Notification sent");
+			});
+			
+		});
+	});
+	
+});
+
+// Notifications triggered when society service accepts User's Society Service request
+
+exports.societyServiceResponseNotifications = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
+.onCreate((change, context) => {
+	
+	const notificationUID = context.params.notificationUID;
+	
+	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+		const userUID = queryResult.val().userUID;
+		const societyServiceType = queryResult.val().societyServiceType;
+		
+		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+			
+			const tokenId = queryResult.val().tokenId;
+			
+			console.log("Token id -> "+tokenId);
+			
+			const payload = {
+				notification: {
+                    title: "Namma Apartments",
+                    body: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
+                    "sound": "default",
+                    "badge": "1"
+				},
+				data: {
+				message: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
+					type: "Society_Service"
+				}
+			};
+			
+			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+				return console.log("Notification sent");
+			});
+			
+		});
+	});
+	
+});
+
+// Nofications related to Namma Apartments Society Service App
+
 // Notifications triggered when User sends notification to Society Service
 
 exports.societyServiceNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
@@ -539,7 +787,88 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 	});
 	
 });
+
+// Notifications triggered when user cancels society service request
+
+exports.userCancelsSocietyServiceRequestNotifications = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/status')
+.onUpdate((change, context) => {
+	
+		const notificationUID = context.params.notificationUID;
+	
+		return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
+			
+			const status = queryResult.val().status;
+			const societyServiceType = queryResult.val().societyServiceType;
+			const societyServiceUID = queryResult.val().takenBy;
+			
+			if (status === "Cancelled"){
+				
+					return admin.database().ref("/societyServices").child(societyServiceType).child("private").child("data").child(societyServiceUID).once('value').then(queryResult => {
 					
+						const tokenId = queryResult.val().tokenId;
+					
+						const payload = {
+										data: {
+											message: "Service has been Cancelled by a User",
+											societyServiceType: "cancelledServiceRequest"
+											}
+										};
+					
+						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+						
+							return console.log("Notification sent");
+						
+						});
+					});
+			} else {
+				
+				return null;
+				
+			}
+		});
+});
+
+// Notifications triggered to Society Admin when User request to donate food 
+
+exports.donateFoodNotifications = functions.database.ref('/foodDonations/{foodDonationNotificationUID}')
+.onCreate((change, context) => {
+	
+		const foodDonationNotificationUID = context.params.foodDonationNotificationUID;
+		
+		return admin.database().ref("/foodDonations").child(foodDonationNotificationUID).once('value').then(queryResult => {
+			
+			const userUID = queryResult.val().userUID;
+			
+			return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
+				
+				const userFullName = queryResult.child("personalDetails").val().fullName;
+				const userApartmentName = queryResult.child("flatDetails").val().apartmentName;
+				const userFlatNumber = queryResult.child("flatDetails").val().flatNumber;
+				
+				return admin.database().ref("/societyServices").child("admin").once('value').then(queryResult => {
+					
+					const tokenId = queryResult.val().tokenId;
+					
+					const payload = {
+						data:{
+							message : userFullName +", "+ userFlatNumber +", "+ userApartmentName +", wants to donate Food to the needy one's",
+							societyServiceType: "userDonateFoodNotification"
+						}
+					};
+					
+					return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+						
+						return console.log("Notification sent");
+						
+					});
+				});
+			});
+			
+		});	
+});
+
+// Nofications related to Namma Apartments Security App
+
 // Notifications triggered when User Raises an Emergency Alarm. The Security Guard Admin and the Society Admin gets notified.
 
 exports.emergencyNotifications = functions.database.ref('/emergencies/public/{emergencyUID}')
@@ -589,286 +918,4 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 		return console.log("End of Function");
 	});
 	
-});
-
-//Notifications triggered when privilege value is set to 0,1 or 2
-
-exports.activateAccountNotification = functions.database.ref('/users/private/{userUID}/privileges/verified')
-.onWrite((change, context) => {
-	const userUID = context.params.userUID;
-
-	return admin.database().ref("/users").child("private").child(userUID).child("privileges").once('value').then(queryResult => {
-
-        /*Exit the API if snapshot does not exist, more likely Delete Operation has been triggered*/
-	    if( ! queryResult.exists()) {
-	        return 0;
-	    }
-
-		const verified = queryResult.val().verified;
-		if(verified === 1 || verified === 2) {
-			return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
-
-				var message;
-				if (verified === 1) {
-				    message = "Welcome to Namma Apartments, Your Account has been Activated";
-				} else {
-				    message = "Sorry, Your Account Activation has been rejected by Admin";
-				}
-
-				const tokenId = queryResult.val().tokenId;
-				const payload = {
-						notification: {
-							title: "Namma Apartments",
-							body: message,
-							"sound": "default",
-							"badge": "1"
-						},
-					data: {
-						message: message,
-						type: "userAccountNotification"
-					}
-				};
-
-				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
-				});				
-				
-			});
-		} else {
-			return admin.database().ref("/societyServices").child("admin").once('value').then(queryResult => {
-				const tokenId = queryResult.val().tokenId;
-				const payload = {
-					data: {
-						message: "A new User Account has been created. Requires Authentication",
-						societyServiceType: "userAccountNotification"
-					}
-				};
-
-				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
-				});				
-				
-			});
-		}
-	});
-});
-
-//Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
-
-exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
-.onCreate((change,context)=>{
-	const city = context.params.city;
-	const society = context.params.society;
-	const apartment = context.params.apartment;
-	const flat = context.params.flat;
-	const userUID = context.params.userUID;
-	const notificationUID = context.params.notificationUID;
-	const visitorType = context.params.visitorType;
-	
-	console.log("City:" + city);
-	console.log("Society:" + society);
-	console.log("Apartment:" + apartment);
-	console.log("Flat:" + flat);
-	console.log("UserUID:" + userUID);
-	console.log("NotificationUID:" + notificationUID);
-	
-	return admin.database().ref("/userData").child("private")
-	.child(city).child(society).child(apartment).child(flat)
-	.child("gateNotifications").child(userUID).child(visitorType).child(notificationUID)
-	.once('value').then(queryResult => {
-
-		const message = queryResult.val().message;
-		const profilePhoto = queryResult.val().profilePhoto;
-		var mobileNumber;
-		
-			if(visitorType === "guests"){
-				mobileNumber = queryResult.val().mobileNumber;
-			} else {
-				mobileNumber = "";
-			}			
-		
-		console.log("NotificationUID:" + profilePhoto);
-		console.log("Visitor's Mobile Number:" + mobileNumber);
-		console.log("Visitor's Message:" + message);
-		
-		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
-			
-			const tokenId = queryResult.val().tokenId;
-			
-			console.log("Token Id : " + tokenId);
-			
-			const deviceType = queryResult.child("otherDetails").val().deviceType;
-			
-			console.log("Device Type is:"+deviceType);
-			
-			if (deviceType === "android") {
-				console.log("If condition entered");
-				const payload = {
-				data: {
-					message: message,
-					notification_uid : notificationUID,
-					user_uid : userUID,
-					visitor_type : visitorType,
-					profile_photo : profilePhoto,
-					mobile_number : mobileNumber,
-					type: "E-Intercom"
-					}
-				};
-				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
-				});
-			} else {
-				console.log("Else condition entered");
-				const payload = {
-				notification: {
-                    title: "Namma Apartments",
-                    body: message,
-                    "sound": "default",
-                    "badge": "1",
-                    "click_action": "actionCategory"
-					},
-				data: {
-					message: message,
-					notification_uid : notificationUID,
-					user_uid : userUID,
-					visitor_type : visitorType,
-					profile_photo : profilePhoto,
-					mobile_number : mobileNumber,
-					type: "E-Intercom"
-					}
-				};
-				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
-				});
-			}
-		});
-	});
-});
-
-// Notifications triggered when Society Admin responds to User's Event Request
-
-exports.eventNotifications = functions.database.ref('/societyServiceNotifications/eventManagement/{notificationUID}')
-.onUpdate((change, context) => {
-	
-	const notificationUID = context.params.notificationUID;
-	
-	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
-		const status = queryResult.val().status;
-		const userUID = queryResult.val().userUID;
-		const eventTitle = queryResult.val().eventTitle;
-		const eventDate = queryResult.val().eventDate;
-		const timeSlot = queryResult.val().timeSlot;
-		var notificationMesage;
-
-		if(status === "Booking Accepted"){
-			notificationMesage = "Your request for the Event, "+eventTitle+", on "+eventDate+", "+timeSlot+" has been accepted";
-		} else{
-			notificationMesage = "Your request for the Event, "+eventTitle+", on "+eventDate+", "+timeSlot+" has been rejected";
-		}			
-		
-		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
-			
-			const tokenId = queryResult.val().tokenId;
-			
-			console.log("Token id -> "+tokenId);
-			
-			const payload = {
-				notification: {
-                    title: "Namma Apartments",
-                    body: notificationMesage,
-                    "sound": "default",
-                    "badge": "1"
-				},
-				data: {
-					message: notificationMesage,
-					type: "Event_Management"
-				}
-			};
-			
-			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-				return console.log("Notification sent");
-			});
-			
-		});
-	});
-	
-});
-
-// Notifications triggered when society service accepts User's Society Service request
-
-exports.societyServiceResponseNotifications = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
-.onCreate((change, context) => {
-	
-	const notificationUID = context.params.notificationUID;
-	
-	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
-		const userUID = queryResult.val().userUID;
-		const societyServiceType = queryResult.val().societyServiceType;
-		
-		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
-			
-			const tokenId = queryResult.val().tokenId;
-			
-			console.log("Token id -> "+tokenId);
-			
-			const payload = {
-				notification: {
-                    title: "Namma Apartments",
-                    body: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
-                    "sound": "default",
-                    "badge": "1"
-				},
-				data: {
-				message: "Your request for the "+societyServiceLookup[societyServiceType]+" Service has been accepted",
-					type: "Society_Service"
-				}
-			};
-			
-			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-				return console.log("Notification sent");
-			});
-			
-		});
-	});
-	
-});
-
-// Notifications triggered when user cancels society service request
-
-exports.userCancelsSocietyServiceRequest = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/status')
-.onUpdate((change, context) => {
-	
-		const notificationUID = context.params.notificationUID;
-	
-		return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
-			
-			const status = queryResult.val().status;
-			const societyServiceType = queryResult.val().societyServiceType;
-			const societyServiceUID = queryResult.val().takenBy;
-			
-			if (status === "Cancelled"){
-				
-					return admin.database().ref("/societyServices").child(societyServiceType).child("private").child("data").child(societyServiceUID).once('value').then(queryResult => {
-					
-						const tokenId = queryResult.val().tokenId;
-					
-						const payload = {
-										data: {
-											message: "Service has been Cancelled by a User",
-											societyServiceType: "cancelledServiceRequest"
-											}
-										};
-					
-						return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-						
-							return console.log("Notification sent");
-						
-						});
-					});
-			} else {
-				
-				return null;
-				
-			}
-		});
 });
