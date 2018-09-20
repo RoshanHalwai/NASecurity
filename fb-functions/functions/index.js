@@ -643,8 +643,8 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 	return admin.database().ref("/societyServiceNotifications").child("all").child(notificationUID).once('value').then(queryResult => {
 		const societyServiceType = queryResult.val().societyServiceType;
 		const ownerUID = queryResult.val().userUID;
-		const eventDate = queryResult.val().eventDate;
-		const timeSlot = queryResult.val().timeSlot;
+		var eventDate = queryResult.val().eventDate;
+		var timeSlot = queryResult.val().timeSlot;
 
 		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
 			
@@ -657,8 +657,9 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				var mobileNumber;
 				var tokenId;
 				
-				if (societyServiceType === "eventManagement"){
+				if (societyServiceType === "eventManagement" || societyServiceType === "scrapCollection"){
 					
+					var notificationMessage;
 					console.log("Entered Event Management Block");
 					
 					return admin.database().ref('/societyServices').child("admin").once('value').then(queryResult =>{		
@@ -670,7 +671,14 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 						console.log("Event Date : " + eventDate);
 						console.log("TimeSlot : " + timeSlot);
 						
-						const notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+" has requested for the hall, for "+ eventDate +" time slot "+ timeSlot +". Please confirm!";
+						if (societyServiceType === "eventManagement"){
+							notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+" has requested for the hall, for "+ eventDate +" time slot "+ timeSlot +". Please confirm!";
+						} else{
+							notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+"wants to discard Scrap from his Flat";
+							eventDate = "";
+							timeSlot = "";
+						}
+						
 						const payload = {		
 								data: {
 									message: notificationMessage,
