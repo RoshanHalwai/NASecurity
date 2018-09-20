@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.AudioAttributes;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
@@ -81,7 +80,6 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(message)
-                .setSound(RingtoneManager.getDefaultUri(Notification.DEFAULT_SOUND))
                 .setPriority(PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .build();

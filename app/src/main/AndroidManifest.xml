@@ -21,7 +21,6 @@
 
         <!-- Ignore these activities for now -->
         <activity android:name=".nammaapartmentsecurityhome.emergency.FilterEmergencyList" />
-        <activity android:name=".MainActivity" />
 
         <!-- Notification Services -->
         <meta-data
