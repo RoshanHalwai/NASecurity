@@ -76,7 +76,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
     private EditText editCabRtoNumber;
     private EditText editCabSerialNumberOne;
     private EditText editCabSerialNumberTwo;
-    private String eIntercomType, visitorMobileNumber;
+    private String eIntercomType, visitorMobileNumber, reference, imageAbsolutePath, userMobileNumber;
     private CircleImageView circleImageView;
     private File profilePhotoPath;
     private EditText editFullName;
@@ -199,6 +199,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
                 @Override
                 public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                    imageAbsolutePath = imageFile.getAbsolutePath();
                     Bitmap dailyServiceProfilePic = getBitmapFromFile(EIntercom.this, imageFile);
                     circleImageView.setImageBitmap(dailyServiceProfilePic);
                     profilePhotoPath = imageFile;
@@ -232,14 +233,17 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         String notificationMessage = null;
         switch (eIntercomType) {
             case GUEST:
-                notificationMessage = getGuestMessage(editFullName.getText().toString());
+                reference = editFullName.getText().toString();
+                notificationMessage = getGuestMessage(reference);
                 break;
             case CAB:
                 String cabNumber = editCabStateCode.getText().toString().trim() + HYPHEN + editCabRtoNumber.getText().toString().trim() + HYPHEN
                         + editCabSerialNumberOne.getText().toString().trim() + HYPHEN + editCabSerialNumberTwo.getText().toString().trim();
+                reference = cabNumber;
                 notificationMessage = getCabMessage(cabNumber);
                 break;
             case PACKAGE:
+                reference = editFullName.getText().toString();
                 notificationMessage = getPackageMessage(editFullName.getText().toString());
                 break;
         }
@@ -256,6 +260,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
     private boolean validateFields() {
         String fullName = editFullName.getText().toString().trim();
         String mobileNumber = editMobileNumber.getText().toString().trim();
+        userMobileNumber = mobileNumber;
         visitorMobileNumber = editVisitorMobileNumber.getText().toString().trim();
         boolean fieldsFilled = isAllFieldsFilled(new EditText[]{editFullName, editMobileNumber, editVisitorMobileNumber});
 
@@ -396,6 +401,9 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         awaitingResponseIntent.putExtra("EIntercomType", eIntercomType);
         awaitingResponseIntent.putExtra("SentUserUID", userUID);
         awaitingResponseIntent.putExtra("NotificationUID", notificationUID);
+        awaitingResponseIntent.putExtra("Reference", reference);
+        awaitingResponseIntent.putExtra("VisitorImageFilePath", imageAbsolutePath);
+        awaitingResponseIntent.putExtra("UserMobileNumber", userMobileNumber);
         startActivity(awaitingResponseIntent);
     }
 

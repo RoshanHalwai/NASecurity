@@ -1,45 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <include layout="@layout/activity_base" />
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        tools:context=".nammaapartmentsecurityhome.eintercom.AwaitingResponse">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:gravity="center"
-            android:text="Notification has been sent to the User"
-            android:textColor="#000000"
-            android:textSize="18sp" />
+            android:orientation="vertical">
 
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/animationWaitingToLoadData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="visible"
-            app:indicatorColor="@color/nmBlack"
-            app:indicatorName="BallSpinFadeLoaderIndicator" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageVisitorPic"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/add_member" />
 
-        <TextView
-            android:id="@+id/textUserResponse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:text="User has not Responded Yet"
-            android:textColor="#000000"
-            android:textSize="18sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textReference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:textColor="@color/nmBlack"
+                android:textSize="20sp" />
 
+            <LinearLayout
+                android:id="@+id/layoutAwaitingResponse"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textNotificationSent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="@string/awaiting_user_confirmation"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <com.wang.avi.AVLoadingIndicatorView
+                    android:id="@+id/animationWaitingToLoadData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    app:indicatorColor="@color/nmBlack"
+                    app:indicatorName="BallSpinFadeLoaderIndicator" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutUserResponse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/imageResponseStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:contentDescription="@string/status_of_visitor"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:id="@+id/textUserResponse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/layoutCallUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <TextView
+                    android:id="@+id/textCallUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:text="Call User"
+                    android:textAllCaps="false"
+                    android:textColor="@color/nmBlack"
+                    android:textSize="20sp" />
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 </LinearLayout>

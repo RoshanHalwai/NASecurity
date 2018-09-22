@@ -151,6 +151,9 @@ public class Constants {
     public static final String CAB = "cab";
     public static final String PACKAGE = "package";
     private static final String FAMILY_MEMBER = "familyMember";
+    public static final String ACCEPTED = "Accepted";
+    public static final String REJECTED = "Rejected";
+    public static final String IGNORED = "Ignored";
 
     /* ------------------------------------------------------------- *
      * Validation Keys

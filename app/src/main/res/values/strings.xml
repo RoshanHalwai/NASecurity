@@ -17,6 +17,15 @@
     <string name="notifying_user">Notifying User</string>
     <string name="please_wait_a_moment">Please wait a moment</string>
 
+
+    <!--NammaApartment security E-Intercom-->
+    <string name="image_of_visitor">Image of Visitor</string>
+    <string name="status_of_visitor">Status of Visitor</string>
+    <string name="awaiting_user_confirmation">Awaiting User Confirmation…</string>
+    <string name="accepted_request">User has Accepted the Request.</string>
+    <string name="rejected_request">User has Rejected the Request.</string>
+    <string name="ignored_request">User has Ignored the Request.</string>
+
     <string name="guest">Guest Approval</string>
     <string name="cab">Cab Approval</string>
     <string name="package_vendor">Package Approval</string>
