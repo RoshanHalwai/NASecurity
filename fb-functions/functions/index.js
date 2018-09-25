@@ -97,7 +97,8 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
                     body: message,
                     "sound": "default",
                     "badge": "1",
-                    "click_action": "actionCategory"
+                    "click_action": "actionCategory",
+					"mutable_content": "true"
 					},
 				data: {
 					message: message,
@@ -644,7 +645,6 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 		const societyServiceType = queryResult.val().societyServiceType;
 		const ownerUID = queryResult.val().userUID;
 		var eventDate = queryResult.val().eventDate;
-		var timeSlot = queryResult.val().timeSlot;
 
 		return admin.database().ref('/users').child("private").child(ownerUID).child("personalDetails").once('value').then(queryResult => {
 			
@@ -669,14 +669,12 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 						console.log("Society Service Type : " + societyServiceType);
 						console.log("tokenId : " + tokenId);
 						console.log("Event Date : " + eventDate);
-						console.log("TimeSlot : " + timeSlot);
 						
 						if (societyServiceType === "eventManagement"){
-							notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+" has requested for the hall, for "+ eventDate +" time slot "+ timeSlot +". Please confirm!";
+							notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+" has booked the hall, for an event on "+ eventDate +". ";
 						} else{
-							notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+"wants to discard Scrap from his Flat";
+							notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+"wants to discard some Scrap items from the residence";
 							eventDate = "";
-							timeSlot = "";
 						}
 						
 						const payload = {		
@@ -684,8 +682,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 									message: notificationMessage,
 									notificationUID: notificationUID,
 									societyServiceType : societyServiceType,
-									eventDate : eventDate,
-									timeSlot : timeSlot
+									eventDate : eventDate
 									}
 								};
 							
