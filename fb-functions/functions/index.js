@@ -36,14 +36,7 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 	const userUID = context.params.userUID;
 	const notificationUID = context.params.notificationUID;
 	const visitorType = context.params.visitorType;
-	
-	console.log("City:" + city);
-	console.log("Society:" + society);
-	console.log("Apartment:" + apartment);
-	console.log("Flat:" + flat);
-	console.log("UserUID:" + userUID);
-	console.log("NotificationUID:" + notificationUID);
-	
+
 	return admin.database().ref("/userData").child("private")
 	.child(city).child(society).child(apartment).child(flat)
 	.child("gateNotifications").child(userUID).child(visitorType).child(notificationUID)
@@ -59,19 +52,11 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 				mobileNumber = "";
 			}			
 		
-		console.log("NotificationUID:" + profilePhoto);
-		console.log("Visitor's Mobile Number:" + mobileNumber);
-		console.log("Visitor's Message:" + message);
-		
 		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult=>{
 			
 			const tokenId = queryResult.val().tokenId;
-			
-			console.log("Token Id : " + tokenId);
-			
+		
 			const deviceType = queryResult.child("otherDetails").val().deviceType;
-			
-			console.log("Device Type is:"+deviceType);
 			
 			if (deviceType === "android") {
 				console.log("If condition entered");
@@ -90,7 +75,6 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 					return console.log("Notification sent");
 				});
 			} else {
-				console.log("Else condition entered");
 				const payload = {
 				notification: {
                     title: "Namma Apartments",
@@ -144,41 +128,58 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 			return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 				const tokenId = queryResult.val().tokenId;
 				const guestNotificationSound = queryResult.child("otherDetails").child("notificationSound").val().guest;
+				const userCity = queryResult.child("flatDetails").val().city;
+				const userSocietyName = queryResult.child("flatDetails").val().societyName;
+				const userApartmentName = queryResult.child("flatDetails").val().apartmentName;
+				const userFlatNumber = queryResult.child("flatDetails").val().flatNumber;
+				
 				var payload;
 				
-				if (guestNotificationSound) {
-					payload = {
-						notification: {
-									title: "Namma Apartments",
-									body: "Your Guest " + guestName + " has " + status + " your society.",
-									"sound": "default",
-									"badge": "1" 
-						},
-						data: {
-							message: "Your Guest " + guestName + " has " + status + " your society.",
-							"sound": "default",
-							type: "Guest_Notification"
-						}
-					};
-				} else {
-					payload = {
-						notification: {
-									title: "Namma Apartments",
-									body: "Your Guest " + guestName + " has " + status + " your society.",
-									"sound": "",
-									"badge": "1" 
-						},
-						data: {
-							message: "Your Guest " + guestName + " has " + status + " your society.",
-							"sound": "",
-							type: "Guest_Notification"
-						}
-					};
-				}
+				return admin.database().ref("/userData").child("private")
+							.child(userCity).child(userSocietyName).child(userApartmentName).child(userFlatNumber).child("visitors").child(inviterUID).child(visitorUID)
+							.once('value').then(queryResult => {
+								
+					const isVisitorAvailable = queryResult.val();
 		
-				return admin.messaging().sendToDevice(tokenId, payload).then(result => {
-					return console.log("Notification sent");
-				});				
+					if (!isVisitorAvailable) {
+						return null;
+					}
+				
+					if (guestNotificationSound) {
+						payload = {
+							notification: {
+										title: "Namma Apartments",
+										body: "Your Guest " + guestName + " has " + status + " your society.",
+										"sound": "default",
+										"badge": "1" 
+							},
+							data: {
+								message: "Your Guest " + guestName + " has " + status + " your society.",
+								"sound": "default",
+								type: "Guest_Notification"
+							}
+						};
+					} else {
+						payload = {
+							notification: {
+										title: "Namma Apartments",
+										body: "Your Guest " + guestName + " has " + status + " your society.",
+										"sound": "",
+										"badge": "1" 
+							},
+							data: {
+								message: "Your Guest " + guestName + " has " + status + " your society.",
+								"sound": "",
+								type: "Guest_Notification"
+							}
+						};
+					}
+			
+					return admin.messaging().sendToDevice(tokenId, payload).then(result => {
+						return console.log("Notification sent");
+					});	
+					
+				});
 				
 			});
 			
@@ -220,15 +221,12 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 						const userCity = queryResult.child("flatDetails").val().city;
 						const userApartmentName = queryResult.child("flatDetails").val().apartmentName;
 						const userFlatNumber = queryResult.child("flatDetails").val().flatNumber;
-						console.log("Flat Number is: "+userFlatNumber);
 						
 						return admin.database().ref("/userData").child("private")
 							.child(userCity).child(userSocietyName).child(userApartmentName).child(userFlatNumber).child("dailyServices").child(dailyServiceType).child(dailyServiceUID)
 							.once('value').then(queryResult => {
 								
 							const isDailyServiceWorking = queryResult.val();
-							
-							console.log("Value -> ", isDailyServiceWorking);
 				
 							if (!isDailyServiceWorking) {
 								return null;
@@ -288,24 +286,20 @@ exports.noticeBoardNotification = functions.database.ref('/noticeBoard/{noticeBo
 	.onCreate((change, context) => {
 		
 		const noticeBoardUID = context.params.noticeBoardUID;
-		console.log("Notice Board UID is:" + noticeBoardUID);
 		const promises = [];
 		
 		return admin.database().ref("/noticeBoard").child(noticeBoardUID).once('value').then(queryResult => {
 			const dateAndTime = queryResult.val().dateAndTime;
 			const title = queryResult.val().title;	
-			console.log("Title is:" + title);
 			
 			return admin.database().ref("users").child("private").once('value').then(queryResult => {
 		
 			return queryResult.forEach((userSnap) => {
 				var userUID = userSnap.key;
-				console.log("User is:" + userUID);
 				
 				const userDataReference = admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
 						const tokenId = queryResult.val().tokenId;
 						const verified = queryResult.child("privileges").val().verified;
-						console.log("Verified Value is -> "+ verified);
 						
 						if(verified === 1){
 						
@@ -370,7 +364,6 @@ exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status
 		return admin.database().ref("/users").child("private").child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			const cabNotificationSound = queryResult.child("otherDetails").child("notificationSound").val().cab;
-			console.log("Cab Notification Sound is: ", cabNotificationSound);
 			var payload;
 			
 			if (cabNotificationSound) {
@@ -569,8 +562,6 @@ exports.eventNotifications = functions.database.ref('/societyServiceNotification
 			
 			const tokenId = queryResult.val().tokenId;
 			
-			console.log("Token id -> "+tokenId);
-			
 			const payload = {
 				notification: {
                     title: "Namma Apartments",
@@ -607,8 +598,6 @@ exports.societyServiceResponseNotifications = functions.database.ref('/societySe
 		return admin.database().ref("/users").child("private").child(userUID).once('value').then(queryResult => {
 			
 			const tokenId = queryResult.val().tokenId;
-			
-			console.log("Token id -> "+tokenId);
 			
 			const payload = {
 				notification: {
@@ -660,15 +649,10 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				if (societyServiceType === "eventManagement" || societyServiceType === "scrapCollection"){
 					
 					var notificationMessage;
-					console.log("Entered Event Management Block");
 					
 					return admin.database().ref('/societyServices').child("admin").once('value').then(queryResult =>{		
 				
 						tokenId = queryResult.val().tokenId;
-						
-						console.log("Society Service Type : " + societyServiceType);
-						console.log("tokenId : " + tokenId);
-						console.log("Event Date : " + eventDate);
 						
 						if (societyServiceType === "eventManagement"){
 							notificationMessage = userFullName +", "+ apartmentName +", "+ flatNumber +", "+" has booked the hall, for an event on "+ eventDate +". ";
@@ -742,9 +726,6 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
                               if (snapshot.exists()) {
                                 console.log("Some Staff has taken this request, so we stop sending request to other staffs");
                               } else {
-                                console.log("None of the staff has taken this request, so we start sending request to other staffs");
-
-                                console.log(availablePlumbers[i]);
 
                                 var tokenId = availablePlumbers[i].tokenId;
                                 var mobileNumber = availablePlumbers[i].mobileNumber;
