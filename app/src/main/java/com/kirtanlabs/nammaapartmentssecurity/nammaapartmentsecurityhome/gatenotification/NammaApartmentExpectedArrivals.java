@@ -1,6 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.gatenotification;
 
-class NammaApartmentExpectedArrivals {
+public class NammaApartmentExpectedArrivals {
 
     /* ------------------------------------------------------------- *
      * Private Members
@@ -12,6 +12,7 @@ class NammaApartmentExpectedArrivals {
     private String validFor;
     private String status;
     private String expectedArrivalUid;
+    private String approvalType;
 
     /* ------------------------------------------------------------- *
      * Constructors
@@ -56,11 +57,19 @@ class NammaApartmentExpectedArrivals {
         return expectedArrivalUid;
     }
 
+    public String getApprovalType() {
+        return approvalType;
+    }
+
     /* ------------------------------------------------------------- *
      * Setters
      * ------------------------------------------------------------- */
 
     public void setExpectedArrivalUid(String expectedArrivalUid) {
         this.expectedArrivalUid = expectedArrivalUid;
+    }
+
+    public void setApprovalType(String approvalType) {
+        this.approvalType = approvalType;
     }
 }

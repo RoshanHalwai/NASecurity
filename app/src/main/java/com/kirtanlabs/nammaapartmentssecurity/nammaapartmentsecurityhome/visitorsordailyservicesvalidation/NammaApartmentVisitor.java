@@ -1,6 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitorsordailyservicesvalidation;
 
-class NammaApartmentVisitor {
+public class NammaApartmentVisitor {
 
     /* ------------------------------------------------------------- *
      * Private Members
@@ -13,6 +13,7 @@ class NammaApartmentVisitor {
     private String profilePhoto;
     private String status;
     private String uid;
+    private String approvalType;
 
     /* ------------------------------------------------------------- *
      * Constructors
@@ -61,5 +62,17 @@ class NammaApartmentVisitor {
 
     public String getUid() {
         return uid;
+    }
+
+    public String getApprovalType() {
+        return approvalType;
+    }
+
+    /* ------------------------------------------------------------- *
+     * Setters
+     * ------------------------------------------------------------- */
+
+    public void setApprovalType(String approvalType) {
+        this.approvalType = approvalType;
     }
 }

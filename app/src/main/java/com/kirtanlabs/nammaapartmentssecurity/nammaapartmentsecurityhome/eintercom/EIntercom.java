@@ -52,9 +52,16 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VI
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_STORAGE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.NOTIFICATION_UID;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.SENT_USER_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.USER_MOBILE_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.VISITOR_IMAGE_FILE_PATH;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.VISITOR_IMAGE_URL;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.VISITOR_MOBILE_NUMBER;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.getCabMessage;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.getGuestMessage;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.getPackageMessage;
@@ -83,6 +90,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
     private EditText editVisitorMobileNumber;
     private EditText editMobileNumber;
     private TextView textErrorProfilePic;
+    private String profilePhoto;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -356,7 +364,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                                 /*Adding the profile photo to storage reference and notification data to real time database under Flat Detail*/
                                 uploadTask.addOnSuccessListener(taskSnapshot -> {
                                     //creating the upload object to store uploaded image details and notification data
-                                    String profilePhoto = taskSnapshot.getDownloadUrl().toString();
+                                    profilePhoto = Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString();
                                     notificationsReference.setValue(new Notification(notificationMessage, visitorMobileNumber, profilePhoto, notificationUID))
                                             .addOnCompleteListener(task -> {
                                                 //dismissing the progress dialog
@@ -398,12 +406,16 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         /*Call AwaitingResponse activity, by this time user should have received the Notification
          * Since, cloud functions would have been triggered*/
         Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);
-        awaitingResponseIntent.putExtra("EIntercomType", eIntercomType);
-        awaitingResponseIntent.putExtra("SentUserUID", userUID);
-        awaitingResponseIntent.putExtra("NotificationUID", notificationUID);
-        awaitingResponseIntent.putExtra("Reference", reference);
-        awaitingResponseIntent.putExtra("VisitorImageFilePath", imageAbsolutePath);
-        awaitingResponseIntent.putExtra("UserMobileNumber", userMobileNumber);
+        awaitingResponseIntent.putExtra(EINTERCOM_TYPE, eIntercomType);
+        awaitingResponseIntent.putExtra(SENT_USER_UID, userUID);
+        awaitingResponseIntent.putExtra(NOTIFICATION_UID, notificationUID);
+        awaitingResponseIntent.putExtra(REFERENCE, reference);
+        awaitingResponseIntent.putExtra(USER_MOBILE_NUMBER, userMobileNumber);
+        if (eIntercomType.equals(GUEST)) {
+            awaitingResponseIntent.putExtra(VISITOR_IMAGE_FILE_PATH, imageAbsolutePath);
+            awaitingResponseIntent.putExtra(VISITOR_MOBILE_NUMBER, visitorMobileNumber);
+            awaitingResponseIntent.putExtra(VISITOR_IMAGE_URL, profilePhoto);
+        }
         startActivity(awaitingResponseIntent);
     }
 
