@@ -40,6 +40,13 @@ public class Constants {
     public static final String MESSAGE = "message";
     public static final String EINTERCOM_TYPE = "eIntercomType";
     public static final String VEHICLE_UID = "vehicleUID";
+    public static final String NOTIFICATION_UID = "notificationUID";
+    public static final String REFERENCE = "reference";
+    public static final String VISITOR_IMAGE_FILE_PATH = "visitorImageFilePath";
+    public static final String SENT_USER_UID = "sentUserUID";
+    public static final String USER_MOBILE_NUMBER = "userMobileNumber";
+    public static final String VISITOR_MOBILE_NUMBER = "visitorMobileNumber";
+    public static final String VISITOR_IMAGE_URL = "visitorImageURL";
 
     /* ------------------------------------------------------------- *
      * Login/OTP Constants
@@ -82,7 +89,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_VISITORS = "visitors";
     public static final String FIREBASE_CHILD_VISITOR_UID = "visitorUID";
     private static final String FIREBASE_CHILD_ALL = "all";
-    private static final String FIREBASE_CHILD_CABS = "cabs";
+    public static final String FIREBASE_CHILD_CABS = "cabs";
     private static final String FIREBASE_CHILD_DAILYSERVICES = "dailyServices";
     private static final String FIREBASE_CHILD_EMERGENCIES = "emergencies";
     private static final String FIREBASE_CHILD_PUBLIC = "public";
@@ -171,6 +178,7 @@ public class Constants {
     public static final int RECENT_EMERGENCY_REQUEST_CODE = 0;
     public static final int SEARCH_FLAT_NUMBER_REQUEST_CODE = 1;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 4;
+    public static final int PLACE_CALL_PERMISSION_REQUEST_CODE = 2;
 
     /* ------------------------------------------------------------- *
      * E-Intercom Type Map

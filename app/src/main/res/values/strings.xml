@@ -31,6 +31,13 @@
     <string name="package_vendor">Package Approval</string>
     <string name="invalid_user_title">Invalid User Message</string>
     <string name="invalid_user_message">No record found for entered User\'s mobile number.</string>
+    <string name="call_user">Call User</string>
+    <string name="approve">Approve</string>
+    <string name="un_approve">Unapprove</string>
+    <string name="guard_approved">guardApproved</string>
+    <string name="approval_title">Approval Message</string>
+    <string name="approval_message">Visitor has been approved</string>
+    <string name="valid_for_default_value">"2 hrs"</string>;
 
     <!--NammaApartment security Home Activity-->
     <string name="e_intercom">E - Intercom</string>
