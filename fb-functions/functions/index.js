@@ -23,7 +23,48 @@ societyServiceLookup['garbageCollection'] = "Garbage Collection";
 		
 admin.initializeApp(functions.config().firebase);
 
-// Nofications related to Namma Apartments App (where user's action is required)
+/*Updating Pending Dues every month*/
+exports.updatePendingDues = functions.https.onRequest((req, res) => {
+
+  return admin.database().ref('/users/private').once('value')
+    .then(userUID => {
+        var userUIDList = [];
+        userUID.forEach((userUIDSnapshot) => {
+        		userUIDList.push(userUIDSnapshot.key);
+        });
+        return userUIDList;
+     })
+     .then (userUIDList => {
+        var userFlatDetails = [];
+        userUIDList.forEach(function (userUID) {
+            userFlatDetails.push(admin.database().ref('/users/private').child(userUID).child('flatDetails').once('value'));
+        });
+        return Promise.all(userFlatDetails);
+     })
+     .then(usersFlatDetailsPromises => {
+        usersFlatDetailsPromises.forEach(userFlatData => {
+            var userFlatReference = admin.database().ref('/userData/private')
+                .child(userFlatData.val().city)
+                .child(userFlatData.val().societyName)
+                .child(userFlatData.val().apartmentName)
+                .child(userFlatData.val().flatNumber);
+            return userFlatReference.once('value')
+                .then(queryResult => {
+                    const maintenanceCost = queryResult.val().maintenanceCost;
+                    var date = new Date();
+                    var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                    var year = date.getFullYear();
+                    return userFlatReference.child('pendingDues').child(month+year).set(maintenanceCost);
+                });
+        });
+        console.log("Pending Dues Update Completed..")
+        return res.redirect(200);
+     })
+     .catch(error => {console.log("Update Error")});
+});
+
+
+// Notifications related to Namma Apartments App (where user's action is required)
 
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
 
@@ -645,7 +686,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 			        7. Else we send request to next available staff and repeat step 3.
 			        8. After iterating over all of the available staffs if the user notification (takenBy) property
 			        is still not present, then it indicates none of the staff has accepted to user request.
-			        9. We update User UI accordingly (//TODO)
+			        9. We update User UI accordingly
 			        */
 					return admin.database().ref('/societyServices').child(societyServiceType).child("private").child("available").once('value')
 					.then(availablePlumbersUID => {
