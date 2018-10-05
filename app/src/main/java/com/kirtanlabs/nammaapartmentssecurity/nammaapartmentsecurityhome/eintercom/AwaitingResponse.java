@@ -30,6 +30,8 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visitor
 import java.io.File;
 import java.util.Objects;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ACCEPTED;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_CABS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_VISITORS_REFERENCE;
@@ -112,6 +114,7 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
         TextView textApprove = findViewById(R.id.textApprove);
         TextView textUnApprove = findViewById(R.id.textUnApprove);
         textUserResponse = findViewById(R.id.textUserResponse);
+        ImageView backButton = findViewById(R.id.backButton);
 
         /*Set Fonts for UI Views*/
         textReference.setTypeface(setLatoRegularFont(this));
@@ -139,6 +142,10 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
         textApprove.setOnClickListener(this);
         textUnApprove.setOnClickListener(this);
         textCallUser.setOnClickListener(this);
+        /*Set Listener for back button here since after sending E-Intercom notification we navigate users
+         * to this activity and when back button is pressed we don't want users to
+         * go back to E- Intercom screen but instead navigate to Security Home Screen*/
+        backButton.setOnClickListener(this);
 
         /*Keep track of user response*/
         getUserResponse(visitorType);
@@ -172,6 +179,9 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
                 Intent intent = new Intent(AwaitingResponse.this, NammaApartmentSecurityHome.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.backButton:
+                onBackPressed();
                 break;
         }
     }
@@ -383,4 +393,19 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
         });
     }
 
+    /* ------------------------------------------------------------- *
+     * Overriding Back button
+     * ------------------------------------------------------------- */
+
+    /*We override these methods since after sending E-Intercom notifications we navigate users
+     * to this activity and when back button is pressed we don't want users to
+     * go back to E=Intercom screen but instead navigate to Security Home Screen*/
+    @Override
+    public void onBackPressed() {
+        if (getIntent().getStringExtra(NOTIFICATION_UID) != null) {
+            startActivity(new Intent(this, NammaApartmentSecurityHome.class).addFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TOP));
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
