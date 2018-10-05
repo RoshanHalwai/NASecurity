@@ -79,18 +79,13 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
      *Private Members
      *-----------------------------------------------*/
 
-    private EditText editCabStateCode;
-    private EditText editCabRtoNumber;
-    private EditText editCabSerialNumberOne;
-    private EditText editCabSerialNumberTwo;
-    private String eIntercomType, visitorMobileNumber, reference, imageAbsolutePath, userMobileNumber;
+    private EditText editCabStateCode, editCabRtoNumber, editCabSerialNumberOne,
+            editCabSerialNumberTwo, editFullName, editVisitorMobileNumber, editMobileNumber;
+    private TextView textErrorProfilePic, textErrorCabNumber;
     private CircleImageView circleImageView;
     private File profilePhotoPath;
-    private EditText editFullName;
-    private EditText editVisitorMobileNumber;
-    private EditText editMobileNumber;
-    private TextView textErrorProfilePic;
-    private String profilePhoto;
+    private String eIntercomType, visitorMobileNumber, reference, imageAbsolutePath,
+            userMobileNumber, profilePhoto;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -116,13 +111,14 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         TextView textMobileNumber = findViewById(R.id.textMobileNumber);
         TextView textVisitorMobileNumber = findViewById(R.id.textVisitorMobileNumber);
         TextView textVisitorCountryCode = findViewById(R.id.textVisitorCountryCode);
-        editVisitorMobileNumber = findViewById(R.id.editVisitorMobileNumber);
-        LinearLayout layoutVisitorMobileNumber = findViewById(R.id.layoutVisitorMobileNumber);
         TextView textCountryCode = findViewById(R.id.textCountryCode);
+        textErrorProfilePic = findViewById(R.id.textErrorProfilePic);
+        textErrorCabNumber = findViewById(R.id.textErrorCabNumber);
+        editVisitorMobileNumber = findViewById(R.id.editVisitorMobileNumber);
         editFullName = findViewById(R.id.editFullName);
         editMobileNumber = findViewById(R.id.editMobileNumber);
         Button buttonSendNotification = findViewById(R.id.buttonSendNotification);
-        textErrorProfilePic = findViewById(R.id.textErrorProfilePic);
+        LinearLayout layoutVisitorMobileNumber = findViewById(R.id.layoutVisitorMobileNumber);
 
         /*Change UI design if E-Intercom type is Cab or Package*/
         eIntercomType = getIntent().getStringExtra(EINTERCOM_TYPE);
@@ -136,6 +132,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
 
             /*Setting font for all the views*/
             textCabOrVendorTitle.setTypeface(setLatoBoldFont(this));
+            textErrorCabNumber.setTypeface(setLatoRegularFont(this));
             editCabStateCode.setTypeface(setLatoRegularFont(this));
             editCabRtoNumber.setTypeface(setLatoRegularFont(this));
             editCabSerialNumberOne.setTypeface(setLatoRegularFont(this));
@@ -270,9 +267,8 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
         String mobileNumber = editMobileNumber.getText().toString().trim();
         userMobileNumber = mobileNumber;
         visitorMobileNumber = editVisitorMobileNumber.getText().toString().trim();
-        boolean fieldsFilled = isAllFieldsFilled(new EditText[]{editFullName, editMobileNumber, editVisitorMobileNumber});
 
-        if (profilePhotoPath == null && !(eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE))) {
+        if (profilePhotoPath == null && (eIntercomType.equals(GUEST))) {
             textErrorProfilePic.setVisibility(View.VISIBLE);
             textErrorProfilePic.requestFocus();
             return false;
@@ -280,28 +276,26 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             textErrorProfilePic.setVisibility(View.INVISIBLE);
         }
 
-        if (!fieldsFilled) {
-            if (TextUtils.isEmpty(fullName) && !(eIntercomType.equals(CAB))) {
-                editFullName.setError(getString(R.string.name_validation));
-                return false;
-            }
-            if (TextUtils.isEmpty(mobileNumber)) {
-                editMobileNumber.setError(getString(R.string.mobile_number_validation));
-                return false;
-            }
-            if (TextUtils.isEmpty(visitorMobileNumber) && !(eIntercomType.equals(CAB) || eIntercomType.equals(PACKAGE))) {
-                editVisitorMobileNumber.setError(getString(R.string.mobile_number_validation));
-                return false;
-            }
+        if (eIntercomType.equals(CAB) && (editCabStateCode.getText().toString().isEmpty() || editCabRtoNumber.getText().toString().isEmpty()
+                || editCabSerialNumberOne.getText().toString().isEmpty() || editCabSerialNumberTwo.getText().toString().isEmpty())) {
+            textErrorCabNumber.setVisibility(View.VISIBLE);
+            textErrorCabNumber.requestFocus();
+            return false;
         } else {
-            if (isPersonNameValid(fullName)) {
-                editFullName.setError(getString(R.string.accept_alphabets));
-                return false;
-            }
-            if (!isPhoneNumberValid(mobileNumber)) {
-                editMobileNumber.setError(getString(R.string.number_10digit_validation));
-                return false;
-            }
+            textErrorCabNumber.setVisibility(View.GONE);
+        }
+
+        if (TextUtils.isEmpty(fullName) && !(eIntercomType.equals(CAB))) {
+            editFullName.setError(getString(R.string.name_validation));
+            return false;
+        }
+        if (!isPhoneNumberValid(mobileNumber)) {
+            editMobileNumber.setError(getString(R.string.mobile_number_validation));
+            return false;
+        }
+        if (!isPhoneNumberValid(visitorMobileNumber) && (eIntercomType.equals(GUEST))) {
+            editVisitorMobileNumber.setError(getString(R.string.mobile_number_validation));
+            return false;
         }
         return true;
     }
