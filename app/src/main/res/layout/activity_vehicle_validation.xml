@@ -93,11 +93,22 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textErrorVehicleNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutVehicleNumber"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/vehicle_number_validation"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/buttonVerifyVehicleNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutVehicleNumber"
+        android:layout_below="@+id/textErrorVehicleNumber"
         android:layout_margin="20dp"
         android:background="@color/nmBlack"
         android:text="@string/verify_vehicle"

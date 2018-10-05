@@ -171,6 +171,7 @@
     <!--Vehicle Validation Activity-->
     <string name="vehicle_number">Vehicle Number</string>
     <string name="verify_vehicle">Verify Vehicle</string>
+    <string name="vehicle_number_validation">Please enter vehicle number</string>
 
     <!--Vehicle Details Activity-->
     <string name="vehicle_details">Vehicle Details</string>
