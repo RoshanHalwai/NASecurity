@@ -40,10 +40,9 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
      * Private Members
      * ------------------------------------------------------------- */
 
-    private EditText editVehicleStateCode;
-    private EditText editVehicleRtoNumber;
-    private EditText editVehicleSerialNumberOne;
-    private EditText editVehicleSerialNumberTwo;
+    private EditText editVehicleStateCode, editVehicleRtoNumber, editVehicleSerialNumberOne,
+            editVehicleSerialNumberTwo;
+    private TextView textErrorVehicleNumber;
     private String vehicleUid;
 
     /* ------------------------------------------------------------- *
@@ -66,6 +65,7 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
 
         /*Getting Id's for all the views*/
         TextView textVehicleNumber = findViewById(R.id.textVehicleNumber);
+        textErrorVehicleNumber = findViewById(R.id.textErrorVehicleNumber);
         editVehicleStateCode = findViewById(R.id.editVehicleStateCode);
         editVehicleRtoNumber = findViewById(R.id.editVehicleRtoNumber);
         editVehicleSerialNumberOne = findViewById(R.id.editVehicleSerialNumberOne);
@@ -74,6 +74,7 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
 
         /*Setting font for all the views*/
         textVehicleNumber.setTypeface(setLatoBoldFont(this));
+        textErrorVehicleNumber.setTypeface(setLatoRegularFont(this));
         editVehicleStateCode.setTypeface(setLatoRegularFont(this));
         editVehicleRtoNumber.setTypeface(setLatoRegularFont(this));
         editVehicleSerialNumberOne.setTypeface(setLatoRegularFont(this));
@@ -99,6 +100,9 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
             //We need Progress Indicator in this screen
             showProgressIndicator();
             checkDetailsInFirebase(vehicleNumber);
+            textErrorVehicleNumber.setVisibility(View.GONE);
+        } else {
+            textErrorVehicleNumber.setVisibility(View.VISIBLE);
         }
     }
 
