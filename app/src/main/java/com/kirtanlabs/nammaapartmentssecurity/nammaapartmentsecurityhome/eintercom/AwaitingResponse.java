@@ -142,7 +142,7 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
         textApprove.setOnClickListener(this);
         textUnApprove.setOnClickListener(this);
         textCallUser.setOnClickListener(this);
-        /*Set Listener for back button here since after sending E-Intercom notification we navigate users
+        /*Set Listener for back button here since after sending E-Intercom notification we navigate security guard
          * to this activity and when back button is pressed we don't want users to
          * go back to E- Intercom screen but instead navigate to Security Home Screen*/
         backButton.setOnClickListener(this);
@@ -397,7 +397,7 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
      * Overriding Back button
      * ------------------------------------------------------------- */
 
-    /*We override these methods since after sending E-Intercom notifications we navigate users
+    /*We override these methods since after sending E-Intercom notifications we navigate security guard
      * to this activity and when back button is pressed we don't want users to
      * go back to E=Intercom screen but instead navigate to Security Home Screen*/
     @Override
