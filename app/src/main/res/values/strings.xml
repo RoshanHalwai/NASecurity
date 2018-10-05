@@ -16,6 +16,7 @@
     <string name="upload_image">Please Upload Image</string>
     <string name="notifying_user">Notifying User</string>
     <string name="please_wait_a_moment">Please wait a moment</string>
+    <string name="cab_number_validation">Please enter cab number</string>
 
 
     <!--NammaApartment security E-Intercom-->
