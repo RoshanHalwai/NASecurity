@@ -137,6 +137,7 @@
     <string name="resident_name">Resident Name:</string>
     <string name="image_emergency">Image to indicate type of Emergency</string>
     <string name="no_emergency_message">Sorry, there\'s no Emergency alarm raised by any of the resident at the moment.</string>
+    <string name="no_emergency_raised_in_this_flat_message">Sorry, there\'s no Emergency alarm raised by any of the resident of this flat.</string>
     <string name="no_emergency_desc">Image to indicate currently no emergency alarm raised by any of the resident.</string>
     <string name="date">Date</string>
     <string name="Filter">Filter</string>

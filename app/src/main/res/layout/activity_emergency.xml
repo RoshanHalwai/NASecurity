@@ -20,11 +20,23 @@
         app:indicatorColor="@color/nmBlack"
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
+    <EditText
+        android:id="@+id/editSearchFlatNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutBaseActivity"
+        android:layout_margin="20dp"
+        android:drawableLeft="@drawable/search"
+        android:drawableStart="@drawable/search"
+        android:hint="@string/search_flat_number_hint"
+        android:visibility="gone"
+        tools:ignore="TextFields" />
+
     <LinearLayout
         android:id="@+id/layoutNoEmergency"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layoutBaseActivity"
+        android:layout_below="@id/editSearchFlatNumber"
         android:orientation="vertical"
         android:visibility="gone"
         tools:ignore="UseCompoundDrawables">
@@ -49,17 +61,6 @@
             android:textSize="18sp" />
 
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/editSearchFlatNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layoutNoEmergency"
-        android:layout_margin="20dp"
-        android:drawableLeft="@drawable/search"
-        android:drawableStart="@drawable/search"
-        android:hint="@string/search_flat_number_hint"
-        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewEmergency"
