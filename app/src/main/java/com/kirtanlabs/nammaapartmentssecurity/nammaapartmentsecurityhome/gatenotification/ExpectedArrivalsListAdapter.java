@@ -20,6 +20,7 @@ import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.userpoj
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAILED;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_BANGALURU;
@@ -69,7 +70,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
     @NonNull
     @Override
     public ExpectedArrivalsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //inflating and returning our view holder
+        /*inflating and returning our view holder*/
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.layout_expected_cab_and_package_arrivals, parent, false);
         return new ExpectedArrivalsHolder(view);
@@ -82,7 +83,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         String flatNumberTitle = mCtx.getString(R.string.flat_number) + ":";
         holder.textFlatNumber.setText(flatNumberTitle);
 
-        //Creating an instance of NammaApartmentExpectedArrivals class and retrieving the values from Firebase
+        /*Creating an instance of NammaApartmentExpectedArrivals class and retrieving the values from Firebase*/
         nammaApartmentExpectedArrivals = nammaApartmentExpectedArrivalsList.get(position);
 
         /*Since we are using same layout for Cab Driver and Package Vendor Validation we need to
@@ -102,7 +103,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             expectedArrivalLeft = mCtx.getString(R.string.cab_driver_left);
         }
 
-        //To retrieve Owners details from firebase
+        /*To retrieve Owners details from firebase*/
         getOwnerDetailsFromFireBase(holder.textBookedByValue, holder.textFlatNumberValue, holder.textApartmentValue, validationStatusOf);
 
         String dateAndTime = nammaApartmentExpectedArrivals.getDateAndTimeOfArrival();
@@ -110,7 +111,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         holder.textDateToVisitValue.setText(separatedDateAndTime[0]);
         holder.textTimeToVisitValue.setText(separatedDateAndTime[1]);
 
-        //If status of Expected Arrival is Entered that we have to change button text.
+        /*If status of Expected Arrival is Entered that we have to change button text.*/
         status = nammaApartmentExpectedArrivals.getStatus();
         if (status.equals(mCtx.getString(R.string.entered))) {
             holder.buttonAllowExpectedArrivals.setText(expectedArrivalLeft);
@@ -143,6 +144,14 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
         buttonAllowExpectedArrivals.setText(allowTo);
     }
 
+    /**
+     * This method is invoked to retrieve the details of the user.
+     *
+     * @param textBookedByValue   - to set owner's name
+     * @param textFlatNumberValue - to set owner's flat number
+     * @param textApartmentValue  - to set owner's apartment name
+     * @param validationStatusOf  - arrival type
+     */
     private void getOwnerDetailsFromFireBase(final TextView textBookedByValue, final TextView textFlatNumberValue, final TextView textApartmentValue, final int validationStatusOf) {
         DatabaseReference ownerReference = PRIVATE_USERS_REFERENCE
                 .child(nammaApartmentExpectedArrivals.getInviterUID());
@@ -150,7 +159,7 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 NammaApartmentUser nammaApartmentUser = dataSnapshot.getValue(NammaApartmentUser.class);
-                flatNumber = nammaApartmentUser.getFlatDetails().getFlatNumber();
+                flatNumber = Objects.requireNonNull(nammaApartmentUser).getFlatDetails().getFlatNumber();
                 apartmentName = nammaApartmentUser.getFlatDetails().getApartmentName();
                 textBookedByValue.setText(nammaApartmentUser.getPersonalDetails().getFullName());
                 if (validationStatusOf == R.string.cab_driver_validation_status) {
@@ -241,7 +250,13 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
                 changeExpectedArrivalStatusInFirebase(position);
                 baseActivity.showNotificationSentDialog(mCtx.getString(R.string.expected_arrival_notification_title), notificationMessage);
             } else {
-                baseActivity.openValidationStatusDialog(FAILED, mCtx.getString(R.string.expected_time_of_arrival_is_finished));
+                String invalidTimeErrorMessage;
+                if (validationStatusOf == R.string.package_vendor_validation_status) {
+                    invalidTimeErrorMessage = mCtx.getString(R.string.expected_time_of_package_is_invalid);
+                } else {
+                    invalidTimeErrorMessage = mCtx.getString(R.string.expected_time_of_cab_is_invalid);
+                }
+                baseActivity.openValidationStatusDialog(FAILED, invalidTimeErrorMessage);
             }
         }
 
