@@ -96,7 +96,8 @@
     <string name="dont_allow_vehicle_to_enter">Don\'t allow this vehicle to enter into Society</string>
     <string name="ordered_by">Ordered By:</string>
     <string name="allow_package_vendor">Allow Package Vendor</string>
-    <string name="expected_time_of_arrival_is_finished">Expected time of this arrival is finished</string>
+    <string name="expected_time_of_cab_is_invalid">Expected arrival time of this cab is invalid</string>
+    <string name="expected_time_of_package_is_invalid">Expected arrival time of this package is invalid</string>
     <string name="cab_state_code_hint">KA</string>
     <string name="cab_rto_number_hint">01</string>
     <string name="cab_serial_number_one_hint">AB</string>
