@@ -601,6 +601,35 @@ exports.societyServiceResponseNotifications = functions.database.ref('/societySe
 
 });
 
+// Notifications triggered when user sents message to another admin user of different flat
+
+exports.receivedChatNotification = functions.database.ref('/chats/private/{chatRoomUID}/{messageUID}')
+.onCreate((change, context) => {
+	
+	const chatRoomUID = context.params.chatRoomUID;
+	const messageUID = context.params.messageUID;
+	
+	return admin.database().ref("/chats").child(FIREBASE_CHILD_PRIVATE).child(chatRoomUID).child(messageUID).once('value').then(queryResult => {
+		const receiverUID = queryResult.val().receiverUID;
+		
+		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(receiverUID).once('value').then(queryResult => {
+			const tokenId = queryResult.val().tokenId;
+			// TODO: To change Sender's UID from here
+			const payload = {
+				data: {
+					message: "A new message has been received",
+					sender_uid: "lIPfiJyrVjTH0zcn6zL3zDebjMm2",
+					type:"neighbour_chat"
+				}
+			};
+			
+			return admin.messaging().sendToDevice(tokenId,payload).then(result => {
+				return console.log("Notification Sent");
+			});
+		});
+	});
+});
+
 // Nofications related to Namma Apartments Society Service App
 
 // Notifications triggered when User sends notification to Society Service
