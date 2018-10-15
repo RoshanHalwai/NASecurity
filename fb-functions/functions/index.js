@@ -35,6 +35,8 @@ const FIREBASE_CHILD_PERSONALDETAILS = "personalDetails";
 const FIREBASE_CHILD_PRIVATE = "private";
 const FIREBASE_CHILD_TOKENID = "tokenId";
 const FIREBASE_CHILD_VISITORS = "visitors";
+const FIREBASE_CHILD_STATUS = "status";
+const FIREBASE_CHILD_TAKEN_BY = "takenBy";
 
 /*Firebase Values*/
 const FIREBASE_VALUE_NOT_ENTERED = "Not Entered";
@@ -726,11 +728,20 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 
 				    	var i = 0, l = availablePlumbers.length;
 				    	return (function iterator() {
+							
+							if(l === 0) {
+								admin.database().ref('/societyServiceNotifications')
+									.child(FIREBASE_CHILD_ALL)
+									.child(notificationUID)
+									.child(FIREBASE_CHILD_STATUS)
+									.set("Declined");
+									return 0;
+							}
 
 				    		admin.database().ref('/societyServiceNotifications')
                             .child(FIREBASE_CHILD_ALL)
                             .child(notificationUID)
-                            .child("takenBy")
+                            .child(FIREBASE_CHILD_TAKEN_BY)
                             .once('value', function (snapshot) {
                             	if (snapshot.exists()) {
                             		console.log("Some Staff has taken this request, so we stop sending request to other staffs");
@@ -759,22 +770,41 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 
                             		admin.messaging().sendToDevice(tokenId, payload)
 									.then(result => {
+										
+										if (++i < l) {
+											setTimeout(iterator, 15000);
+										} else{
+											setTimeout(function(){
+												admin.database().ref('/societyServiceNotifications')
+												.child(FIREBASE_CHILD_ALL)
+												.child(notificationUID)
+												.child(FIREBASE_CHILD_TAKEN_BY)
+												.once('value', function (snapshot) {
+														if(snapshot.exists()){
+																console.log("Last staff member has taken this request");
+														} else{
+															admin.database().ref('/societyServiceNotifications')
+																.child(FIREBASE_CHILD_ALL)
+																.child(notificationUID)
+																.child(FIREBASE_CHILD_STATUS)
+																.set("Declined");
+														}
+												});
+											},15000);
+
+										}
 										return console.log("Notification sent");
 									})
 									.catch(error => { console.log("Notification Error") });
 
                             	}
 
-                            	if (++i < l) {
-                            		setTimeout(iterator, 15000);
-                            	}
-
                             	return 0;
 
                             });
-
+							
 				    	})();
-
+						
 				    });
 				}
 			});
