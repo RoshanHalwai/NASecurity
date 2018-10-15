@@ -4,6 +4,14 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const APP_NAME = "Namma Apartments";
 
+/*Society Details*/
+const DEFAULT_DB_URL = "https://nammaapartments-development.firebaseio.com/"
+const DEFAULT_INSTANCE_NAME = "nammaapartments-development"
+
+const AIR_FORCE_COLONY_DB_URL = "https://nammaapartments-dev-airforcecolony.firebaseio.com/"
+const AIR_FORCE_COLONY_INSTANCE_NAME = "nammaapartments-dev-airforcecolony"
+
+
 /*Mapping Daily Service Firebase Keys with Notification value*/
 const dailyServiceLookup = {};
 dailyServiceLookup['cooks'] = "Cook";
@@ -42,7 +50,11 @@ const FIREBASE_CHILD_TAKEN_BY = "takenBy";
 const FIREBASE_VALUE_NOT_ENTERED = "Not Entered";
 
 /*Firebase App Initialization - (DEV/BETA) */
-admin.initializeApp(functions.config().firebase);
+const defaultInstance = admin.initializeApp(functions.config().firebase);
+
+const airForceColonyConfig = Object.assign({}, functions.config().firebase)
+airForceColonyConfig.databaseURL = AIR_FORCE_COLONY_DB_URL;
+const airForceColonyInstance = admin.initializeApp(airForceColonyConfig, AIR_FORCE_COLONY_INSTANCE_NAME)
 
 /*Updating Pending Dues every month*/
 exports.updatePendingDues = functions.https.onRequest((req, res) => {
@@ -162,9 +174,17 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 // Nofications related to Namma Apartments App (where user's action is  not required)
 
 //Notifications triggered when Guests either Enters or Leaves the Society
-exports.guestNotifications = functions.database.ref('/visitors/private/{visitorUID}/status')
+exports.guestNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/visitors/private/{visitorUID}/status')
 .onWrite((change, context) => {
+	return guestNotifications(defaultInstance, change, context);
+});
 
+exports.guestNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/visitors/private/{visitorUID}/status')
+.onWrite((change, context) => {
+	return guestNotifications(airForceColonyInstance, change, context);
+});
+
+function guestNotifications(instance, change, context) {
 	/*If record is deleted or if status is Not Entered then we don't want to send notification to users*/
 	const status = change.after.val();
 	if (status === null || status === FIREBASE_VALUE_NOT_ENTERED)
@@ -173,11 +193,11 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 	const visitorUID = context.params.visitorUID;
 
 	/*Guest has either Entered or Left the society*/
-	return admin.database().ref("/visitors").child(FIREBASE_CHILD_PRIVATE).child(visitorUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/visitors").child(FIREBASE_CHILD_PRIVATE).child(visitorUID).once('value').then(queryResult => {
 		const guestName = queryResult.val().fullName;
 		const inviterUID = queryResult.val().inviterUID;
 
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			const guestNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().guest;
 			const flatDetails = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val();
@@ -188,7 +208,7 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 
 			var payload;
 
-			return admin.database().ref("/userData").child(FIREBASE_CHILD_PRIVATE)
+			return admin.database(instance).ref("/userData").child(FIREBASE_CHILD_PRIVATE)
 						.child(userCity).child(userSocietyName).child(userApartmentName).child(userFlatNumber).child(FIREBASE_CHILD_VISITORS).child(inviterUID).child(visitorUID)
 						.once('value').then(queryResult => {
 							const isVisitorAvailable = queryResult.val();
@@ -237,7 +257,7 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 
 	});
 
-});
+}
 
 //Notifications triggered when Daily Services either Enters or Leaves the User Society
 exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
