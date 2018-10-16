@@ -4,6 +4,14 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const APP_NAME = "Namma Apartments";
 
+/*Society Details*/
+const DEFAULT_DB_URL = "https://nammaapartments-development.firebaseio.com/"
+const DEFAULT_INSTANCE_NAME = "nammaapartments-development"
+
+const AIR_FORCE_COLONY_DB_URL = "https://nammaapartments-dev-airforcecolony.firebaseio.com/"
+const AIR_FORCE_COLONY_INSTANCE_NAME = "nammaapartments-dev-airforcecolony"
+
+
 /*Mapping Daily Service Firebase Keys with Notification value*/
 const dailyServiceLookup = {};
 dailyServiceLookup['cooks'] = "Cook";
@@ -42,9 +50,14 @@ const FIREBASE_CHILD_TAKEN_BY = "takenBy";
 const FIREBASE_VALUE_NOT_ENTERED = "Not Entered";
 
 /*Firebase App Initialization - (DEV/BETA) */
-admin.initializeApp(functions.config().firebase);
+const defaultInstance = admin.initializeApp(functions.config().firebase);
+
+const airForceColonyConfig = Object.assign({}, functions.config().firebase)
+airForceColonyConfig.databaseURL = AIR_FORCE_COLONY_DB_URL;
+const airForceColonyInstance = admin.initializeApp(airForceColonyConfig, AIR_FORCE_COLONY_INSTANCE_NAME)
 
 /*Updating Pending Dues every month*/
+
 exports.updatePendingDues = functions.https.onRequest((req, res) => {
 	return admin.database().ref('/users/private').once('value')
 	  .then(userUID => {
@@ -87,9 +100,17 @@ exports.updatePendingDues = functions.https.onRequest((req, res) => {
 // Notifications related to Namma Apartments App (where user's action is required)
 
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
-
-exports.sendNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
+exports.sendNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
 .onCreate((change, context) => {
+	return sendNotifications(defaultInstance, change, context);
+});
+
+exports.sendNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
+.onCreate((change, context) => {
+	return sendNotifications(airForceColonyInstance, change, context);
+});
+
+function sendNotifications(instance, change, context) {
 	const city = context.params.city;
 	const society = context.params.society;
 	const apartment = context.params.apartment;
@@ -98,7 +119,7 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 	const notificationUID = context.params.notificationUID;
 	const visitorType = context.params.visitorType;
 
-	return admin.database().ref("/userData").child(FIREBASE_CHILD_PRIVATE)
+	return admin.database(instance).ref("/userData").child(FIREBASE_CHILD_PRIVATE)
 	.child(city).child(society).child(apartment).child(flat)
 	.child(FIREBASE_CHILD_GATENOTIFICATIONS).child(userUID).child(visitorType).child(notificationUID)
 	.once('value').then(queryResult => {
@@ -112,7 +133,7 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			mobileNumber = "";
 		}
 
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult=> {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult=> {
 			const tokenId = queryResult.val().tokenId;
 			const deviceType = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).val().deviceType;
 			if (deviceType === "android") {
@@ -157,14 +178,23 @@ exports.sendNotifications = functions.database.ref('/userData/private/{city}/{so
 			}
 		});
 	});
-});
+}
 
 // Nofications related to Namma Apartments App (where user's action is  not required)
 
 //Notifications triggered when Guests either Enters or Leaves the Society
-exports.guestNotifications = functions.database.ref('/visitors/private/{visitorUID}/status')
+exports.guestNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/visitors/private/{visitorUID}/status')
 .onWrite((change, context) => {
+	return guestNotifications(defaultInstance, change, context);
+});
 
+exports.guestNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/visitors/private/{visitorUID}/status')
+.onWrite((change, context) => {
+	return guestNotifications(airForceColonyInstance, change, context);
+});
+
+
+function guestNotifications(instance, change, context) {
 	/*If record is deleted or if status is Not Entered then we don't want to send notification to users*/
 	const status = change.after.val();
 	if (status === null || status === FIREBASE_VALUE_NOT_ENTERED)
@@ -173,11 +203,11 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 	const visitorUID = context.params.visitorUID;
 
 	/*Guest has either Entered or Left the society*/
-	return admin.database().ref("/visitors").child(FIREBASE_CHILD_PRIVATE).child(visitorUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/visitors").child(FIREBASE_CHILD_PRIVATE).child(visitorUID).once('value').then(queryResult => {
 		const guestName = queryResult.val().fullName;
 		const inviterUID = queryResult.val().inviterUID;
 
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			const guestNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().guest;
 			const flatDetails = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val();
@@ -188,7 +218,7 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 
 			var payload;
 
-			return admin.database().ref("/userData").child(FIREBASE_CHILD_PRIVATE)
+			return admin.database(instance).ref("/userData").child(FIREBASE_CHILD_PRIVATE)
 						.child(userCity).child(userSocietyName).child(userApartmentName).child(userFlatNumber).child(FIREBASE_CHILD_VISITORS).child(inviterUID).child(visitorUID)
 						.once('value').then(queryResult => {
 							const isVisitorAvailable = queryResult.val();
@@ -237,11 +267,20 @@ exports.guestNotifications = functions.database.ref('/visitors/private/{visitorU
 
 	});
 
-});
+}
 
 //Notifications triggered when Daily Services either Enters or Leaves the User Society
-exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
-	.onWrite((change, context) => {
+exports.dailyServiceNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
+.onWrite((change, context) => {
+	return dailyServiceNotification(defaultInstance, change, context);
+});
+
+exports.dailyServiceNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
+.onWrite((change, context) => {
+	return dailyServiceNotification(airForceColonyInstance, change, context);
+});
+
+function dailyServiceNotification(instance, change, context) {
 		const status = change.after.val();
 		if (status === null || status === FIREBASE_VALUE_NOT_ENTERED)
 			return 0;
@@ -250,14 +289,14 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 		const dailyServiceUID = context.params.dailyServiceUID;
 		const promises = [];
 
-		return admin.database().ref("/dailyServices").child(FIREBASE_CHILD_ALL).child("public").child(dailyServiceType).child(dailyServiceUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/dailyServices").child(FIREBASE_CHILD_ALL).child("public").child(dailyServiceType).child(dailyServiceUID).once('value').then(queryResult => {
 
 			return queryResult.forEach((userSnap) => {
 				var userUID = userSnap.key;
 
 				if (userUID.localeCompare("status") !== 0) {
 
-					const userDataReference = admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
+					const userDataReference = admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
 						const tokenId = queryResult.val().tokenId;
 						const dailyServiceNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().dailyService;
 
@@ -268,7 +307,7 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 						const userFlatNumber = flatDetailsSnapshot.flatNumber;
 
 						var payload;
-						return admin.database().ref("/userData").child(FIREBASE_CHILD_PRIVATE)
+						return admin.database(instance).ref("/userData").child(FIREBASE_CHILD_PRIVATE)
 							.child(userCity).child(userSocietyName).child(userApartmentName).child(userFlatNumber).child("dailyServices").child(dailyServiceType).child(dailyServiceUID)
 							.once('value').then(queryResult => {
 
@@ -324,26 +363,34 @@ exports.dailyServiceNotification = functions.database.ref('/dailyServices/all/pu
 			return Promise.all(promises);
 		});
 
-	});
+	}
 
 //Notifications triggered when Admin adds a Notice
+exports.noticeBoardNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/noticeBoard/{noticeBoardUID}')
+.onWrite((change, context) => {
+	return noticeBoardNotification(defaultInstance, change, context);
+});
 
-exports.noticeBoardNotification = functions.database.ref('/noticeBoard/{noticeBoardUID}')
-	.onCreate((change, context) => {
+exports.noticeBoardNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/noticeBoard/{noticeBoardUID}')
+.onWrite((change, context) => {
+	return noticeBoardNotification(airForceColonyInstance, change, context);
+});
+
+function noticeBoardNotification(instance, change, context) {
 
 		const noticeBoardUID = context.params.noticeBoardUID;
 		const promises = [];
 
-		return admin.database().ref("/noticeBoard").child(noticeBoardUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/noticeBoard").child(noticeBoardUID).once('value').then(queryResult => {
 			const dateAndTime = queryResult.val().dateAndTime;
 			const title = queryResult.val().title;
 
-			return admin.database().ref("users").child(FIREBASE_CHILD_PRIVATE).once('value').then(queryResult => {
+			return admin.database(instance).ref("users").child(FIREBASE_CHILD_PRIVATE).once('value').then(queryResult => {
 
 				return queryResult.forEach((userSnap) => {
 					var userUID = userSnap.key;
 
-					const userDataReference = admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
+					const userDataReference = admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
 						const tokenId = queryResult.val().tokenId;
 						const verified = queryResult.child("privileges").val().verified;
 
@@ -381,22 +428,31 @@ exports.noticeBoardNotification = functions.database.ref('/noticeBoard/{noticeBo
 
 		});
 
-	});
-
+	}
 
 //Notifications triggered when Cabs either Enters or Leaves the User Society
-exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status')
+
+exports.cabNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/cabs/private/{cabUID}/status')
 .onWrite((change, context) => {
+	return cabNotifications(defaultInstance, change, context);
+});
+
+exports.cabNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/cabs/private/{cabUID}/status')
+.onWrite((change, context) => {
+	return cabNotifications(airForceColonyInstance, change, context);
+});
+
+function cabNotifications(instance, change, context) {
 
 	const status = change.after.val();
 	if (status === null || status === FIREBASE_VALUE_NOT_ENTERED)
 		return 0;
 
 	const cabUID = context.params.cabUID;
-	return admin.database().ref("/cabs").child(FIREBASE_CHILD_PRIVATE).child(cabUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/cabs").child(FIREBASE_CHILD_PRIVATE).child(cabUID).once('value').then(queryResult => {
 		const inviterUID = queryResult.val().inviterUID;
 
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			const cabNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().cab;
 			var payload;
@@ -441,12 +497,21 @@ exports.cabNotifications = functions.database.ref('/cabs/private/{cabUID}/status
 
 	});
 
-});
+}
 
 //Notifications triggered when Packages either Enters or Leaves the User Society
 
-exports.packageNotifications = functions.database.ref('/deliveries/private/{deliveryUID}/status')
+exports.packageNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/deliveries/private/{deliveryUID}/status')
 .onWrite((change, context) => {
+	return packageNotifications(defaultInstance, change, context);
+});
+
+exports.packageNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/deliveries/private/{deliveryUID}/status')
+.onWrite((change, context) => {
+	return packageNotifications(airForceColonyInstance, change, context);
+});
+
+function packageNotifications(instance, change, context) {
 
 	const status = change.after.val();
 	if (status === null || status === FIREBASE_VALUE_NOT_ENTERED)
@@ -454,11 +519,11 @@ exports.packageNotifications = functions.database.ref('/deliveries/private/{deli
 
 	const deliveryUID = context.params.deliveryUID;
 
-	return admin.database().ref("/deliveries").child(FIREBASE_CHILD_PRIVATE).child(deliveryUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/deliveries").child(FIREBASE_CHILD_PRIVATE).child(deliveryUID).once('value').then(queryResult => {
 		const reference = queryResult.val().reference;
 		const inviterUID = queryResult.val().inviterUID;
 
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			const packageNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().package;
 			var payload;
@@ -504,21 +569,30 @@ exports.packageNotifications = functions.database.ref('/deliveries/private/{deli
 
 	});
 
-});
+}
 
 //Notifications triggered when privilege value is set to 0,1 or 2
 
-exports.activateAccountNotification = functions.database.ref('/users/private/{userUID}/privileges/verified')
+exports.activateAccountNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/users/private/{userUID}/privileges/verified')
 .onWrite((change, context) => {
+	return activateAccountNotification(defaultInstance, change, context);
+});
+
+exports.activateAccountNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/users/private/{userUID}/privileges/verified')
+.onWrite((change, context) => {
+	return activateAccountNotification(airForceColonyInstance, change, context);
+});
+
+function activateAccountNotification(instance, change, context) {
 
 	const verified = change.after.val();
 	if (verified === null)
 		return 0;
 
 	const userUID = context.params.userUID;
-	return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).child("privileges").once('value').then(queryResult => {
+	return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).child("privileges").once('value').then(queryResult => {
 		if (verified === 1 || verified === 2) {
-			return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
+			return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
 
 				var message;
 				if (verified === 1) {
@@ -547,7 +621,7 @@ exports.activateAccountNotification = functions.database.ref('/users/private/{us
 
 			});
 		} else {
-			return admin.database().ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
+			return admin.database(instance).ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
 				const tokenId = queryResult.val().tokenId;
 				const payload = {
 					data: {
@@ -563,20 +637,29 @@ exports.activateAccountNotification = functions.database.ref('/users/private/{us
 			});
 		}
 	});
-});
+}
 
 // Notifications triggered when society service accepts User's Society Service request
 
-exports.societyServiceResponseNotifications = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
-.onCreate((change, context) => {
+exports.societyServiceResponseNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
+.onWrite((change, context) => {
+	return societyServiceResponseNotifications(defaultInstance, change, context);
+});
+
+exports.societyServiceResponseNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
+.onWrite((change, context) => {
+	return societyServiceResponseNotifications(airForceColonyInstance, change, context);
+});
+
+function societyServiceResponseNotifications(instance, change, context) {
 
 	const notificationUID = context.params.notificationUID;
 
-	return admin.database().ref("/societyServiceNotifications").child(FIREBASE_CHILD_ALL).child(notificationUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/societyServiceNotifications").child(FIREBASE_CHILD_ALL).child(notificationUID).once('value').then(queryResult => {
 		const userUID = queryResult.val().userUID;
 		const societyServiceType = queryResult.val().societyServiceType;
 
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
 
 			const tokenId = queryResult.val().tokenId;
 
@@ -601,20 +684,31 @@ exports.societyServiceResponseNotifications = functions.database.ref('/societySe
 		});
 	});
 
-});
+}
 
 // Notifications triggered when user sents message to another admin user of different flat
 
-exports.receivedChatNotification = functions.database.ref('/chats/private/{chatRoomUID}/{messageUID}')
+exports.receivedChatNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/chats/private/{chatRoomUID}/{messageUID}')
 .onCreate((change, context) => {
+	console.log("receivedChatNotification_default API Called");
+	return receivedChatNotification(defaultInstance, change, context);
+});
+
+exports.receivedChatNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/chats/private/{chatRoomUID}/{messageUID}')
+.onCreate((change, context) => {
+	console.log("receivedChatNotification_2 API Called");
+	return receivedChatNotification(airForceColonyInstance, change, context);
+});
+
+function receivedChatNotification(instance, change, context) {
 	
 	const chatRoomUID = context.params.chatRoomUID;
 	const messageUID = context.params.messageUID;
 	
-	return admin.database().ref("/chats").child(FIREBASE_CHILD_PRIVATE).child(chatRoomUID).child(messageUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/chats").child(FIREBASE_CHILD_PRIVATE).child(chatRoomUID).child(messageUID).once('value').then(queryResult => {
 		const receiverUID = queryResult.val().receiverUID;
 		
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(receiverUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(receiverUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			// TODO: To change Sender's UID from here
 			const payload = {
@@ -630,27 +724,36 @@ exports.receivedChatNotification = functions.database.ref('/chats/private/{chatR
 			});
 		});
 	});
-});
+}
 
 // Nofications related to Namma Apartments Society Service App
 
 // Notifications triggered when User sends notification to Society Service
 
-exports.societyServiceNotifications = functions.database.ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
-.onCreate((change, context) => {
+exports.societyServiceNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
+.onWrite((change, context) => {
+	return societyServiceNotifications(defaultInstance, change, context);
+});
+
+exports.societyServiceNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
+.onWrite((change, context) => {
+	return societyServiceNotifications(airForceColonyInstance, change, context);
+});
+
+function societyServiceNotifications(instance, change, context) {
 
 	const notificationUID = context.params.notificationUID;
 
-	return admin.database().ref("/societyServiceNotifications").child(FIREBASE_CHILD_ALL).child(notificationUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/societyServiceNotifications").child(FIREBASE_CHILD_ALL).child(notificationUID).once('value').then(queryResult => {
 		const societyServiceType = queryResult.val().societyServiceType;
 		const ownerUID = queryResult.val().userUID;
 		var eventDate = queryResult.val().eventDate;
 
-		return admin.database().ref('/users').child(FIREBASE_CHILD_PRIVATE).child(ownerUID).child(FIREBASE_CHILD_PERSONALDETAILS).once('value').then(queryResult => {
+		return admin.database(instance).ref('/users').child(FIREBASE_CHILD_PRIVATE).child(ownerUID).child(FIREBASE_CHILD_PERSONALDETAILS).once('value').then(queryResult => {
 
 			const userFullName = queryResult.val().fullName;
 
-			return admin.database().ref('/users').child(FIREBASE_CHILD_PRIVATE).child(ownerUID).child(FIREBASE_CHILD_FLATDETAILS).once('value').then(queryResult => {
+			return admin.database(instance).ref('/users').child(FIREBASE_CHILD_PRIVATE).child(ownerUID).child(FIREBASE_CHILD_FLATDETAILS).once('value').then(queryResult => {
 
 				const apartmentName = queryResult.val().apartmentName;
 				const flatNumber = queryResult.val().flatNumber;
@@ -661,7 +764,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 
 					var notificationMessage;
 
-					return admin.database().ref('/societyServices').child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
+					return admin.database(instance).ref('/societyServices').child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
 
 						tokenId = queryResult.val().tokenId;
 
@@ -704,7 +807,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 			        is still not present, then it indicates none of the staff has accepted to user request.
 			        9. We update User UI accordingly
 			        */
-					return admin.database().ref('/societyServices').child(societyServiceType).child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_AVAILABLE).once('value')
+					return admin.database(instance).ref('/societyServices').child(societyServiceType).child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_AVAILABLE).once('value')
 					.then(availablePlumbersUID => {
 						var availablePlumbersUIDList = [];
 						availablePlumbersUID.forEach((plumberUIDSnapshot) => {
@@ -715,7 +818,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 					.then(availablePlumbersUIDList => {
 						var availablePlumbers = [];
 						availablePlumbersUIDList.forEach(function (plumberUID) {
-							availablePlumbers.push(admin.database().ref('/societyServices').child(societyServiceType).child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA).child(plumberUID).once('value'));
+							availablePlumbers.push(admin.database(instance).ref('/societyServices').child(societyServiceType).child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA).child(plumberUID).once('value'));
 						});
 						return Promise.all(availablePlumbers);
 					})
@@ -730,7 +833,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 				    	return (function iterator() {
 							
 							if(l === 0) {
-								admin.database().ref('/societyServiceNotifications')
+								admin.database(instance).ref('/societyServiceNotifications')
 									.child(FIREBASE_CHILD_ALL)
 									.child(notificationUID)
 									.child(FIREBASE_CHILD_STATUS)
@@ -738,7 +841,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 									return 0;
 							}
 
-				    		admin.database().ref('/societyServiceNotifications')
+				    		admin.database(instance).ref('/societyServiceNotifications')
                             .child(FIREBASE_CHILD_ALL)
                             .child(notificationUID)
                             .child(FIREBASE_CHILD_TAKEN_BY)
@@ -760,7 +863,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
                             		};
 
                             		//Update the service count of the staff to whom request is sent
-                            		admin.database().ref('/societyServices')
+                            		admin.database(instance).ref('/societyServices')
 									.child(societyServiceType)
 									.child(FIREBASE_CHILD_PRIVATE)
 									.child(FIREBASE_CHILD_DATA)
@@ -775,7 +878,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 											setTimeout(iterator, 15000);
 										} else{
 											setTimeout(function(){
-												admin.database().ref('/societyServiceNotifications')
+												admin.database(instance).ref('/societyServiceNotifications')
 												.child(FIREBASE_CHILD_ALL)
 												.child(notificationUID)
 												.child(FIREBASE_CHILD_TAKEN_BY)
@@ -783,7 +886,7 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 														if(snapshot.exists()){
 																console.log("Last staff member has taken this request");
 														} else{
-															admin.database().ref('/societyServiceNotifications')
+															admin.database(instance).ref('/societyServiceNotifications')
 																.child(FIREBASE_CHILD_ALL)
 																.child(notificationUID)
 																.child(FIREBASE_CHILD_STATUS)
@@ -811,24 +914,32 @@ exports.societyServiceNotifications = functions.database.ref('/userData/private/
 		});
 	});
 
-});
+}
 
 // Notifications triggered when user cancels society service request
+exports.userCancelsSocietyServiceRequestNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/status')
+.onWrite((change, context) => {
+	return userCancelsSocietyServiceRequestNotifications(defaultInstance, change, context);
+});
 
-exports.userCancelsSocietyServiceRequestNotifications = functions.database.ref('/societyServiceNotifications/all/{notificationUID}/status')
-.onUpdate((change, context) => {
+exports.userCancelsSocietyServiceRequestNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/status')
+.onWrite((change, context) => {
+	return userCancelsSocietyServiceRequestNotifications(airForceColonyInstance, change, context);
+});
+
+function userCancelsSocietyServiceRequestNotifications(instance, change, context){
 
 	const status = change.after.val;
 	if (status === null || status !== "Cancelled")
 		return 0;
 
 	const notificationUID = context.params.notificationUID;
-	return admin.database().ref("/societyServiceNotifications").child(FIREBASE_CHILD_ALL).child(notificationUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/societyServiceNotifications").child(FIREBASE_CHILD_ALL).child(notificationUID).once('value').then(queryResult => {
 		const notificationSnap = queryResult.val();
 		const societyServiceType = notificationSnap.societyServiceType;
 		const societyServiceUID = notificationSnap.takenBy;
 
-		return admin.database().ref("/societyServices").child(societyServiceType).child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA).child(societyServiceUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/societyServices").child(societyServiceType).child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA).child(societyServiceUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
 			const payload = {
 				data: {
@@ -841,23 +952,32 @@ exports.userCancelsSocietyServiceRequestNotifications = functions.database.ref('
 			});
 		});
 	});
-});
+}
 
 // Notifications triggered to Society Admin when User request to donate food 
 
-exports.donateFoodNotifications = functions.database.ref('/foodDonations/{foodDonationNotificationUID}')
-.onCreate((change, context) => {
+exports.donateFoodNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}')
+.onWrite((change, context) => {
+	return donateFoodNotifications(defaultInstance, change, context);
+});
+
+exports.donateFoodNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}')
+.onWrite((change, context) => {
+	return donateFoodNotifications(airForceColonyInstance, change, context);
+});
+
+function donateFoodNotifications(instance, change, context) {
 	const foodDonationNotificationUID = context.params.foodDonationNotificationUID;
 
-	return admin.database().ref("/foodDonations").child(foodDonationNotificationUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/foodDonations").child(foodDonationNotificationUID).once('value').then(queryResult => {
 		const userUID = queryResult.val().userUID;
 
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
 			const userFullName = queryResult.child(FIREBASE_CHILD_PERSONALDETAILS).val().fullName;
 			const userApartmentName = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val().apartmentName;
 			const userFlatNumber = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val().flatNumber;
 
-			return admin.database().ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
+			return admin.database(instance).ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
 				const tokenId = queryResult.val().tokenId;
 				const payload = {
 					data: {
@@ -873,22 +993,30 @@ exports.donateFoodNotifications = functions.database.ref('/foodDonations/{foodDo
 		});
 
 	});
-});
+}
 
 // Notifications triggered to Society Admin when User raises 'Support' request 
+exports.supportNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/support/{supportUID}')
+.onWrite((change, context) => {
+	return supportNotifications(defaultInstance, change, context);
+});
 
-exports.supportNotifications = functions.database.ref('/support/{supportUID}')
-.onCreate((change, context) => {
+exports.supportNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/support/{supportUID}')
+.onWrite((change, context) => {
+	return supportNotifications(airForceColonyInstance, change, context);
+});
+
+function supportNotifications(instance, change, context) {
 	const supportUID = context.params.supportUID;
 
-	return admin.database().ref("/support").child(supportUID).once('value').then(queryResult => {
+	return admin.database(instance).ref("/support").child(supportUID).once('value').then(queryResult => {
 		const userUID = queryResult.val().userUID;
-		return admin.database().ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
+		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
 			const userFullName = queryResult.child(FIREBASE_CHILD_PERSONALDETAILS).val().fullName;
 			const userApartmentName = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val().apartmentName;
 			const userFlatNumber = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val().flatNumber;
 
-			return admin.database().ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
+			return admin.database(instance).ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
 				const tokenId = queryResult.val().tokenId;
 				const payload = {
 					data: {
@@ -904,17 +1032,25 @@ exports.supportNotifications = functions.database.ref('/support/{supportUID}')
 		});
 
 	});
-});
+}
 
 // Nofications related to Namma Apartments Security App
 
 // Notifications triggered when User Raises an Emergency Alarm. The Security Guard Admin and the Society Admin gets notified.
+exports.emergencyNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/emergencies/public/{emergencyUID}')
+.onWrite((change, context) => {
+	return emergencyNotifications(defaultInstance, change, context);
+});
 
-exports.emergencyNotifications = functions.database.ref('/emergencies/public/{emergencyUID}')
-.onCreate((change, context) => {
+exports.emergencyNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/emergencies/public/{emergencyUID}')
+.onWrite((change, context) => {
+	return emergencyNotifications(airForceColonyInstance, change, context);
+});
+
+function emergencyNotifications(instance, change, context) {
 
 	const emergencyUID = context.params.emergencyUID;
-	return admin.database().ref('/emergencies').child('public').child(emergencyUID).once('value').then(queryResult => {
+	return admin.database(instance).ref('/emergencies').child('public').child(emergencyUID).once('value').then(queryResult => {
 		const emergencySnapshot = queryResult.val();
 		const ownerName = emergencySnapshot.fullName;
 		const emergencyType = emergencySnapshot.emergencyType;
@@ -922,14 +1058,14 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 		const flatNumber = emergencySnapshot.flatNumber;
 		const mobileNumber = emergencySnapshot.phoneNumber;
 
-		const guardAdminReference = admin.database().ref('/guards').child(FIREBASE_CHILD_PRIVATE)
+		const guardAdminReference = admin.database(instance).ref('/guards').child(FIREBASE_CHILD_PRIVATE)
             .child(FIREBASE_CHILD_ADMIN).on('value', function (snapshot) {
             	const adminGuardUID = snapshot.val();
-            	const adminReference = admin.database().ref('/guards').child(FIREBASE_CHILD_PRIVATE)
+            	const adminReference = admin.database(instance).ref('/guards').child(FIREBASE_CHILD_PRIVATE)
                     .child(FIREBASE_CHILD_DATA).child(adminGuardUID).child(FIREBASE_CHILD_TOKENID).on('value', function (snapshot) {
                     	const guardTokenId = snapshot.val();
 
-                    	return admin.database().ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
+                    	return admin.database(instance).ref("/societyServices").child(FIREBASE_CHILD_ADMIN).once('value').then(queryResult => {
                     		const adminTokenId = queryResult.val().tokenId;
 
                     		const payload = {
@@ -954,4 +1090,4 @@ exports.emergencyNotifications = functions.database.ref('/emergencies/public/{em
 		return console.log("End of Function");
 	});
 
-});
+}
