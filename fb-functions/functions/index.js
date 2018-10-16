@@ -704,24 +704,38 @@ function receivedChatNotification(instance, change, context) {
 	
 	const chatRoomUID = context.params.chatRoomUID;
 	const messageUID = context.params.messageUID;
+	var senderUID;
 	
 	return admin.database(instance).ref("/chats").child(FIREBASE_CHILD_PRIVATE).child(chatRoomUID).child(messageUID).once('value').then(queryResult => {
 		const receiverUID = queryResult.val().receiverUID;
 		
 		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(receiverUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
-			// TODO: To change Sender's UID from here
-			const payload = {
-				data: {
-					message: "A new message has been received",
-					sender_uid: "lIPfiJyrVjTH0zcn6zL3zDebjMm2",
-					type:"neighbour_chat"
-				}
-			};
 			
-			return admin.messaging().sendToDevice(tokenId,payload).then(result => {
-				return console.log("Notification Sent");
+			return admin.database(instance).ref("/chats").child(FIREBASE_CHILD_ALL).child(chatRoomUID).once('value').then(queryResult=>{
+				
+					const snapshotVal = queryResult.val();
+					for(var UID in snapshotVal) {
+						if(UID !== receiverUID) {
+							senderUID = UID;
+							console.log("Sender UID : " + senderUID);
+						}
+					}
+					
+					const payload = {
+					data: {
+						message: "A new message has been received",
+						sender_uid: senderUID,
+						type:"neighbour_chat"
+					}
+				};
+			
+				return admin.messaging().sendToDevice(tokenId,payload).then(result => {
+					return console.log("Notification Sent");
+				});
+				
 			});
+			
 		});
 	});
 }
