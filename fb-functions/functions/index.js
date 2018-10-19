@@ -17,7 +17,7 @@ const dailyServiceLookup = {};
 dailyServiceLookup['cooks'] = "Cook";
 dailyServiceLookup['maids'] = "Maid";
 dailyServiceLookup['childDayCares'] = "Child Day Care";
-dailyServiceLookup['dailyNewsPapers'] = "Daily Newspaper";
+dailyServiceLookup['dailyNewspapers'] = "Daily Newspaper";
 dailyServiceLookup['carBikeCleaners'] = "Car/Bike Cleaner";
 dailyServiceLookup['drivers'] = "Driver";
 dailyServiceLookup['laundries'] = "Laundry";
@@ -726,6 +726,7 @@ function receivedChatNotification(instance, change, context) {
 					data: {
 						message: "A new message has been received",
 						sender_uid: senderUID,
+						chat_room_uid: chatRoomUID,
 						type:"neighbour_chat"
 					}
 				};
