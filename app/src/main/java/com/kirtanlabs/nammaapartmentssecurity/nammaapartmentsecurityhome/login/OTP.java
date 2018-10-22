@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
-import com.kirtanlabs.nammaapartmentssecurity.Constants;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 import com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.NammaApartmentSecurityHome;
 
@@ -32,8 +31,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_SECURITY_GUARDS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.COUNTRY_CODE_IN;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_AUTH;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.MOBILE_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.OTP_TIMER;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoLightFont;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.setLatoRegularFont;
 
@@ -82,7 +86,7 @@ public class OTP extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         /* Generate an OTP to user's mobile number */
-        userMobileNumber = getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+        userMobileNumber = getIntent().getStringExtra(MOBILE_NUMBER);
         sendOTP();
 
         /* Start the Resend OTP timer, valid for 120 seconds*/
@@ -116,6 +120,12 @@ public class OTP extends BaseActivity implements View.OnClickListener {
         editFifthOTPDigit.setTypeface(setLatoRegularFont(this));
         editSixthOTPDigit.setTypeface(setLatoRegularFont(this));
         buttonVerifyOTP.setTypeface(setLatoLightFont(this));
+
+        /*Setting Text to the views*/
+        String otpDescription = getString(R.string.enter_verification_code);
+        otpDescription = otpDescription.replace(getString(R.string.your_mobile_number),
+                COUNTRY_CODE_IN + HYPHEN + userMobileNumber);
+        textDescription.setText(otpDescription);
 
         /*Setting events for OTP edit text*/
         setEventsForEditText();
@@ -171,8 +181,8 @@ public class OTP extends BaseActivity implements View.OnClickListener {
     private void sendOTP() {
         setUpVerificationCallbacks();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                Constants.COUNTRY_CODE_IN + userMobileNumber,
-                Constants.OTP_TIMER,
+                COUNTRY_CODE_IN + userMobileNumber,
+                OTP_TIMER,
                 TimeUnit.SECONDS,
                 this,
                 verificationCallbacks);
@@ -224,14 +234,14 @@ public class OTP extends BaseActivity implements View.OnClickListener {
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
         FIREBASE_AUTH.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, (task) -> {
-                    hideProgressDialog();
                     if (task.isSuccessful()) {
-                        DatabaseReference guardReference = Constants.ALL_SECURITY_GUARDS_REFERENCE.child(userMobileNumber);
+                        DatabaseReference guardReference = ALL_SECURITY_GUARDS_REFERENCE.child(userMobileNumber);
                         guardReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 /* Check if User mobile number is found in database */
                                 if (dataSnapshot.exists()) {
+                                    hideProgressDialog();
                                     startActivity(new Intent(OTP.this, NammaApartmentSecurityHome.class));
                                     finish();
                                 } else {
@@ -246,6 +256,7 @@ public class OTP extends BaseActivity implements View.OnClickListener {
                             }
                         });
                     } else {
+                        hideProgressDialog();
                         /*Check if network is available or not*/
                         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -268,8 +279,8 @@ public class OTP extends BaseActivity implements View.OnClickListener {
      */
     private void resendOTP() {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                Constants.COUNTRY_CODE_IN + userMobileNumber,
-                Constants.OTP_TIMER,
+                COUNTRY_CODE_IN + userMobileNumber,
+                OTP_TIMER,
                 TimeUnit.SECONDS,
                 this,
                 verificationCallbacks,
