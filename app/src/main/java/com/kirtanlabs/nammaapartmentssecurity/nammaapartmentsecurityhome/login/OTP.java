@@ -234,7 +234,6 @@ public class OTP extends BaseActivity implements View.OnClickListener {
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
         FIREBASE_AUTH.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, (task) -> {
-                    hideProgressDialog();
                     if (task.isSuccessful()) {
                         DatabaseReference guardReference = ALL_SECURITY_GUARDS_REFERENCE.child(userMobileNumber);
                         guardReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -242,6 +241,7 @@ public class OTP extends BaseActivity implements View.OnClickListener {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 /* Check if User mobile number is found in database */
                                 if (dataSnapshot.exists()) {
+                                    hideProgressDialog();
                                     startActivity(new Intent(OTP.this, NammaApartmentSecurityHome.class));
                                     finish();
                                 } else {
@@ -256,6 +256,7 @@ public class OTP extends BaseActivity implements View.OnClickListener {
                             }
                         });
                     } else {
+                        hideProgressDialog();
                         /*Check if network is available or not*/
                         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
