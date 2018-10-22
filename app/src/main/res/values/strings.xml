@@ -156,8 +156,9 @@
     <!--OTP Activity-->
     <string name="phone_verification">Phone Verification</string>
     <string name="verify_otp">VERIFY OTP</string>
-    <string name="enter_verification_code">We need to verify your account. Please enter the 6 digit verification
+    <string name="enter_verification_code">We need to verify your account. Please enter the 6-digit verification
     code sent to your mobile number.</string>
+    <string name="your_mobile_number">your mobile number</string>
     <string name="auto_verification_completed">AutoVerification completed. Please wait while we check your Account in our system. . .</string>
     <string name="check_network_connection">Please check your Network Connection</string>
     <string name="wrong_otp_entered">Wrong OTP has been entered</string>
