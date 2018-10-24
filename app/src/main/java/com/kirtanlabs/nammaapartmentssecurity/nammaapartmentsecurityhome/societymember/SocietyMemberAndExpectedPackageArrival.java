@@ -256,14 +256,14 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
         apartment = editApartment.getText().toString();
         flat = editFlat.getText().toString();
 
-        //Database Reference for Retrieving all details of that particular flat from (userData->private->apartment->flat) in firebase.
+        /*Database Reference for Retrieving all details of that particular flat from (userData->private->apartment->flat) in firebase.*/
         flatReference = Constants.PRIVATE_USER_DATA_REFERENCE
                 .child(Constants.FIREBASE_CHILD_BANGALURU)
                 .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
                 .child(apartment)
                 .child(flat);
         if (screenTitle == R.string.society_member) {
-            // Checking if any members lives in this flat or not.
+            /*Checking if any members lives in this flat or not.*/
             flatReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -271,7 +271,7 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
                     if (dataSnapshot.hasChildren()) {
                         openFlatMemberOrPackageArrivalList();
                     } else {
-                        openValidationStatusDialog(Constants.FAILED, getString(R.string.no_member_in_this_flat));
+                        showNotificationDialog(getString(R.string.society_members_message), getString(R.string.no_member_in_this_flat), null);
                     }
                 }
 
@@ -281,7 +281,7 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
                 }
             });
         } else {
-            // Checking if any member in this particular flat has ordered any package or not.
+            /*Checking if any member in this particular flat has ordered any package or not.*/
             DatabaseReference packageVendorReference = flatReference.child(Constants.FIREBASE_CHILD_DELIVERIES);
             packageVendorReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

@@ -120,7 +120,8 @@
     <string name="name">Name:</string>
     <string name="apartment">Apartment</string>
     <string name="flat">Flat</string>
-    <string name="no_member_in_this_flat">There are no members in this flat</string>
+    <string name="no_member_in_this_flat">There is no member in this flat</string>
+    <string name="society_members_message">Society Members Message</string>
     <string name="not_ordered_any_packages">Members of this flat has not ordered any package</string>
 
     <!--Visitors And Daily Services Validation Status Activity-->
