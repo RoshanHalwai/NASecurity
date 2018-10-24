@@ -78,6 +78,7 @@
     <string name="daily_service_arrival_notification_message">Daily service arrival notification has been sent to user.</string>
     <string name="daily_service_left_notification_message">Daily service left notification has been sent to user.</string>
     <string name="visitor_record_not_found">Visitor record not found.</string>
+    <string name="expected_date_of_visitor_is_invalid">Expected arrival date of this visitor is invalid.\n\nExpected Date:</string>
 
     <!--Gate Notification Screen Activity-->
     <string name="expected_package_arrivals">Expected Package Arrivals</string>
@@ -96,7 +97,8 @@
     <string name="dont_allow_vehicle_to_enter">Don\'t allow this vehicle to enter into Society</string>
     <string name="ordered_by">Ordered By:</string>
     <string name="allow_package_vendor">Allow Package Vendor</string>
-    <string name="expected_time_of_arrival_is_finished">Expected time of this arrival is finished</string>
+    <string name="expected_time_of_cab_is_invalid">Expected arrival time of this cab is invalid</string>
+    <string name="expected_time_of_package_is_invalid">Expected arrival time of this package is invalid</string>
     <string name="cab_state_code_hint">KA</string>
     <string name="cab_rto_number_hint">01</string>
     <string name="cab_serial_number_one_hint">AB</string>
@@ -138,6 +140,7 @@
     <string name="resident_name">Resident Name:</string>
     <string name="image_emergency">Image to indicate type of Emergency</string>
     <string name="no_emergency_message">Sorry, there\'s no Emergency alarm raised by any of the resident at the moment.</string>
+    <string name="no_emergency_raised_in_this_flat_message">Sorry, there\'s no Emergency alarm raised by any of the resident of this flat.</string>
     <string name="no_emergency_desc">Image to indicate currently no emergency alarm raised by any of the resident.</string>
     <string name="date">Date</string>
     <string name="Filter">Filter</string>
@@ -155,8 +158,9 @@
     <!--OTP Activity-->
     <string name="phone_verification">Phone Verification</string>
     <string name="verify_otp">VERIFY OTP</string>
-    <string name="enter_verification_code">We need to verify your account. Please enter the 6 digit verification
+    <string name="enter_verification_code">We need to verify your account. Please enter the 6-digit verification
     code sent to your mobile number.</string>
+    <string name="your_mobile_number">your mobile number</string>
     <string name="auto_verification_completed">AutoVerification completed. Please wait while we check your Account in our system. . .</string>
     <string name="check_network_connection">Please check your Network Connection</string>
     <string name="wrong_otp_entered">Wrong OTP has been entered</string>

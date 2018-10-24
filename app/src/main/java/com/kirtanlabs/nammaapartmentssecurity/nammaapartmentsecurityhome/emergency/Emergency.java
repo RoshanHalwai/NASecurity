@@ -30,6 +30,7 @@ public class Emergency extends BaseActivity implements View.OnClickListener, Vie
      * ------------------------------------------------------------- */
 
     private EditText editSearchFlatNumber;
+    private TextView textFeatureUnavailable;
     private LinearLayout layoutNoEmergency;
     private DatabaseReference emergencyReference;
     private List<NammaApartmentEmergency> nammaApartmentEmergencyList;
@@ -56,22 +57,22 @@ public class Emergency extends BaseActivity implements View.OnClickListener, Vie
 
         /*Getting Id's for all the views*/
         editSearchFlatNumber = findViewById(R.id.editSearchFlatNumber);
-        TextView textFeatureUnavailable = findViewById(R.id.textFeatureUnavailable);
+        textFeatureUnavailable = findViewById(R.id.textFeatureUnavailable);
         layoutNoEmergency = findViewById(R.id.layoutNoEmergency);
         RecyclerView recyclerViewEmergency = findViewById(R.id.recyclerViewEmergency);
 
         /*Setting font for all the views*/
         textFeatureUnavailable.setTypeface(Constants.setLatoItalicFont(this));
 
-        //Creating recycler view adapter
+        /*Creating recycler view adapter*/
         nammaApartmentEmergencyList = new ArrayList<>();
         recyclerViewEmergency.setHasFixedSize(true);
         recyclerViewEmergency.setLayoutManager(new LinearLayoutManager(this));
 
-        //Creating recycler view adapter
+        /*Creating recycler view adapter*/
         adapter = new EmergencyAdapter(this, nammaApartmentEmergencyList);
 
-        //Setting adapter to recycler view
+        /*Setting adapter to recycler view*/
         recyclerViewEmergency.setAdapter(adapter);
 
         /*We don't want the keyboard to be displayed when user clicks on the time edit field*/
@@ -81,7 +82,7 @@ public class Emergency extends BaseActivity implements View.OnClickListener, Vie
         editSearchFlatNumber.setOnClickListener(this);
         editSearchFlatNumber.setOnFocusChangeListener(this);
 
-        //To retrieve all details of emergency occurred in society from firebase
+        /*To retrieve all details of emergency occurred in society from firebase*/
         retrieveEmergencyDetailsFromFireBase();
 
         /*We need Progress Indicator in this screen*/
@@ -113,19 +114,24 @@ public class Emergency extends BaseActivity implements View.OnClickListener, Vie
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
+        if (requestCode == SEARCH_FLAT_NUMBER_REQUEST_CODE && resultCode == RESULT_OK) {
             String flatNumber = data.getStringExtra(Constants.FLAT_NUMBER);
             DatabaseReference flatNumberReference = Constants.ALL_EMERGENCIES_REFERENCE.child(flatNumber);
-            //Getting Emergency UID from emergencies->private->all in firebase.
+            /*Getting Emergency UID from emergencies->private->all in firebase.*/
             flatNumberReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    nammaApartmentEmergencyList.clear();
+                    adapter.notifyDataSetChanged();
                     if (dataSnapshot.exists()) {
-                        nammaApartmentEmergencyList.clear();
+                        layoutNoEmergency.setVisibility(View.GONE);
                         for (DataSnapshot emergencyUidDataSnapshot : dataSnapshot.getChildren()) {
                             emergencyUID = emergencyUidDataSnapshot.getKey();
                             displayEmergencyList(emergencyUID);
                         }
+                    } else {
+                        layoutNoEmergency.setVisibility(View.VISIBLE);
+                        textFeatureUnavailable.setText(R.string.no_emergency_raised_in_this_flat_message);
                     }
                 }
 
@@ -152,7 +158,7 @@ public class Emergency extends BaseActivity implements View.OnClickListener, Vie
                 if (dataSnapshot.exists()) {
                     editSearchFlatNumber.setVisibility(View.VISIBLE);
                     for (DataSnapshot emergencyUidDataSnapshot : dataSnapshot.getChildren()) {
-                        //Getting Emergency UID from emergencies->public
+                        /*Getting Emergency UID from emergencies->public*/
                         emergencyUID = emergencyUidDataSnapshot.getKey();
                         displayEmergencyList(emergencyUID);
                     }
@@ -174,7 +180,7 @@ public class Emergency extends BaseActivity implements View.OnClickListener, Vie
      * @param emergencyUID contains that Emergency UID of that respected flat number.
      */
     private void displayEmergencyList(String emergencyUID) {
-        //Retrieving details of Emergency from emergencies->public->emergencyUID from firebase and adding in a list.
+        /*Retrieving details of Emergency from emergencies->public->emergencyUID from firebase and adding in a list.*/
         emergencyReference
                 .child(emergencyUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -2,6 +2,7 @@ package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.visito
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,11 +15,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.kirtanlabs.nammaapartmentssecurity.BaseActivity;
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
+import java.util.Objects;
+
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_VISITORS_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.ENTERED;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAILED;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DAILYSERVICE_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_VISIT;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITOR_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.LEFT;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.NOT_ENTERED;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_DAILYSERVICES_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_VISITORS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.SCREEN_TITLE;
@@ -168,19 +175,25 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
      */
     private void checkVisitorStatus() {
         DatabaseReference visitorStatusReference = PRIVATE_VISITORS_REFERENCE
-                .child(visitorUid)
-                .child(FIREBASE_CHILD_STATUS);
+                .child(visitorUid);
 
         // Retrieving Status of Visitor from (Visitors->Private->VisitorUID) in firebase.
         visitorStatusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String visitorStatus = (String) dataSnapshot.getValue();
-                assert visitorStatus != null;
-                if (visitorStatus.equals(getString(R.string.left))) {
-                    openValidationStatusDialog(FAILED, getString(R.string.visitor_record_not_found));
-                } else {
-                    openVisitorOrDailyServiceList();
+                String visitorStatus = dataSnapshot.child(FIREBASE_CHILD_STATUS).getValue(String.class);
+                switch (Objects.requireNonNull(visitorStatus)) {
+                    case NOT_ENTERED:
+                        String dateAndTime = dataSnapshot.child(FIREBASE_CHILD_DATE_AND_TIME_OF_VISIT).getValue(String.class);
+                        String separatedDateAndTime[] = TextUtils.split(dateAndTime, "\t\t ");
+                        checkVisitorInvitationDate(separatedDateAndTime[0]);
+                        break;
+                    case ENTERED:
+                        openVisitorOrDailyServiceList();
+                        break;
+                    case LEFT:
+                        openValidationStatusDialog(FAILED, getString(R.string.visitor_record_not_found));
+                        break;
                 }
             }
 
@@ -189,6 +202,21 @@ public class VisitorsAndDailyServicesValidation extends BaseActivity implements 
 
             }
         });
+    }
+
+    /**
+     * This method is invoked to check whether visitor has arrived the society on invitation date or not.
+     *
+     * @param invitationDate - date that user invites to that visitor.
+     */
+    private void checkVisitorInvitationDate(final String invitationDate) {
+        String currentDate = getCurrentDate();
+        if (currentDate.equals(invitationDate)) {
+            openVisitorOrDailyServiceList();
+        } else {
+            String errorMessage = getString(R.string.expected_date_of_visitor_is_invalid) + " " + invitationDate;
+            openValidationStatusDialog(FAILED, errorMessage);
+        }
     }
 
     /**
