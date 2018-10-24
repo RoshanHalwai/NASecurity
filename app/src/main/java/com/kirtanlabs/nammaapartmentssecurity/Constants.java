@@ -103,6 +103,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_VEHICLE_NUMBER = "vehicleNumber";
     public static final String FIREBASE_CHILD_OWNER_NAME = "ownerName";
     public static final String FIREBASE_CHILD_VEHICLE_TYPE = "vehicleType";
+    public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_VISIT = "dateAndTimeOfVisit";
 
     /* ------------------------------------------------------------- *
      * Firebase Database References
@@ -161,6 +162,9 @@ public class Constants {
     public static final String ACCEPTED = "Accepted";
     public static final String REJECTED = "Rejected";
     public static final String IGNORED = "Ignored";
+    public static final String NOT_ENTERED = "Not Entered";
+    public static final String ENTERED = "Entered";
+    public static final String LEFT = "Left";
 
     /* ------------------------------------------------------------- *
      * Validation Keys
