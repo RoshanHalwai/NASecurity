@@ -11,6 +11,8 @@ const DEFAULT_INSTANCE_NAME = "nammaapartments-development"
 const AIR_FORCE_COLONY_DB_URL = "https://nammaapartments-dev-airforcecolony.firebaseio.com/"
 const AIR_FORCE_COLONY_INSTANCE_NAME = "nammaapartments-dev-airforcecolony"
 
+const BRIGADE_GATEWAY_DB_URL = "https://brigadegateway.firebaseio.com/"
+const BRIGADE_GATEWAY_INSTANCE_NAME = "brigadegateway"
 
 /*Mapping Daily Service Firebase Keys with Notification value*/
 const dailyServiceLookup = {};
@@ -55,6 +57,10 @@ const defaultInstance = admin.initializeApp(functions.config().firebase);
 const airForceColonyConfig = Object.assign({}, functions.config().firebase)
 airForceColonyConfig.databaseURL = AIR_FORCE_COLONY_DB_URL;
 const airForceColonyInstance = admin.initializeApp(airForceColonyConfig, AIR_FORCE_COLONY_INSTANCE_NAME)
+
+const brigadeGatewayConfig = Object.assign({}, functions.config().firebase)
+brigadeGatewayConfig.databaseURL = BRIGADE_GATEWAY_DB_URL;
+const brigadeGatewayInstance = admin.initializeApp(brigadeGatewayConfig, BRIGADE_GATEWAY_INSTANCE_NAME)
 
 /*Updating Pending Dues every month*/
 
@@ -108,6 +114,11 @@ exports.sendNotifications_default = functions.database.instance(DEFAULT_INSTANCE
 exports.sendNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
 .onCreate((change, context) => {
 	return sendNotifications(airForceColonyInstance, change, context);
+});
+
+exports.sendNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
+.onCreate((change, context) => {
+	return sendNotifications(brigadeGatewayInstance, change, context);
 });
 
 function sendNotifications(instance, change, context) {
@@ -193,6 +204,10 @@ exports.guestNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INST
 	return guestNotifications(airForceColonyInstance, change, context);
 });
 
+exports.guestNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/visitors/private/{visitorUID}/status')
+.onWrite((change, context) => {
+	return guestNotifications(brigadeGatewayInstance, change, context);
+});
 
 function guestNotifications(instance, change, context) {
 	/*If record is deleted or if status is Not Entered then we don't want to send notification to users*/
@@ -278,6 +293,11 @@ exports.dailyServiceNotification_default = functions.database.instance(DEFAULT_I
 exports.dailyServiceNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
 .onWrite((change, context) => {
 	return dailyServiceNotification(airForceColonyInstance, change, context);
+});
+
+exports.dailyServiceNotification_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
+.onWrite((change, context) => {
+	return dailyServiceNotification(brigadeGatewayInstance, change, context);
 });
 
 function dailyServiceNotification(instance, change, context) {
@@ -376,6 +396,11 @@ exports.noticeBoardNotification_2 = functions.database.instance(AIR_FORCE_COLONY
 	return noticeBoardNotification(airForceColonyInstance, change, context);
 });
 
+exports.noticeBoardNotification_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/noticeBoard/{noticeBoardUID}')
+.onWrite((change, context) => {
+	return noticeBoardNotification(brigadeGatewayInstance, change, context);
+});
+
 function noticeBoardNotification(instance, change, context) {
 
 		const noticeBoardUID = context.params.noticeBoardUID;
@@ -440,6 +465,11 @@ exports.cabNotifications_default = functions.database.instance(DEFAULT_INSTANCE_
 exports.cabNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/cabs/private/{cabUID}/status')
 .onWrite((change, context) => {
 	return cabNotifications(airForceColonyInstance, change, context);
+});
+
+exports.cabNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/cabs/private/{cabUID}/status')
+.onWrite((change, context) => {
+	return cabNotifications(brigadeGatewayInstance, change, context);
 });
 
 function cabNotifications(instance, change, context) {
@@ -509,6 +539,11 @@ exports.packageNotifications_default = functions.database.instance(DEFAULT_INSTA
 exports.packageNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/deliveries/private/{deliveryUID}/status')
 .onWrite((change, context) => {
 	return packageNotifications(airForceColonyInstance, change, context);
+});
+
+exports.packageNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/deliveries/private/{deliveryUID}/status')
+.onWrite((change, context) => {
+	return packageNotifications(brigadeGatewayInstance, change, context);
 });
 
 function packageNotifications(instance, change, context) {
@@ -583,6 +618,11 @@ exports.activateAccountNotification_2 = functions.database.instance(AIR_FORCE_CO
 	return activateAccountNotification(airForceColonyInstance, change, context);
 });
 
+exports.activateAccountNotification_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/users/private/{userUID}/privileges/verified')
+.onWrite((change, context) => {
+	return activateAccountNotification(brigadeGatewayInstance, change, context);
+});
+
 function activateAccountNotification(instance, change, context) {
 
 	const verified = change.after.val();
@@ -651,6 +691,11 @@ exports.societyServiceResponseNotifications_2 = functions.database.instance(AIR_
 	return societyServiceResponseNotifications(airForceColonyInstance, change, context);
 });
 
+exports.societyServiceResponseNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
+.onWrite((change, context) => {
+	return societyServiceResponseNotifications(brigadeGatewayInstance, change, context);
+});
+
 function societyServiceResponseNotifications(instance, change, context) {
 
 	const notificationUID = context.params.notificationUID;
@@ -698,6 +743,12 @@ exports.receivedChatNotification_2 = functions.database.instance(AIR_FORCE_COLON
 .onCreate((change, context) => {
 	console.log("receivedChatNotification_2 API Called");
 	return receivedChatNotification(airForceColonyInstance, change, context);
+});
+
+exports.receivedChatNotification_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/chats/private/{chatRoomUID}/{messageUID}')
+.onCreate((change, context) => {
+	console.log("receivedChatNotification_2 API Called");
+	return receivedChatNotification(brigadeGatewayInstance, change, context);
 });
 
 function receivedChatNotification(instance, change, context) {
@@ -753,6 +804,11 @@ exports.societyServiceNotifications_default = functions.database.instance(DEFAUL
 exports.societyServiceNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
 .onWrite((change, context) => {
 	return societyServiceNotifications(airForceColonyInstance, change, context);
+});
+
+exports.societyServiceNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
+.onWrite((change, context) => {
+	return societyServiceNotifications(brigadeGatewayInstance, change, context);
 });
 
 function societyServiceNotifications(instance, change, context) {
@@ -942,6 +998,11 @@ exports.userCancelsSocietyServiceRequestNotifications_2 = functions.database.ins
 	return userCancelsSocietyServiceRequestNotifications(airForceColonyInstance, change, context);
 });
 
+exports.userCancelsSocietyServiceRequestNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/status')
+.onWrite((change, context) => {
+	return userCancelsSocietyServiceRequestNotifications(brigadeGatewayInstance, change, context);
+});
+
 function userCancelsSocietyServiceRequestNotifications(instance, change, context){
 
 	const status = change.after.val;
@@ -979,6 +1040,11 @@ exports.donateFoodNotifications_default = functions.database.instance(DEFAULT_IN
 exports.donateFoodNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}')
 .onWrite((change, context) => {
 	return donateFoodNotifications(airForceColonyInstance, change, context);
+});
+
+exports.donateFoodNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}')
+.onWrite((change, context) => {
+	return donateFoodNotifications(brigadeGatewayInstance, change, context);
 });
 
 function donateFoodNotifications(instance, change, context) {
@@ -1021,6 +1087,11 @@ exports.supportNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_IN
 	return supportNotifications(airForceColonyInstance, change, context);
 });
 
+exports.supportNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/support/{supportUID}')
+.onWrite((change, context) => {
+	return supportNotifications(brigadeGatewayInstance, change, context);
+});
+
 function supportNotifications(instance, change, context) {
 	const supportUID = context.params.supportUID;
 
@@ -1060,6 +1131,11 @@ exports.emergencyNotifications_default = functions.database.instance(DEFAULT_INS
 exports.emergencyNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/emergencies/public/{emergencyUID}')
 .onWrite((change, context) => {
 	return emergencyNotifications(airForceColonyInstance, change, context);
+});
+
+exports.emergencyNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/emergencies/public/{emergencyUID}')
+.onWrite((change, context) => {
+	return emergencyNotifications(brigadeGatewayInstance, change, context);
 });
 
 function emergencyNotifications(instance, change, context) {
