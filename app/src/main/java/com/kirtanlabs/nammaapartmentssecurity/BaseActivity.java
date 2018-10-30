@@ -68,10 +68,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> onBackPressed());
     }
 
-    private void showBackButton() {
-        backButton.setVisibility(View.VISIBLE);
-    }
-
     /**
      * This method is used to display a pop menu on click of menu icon and performs actions based on click of item in the list.
      */
@@ -166,7 +162,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         /*Getting Id's for all the views*/
         ImageView imageSuccess = validationDialog.findViewById(R.id.imageSuccess);
         ImageView imageFailed = validationDialog.findViewById(R.id.imageFailed);
-        ImageView imageWarning = validationDialog.findViewById(R.id.imageWarning);
         TextView textDescription = validationDialog.findViewById(R.id.textDescription);
         Button buttonEIntercom = validationDialog.findViewById(R.id.buttonEIntercom);
 
@@ -183,9 +178,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case Constants.FAILED:
                 imageFailed.setVisibility(View.VISIBLE);
-                break;
-            case Constants.WARNING:
-                imageWarning.setVisibility(View.VISIBLE);
                 break;
         }
 

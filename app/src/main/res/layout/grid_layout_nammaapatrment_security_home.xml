@@ -11,8 +11,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:contentDescription="@string/images_of_nammaapartment_security_services"
-        android:src="@drawable/e_intercom" />
+        android:contentDescription="@string/images_of_nammaapartment_security_services" />
 
     <TextView
         android:id="@+id/textNammaApartmentSecurityServices"

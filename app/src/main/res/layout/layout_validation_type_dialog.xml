@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:contentDescription="@string/image_success"
-        android:src="@drawable/success"
+        android:src="@drawable/success_na"
         android:visibility="gone" />
 
     <ImageView
@@ -20,15 +20,6 @@
         android:layout_margin="10dp"
         android:contentDescription="@string/image_failed"
         android:src="@drawable/failed"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/imageWarning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:contentDescription="@string/image_failed"
-        android:src="@drawable/warning"
         android:visibility="gone" />
 
     <TextView
