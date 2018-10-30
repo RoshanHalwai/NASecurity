@@ -25,6 +25,32 @@ public class Constants {
     public static final String DEV_ENV = "dev_env";
 
     /* ------------------------------------------------------------- *
+     * Application Specific
+     * ------------------------------------------------------------- */
+
+    //TODO:Change the Guard's City and Society name when we deploy to new society.
+    public static final String GUARD_CITY_NAME = "Bengaluru";
+    public static final String GUARD_SOCIETY_NAME = "Brigade Gateway";
+
+    public static final String PACKAGE_NAME = "com.kirtanlabs.nammaapartmentssecurity";
+    public static final String HYPHEN = "-";
+    public static final String EMERGENCY_TYPE_MEDICAL = "Medical";
+    public static final String EMERGENCY_TYPE_FIRE = "Fire";
+    public static final String EMERGENCY_TYPE_THEFT = "Theft";
+    public static final String EMERGENCY_TYPE_WATER = "Water";
+    public static final String GUEST = "guest";
+    private static final String DAILY_SERVICE = "dailyService";
+    public static final String CAB = "cab";
+    public static final String PACKAGE = "package";
+    private static final String FAMILY_MEMBER = "familyMember";
+    public static final String ACCEPTED = "Accepted";
+    public static final String REJECTED = "Rejected";
+    public static final String IGNORED = "Ignored";
+    public static final String NOT_ENTERED = "Not Entered";
+    public static final String ENTERED = "Entered";
+    public static final String LEFT = "Left";
+
+    /* ------------------------------------------------------------- *
      * Intent Keys
      * ------------------------------------------------------------- */
 
@@ -67,8 +93,6 @@ public class Constants {
      * ------------------------------------------------------------- */
 
     public static final String FIREBASE_CHILD_APARTMENTS = "apartments";
-    public static final String FIREBASE_CHILD_BANGALURU = "Bengaluru";
-    public static final String FIREBASE_CHILD_BRIGADEGATEWAY = "Brigade Gateway";
     public static final String FIREBASE_CHILD_SALARPURIA_CAMBRIDGE = "Salarpuria Cambridge";
     public static final String FIREBASE_CHILD_DAILYSERVICE_UID = "dailyServiceUID";
     public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL = "dateAndTimeOfArrival";
@@ -104,6 +128,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_OWNER_NAME = "ownerName";
     public static final String FIREBASE_CHILD_VEHICLE_TYPE = "vehicleType";
     public static final String FIREBASE_CHILD_DATE_AND_TIME_OF_VISIT = "dateAndTimeOfVisit";
+    private static final String FIREBASE_CHILD_SOCIETY_DETAILS = "societyDetails";
 
     /* ------------------------------------------------------------- *
      * Firebase Database References
@@ -144,27 +169,7 @@ public class Constants {
     private static final DatabaseReference VEHICLES_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_VEHICLES);
     public static final DatabaseReference ALL_VEHICLES_REFERENCE = VEHICLES_REFERENCE.child(FIREBASE_CHILD_ALL);
     public static final DatabaseReference PRIVATE_VEHICLES_REFERENCE = VEHICLES_REFERENCE.child(FIREBASE_CHILD_PRIVATE);
-
-    /* ------------------------------------------------------------- *
-     * Application Specific
-     * ------------------------------------------------------------- */
-
-    public static final String HYPHEN = "-";
-    public static final String EMERGENCY_TYPE_MEDICAL = "Medical";
-    public static final String EMERGENCY_TYPE_FIRE = "Fire";
-    public static final String EMERGENCY_TYPE_THEFT = "Theft";
-    public static final String EMERGENCY_TYPE_WATER = "Water";
-    public static final String GUEST = "guest";
-    private static final String DAILY_SERVICE = "dailyService";
-    public static final String CAB = "cab";
-    public static final String PACKAGE = "package";
-    private static final String FAMILY_MEMBER = "familyMember";
-    public static final String ACCEPTED = "Accepted";
-    public static final String REJECTED = "Rejected";
-    public static final String IGNORED = "Ignored";
-    public static final String NOT_ENTERED = "Not Entered";
-    public static final String ENTERED = "Entered";
-    public static final String LEFT = "Left";
+    public static final DatabaseReference PRIVATE_SOCIETY_DETAILS_REFERENCE = FIREBASE_DATABASE.getReference(FIREBASE_CHILD_SOCIETY_DETAILS).child(FIREBASE_CHILD_PRIVATE);
 
     /* ------------------------------------------------------------- *
      * Validation Keys

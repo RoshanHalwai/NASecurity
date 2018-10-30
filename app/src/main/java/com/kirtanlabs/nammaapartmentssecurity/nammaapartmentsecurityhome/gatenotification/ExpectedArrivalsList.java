@@ -16,8 +16,8 @@ import java.util.List;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EXPECTED_ARRIVAL_UID;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_APARTMENTS;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_BANGALURU;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_BRIGADEGATEWAY;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUARD_CITY_NAME;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUARD_SOCIETY_NAME;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DELIVERIES;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_FLAT_MEMBERS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_FLAT_NUMBER;
@@ -114,8 +114,8 @@ public class ExpectedArrivalsList extends BaseActivity {
 
             // Retrieving UID of Package Vendor from (userData->private->apartment->flat) in firebase.
             DatabaseReference packageVendorReference = PRIVATE_USER_DATA_REFERENCE
-                    .child(FIREBASE_CHILD_BANGALURU)
-                    .child(FIREBASE_CHILD_BRIGADEGATEWAY)
+                    .child(GUARD_CITY_NAME)
+                    .child(GUARD_SOCIETY_NAME)
                     .child(apartment)
                     .child(flat);
             packageVendorReference.child(FIREBASE_CHILD_FLAT_MEMBERS).addListenerForSingleValueEvent(new ValueEventListener() {
