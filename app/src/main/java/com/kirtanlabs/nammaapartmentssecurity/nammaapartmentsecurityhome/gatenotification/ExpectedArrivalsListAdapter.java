@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FAILED;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_BANGALURU;
-import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_BRIGADEGATEWAY;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUARD_CITY_NAME;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUARD_SOCIETY_NAME;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DATE_AND_TIME_OF_ARRIVAL;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_DELIVERIES;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_STATUS;
@@ -281,8 +281,8 @@ public class ExpectedArrivalsListAdapter extends RecyclerView.Adapter<ExpectedAr
 
                 if (status.equals(mCtx.getString(R.string.entered))) {
                     DatabaseReference deliveryUID = PRIVATE_USER_DATA_REFERENCE
-                            .child(FIREBASE_CHILD_BANGALURU)
-                            .child(FIREBASE_CHILD_BRIGADEGATEWAY)
+                            .child(GUARD_CITY_NAME)
+                            .child(GUARD_SOCIETY_NAME)
                             .child(apartmentName).child(flatNumber).child(FIREBASE_CHILD_DELIVERIES).child(nammaApartmentExpectedArrivals.getInviterUID())
                             .child(nammaApartmentExpectedArrivals.getExpectedArrivalUid());
                     deliveryUID.setValue(false);

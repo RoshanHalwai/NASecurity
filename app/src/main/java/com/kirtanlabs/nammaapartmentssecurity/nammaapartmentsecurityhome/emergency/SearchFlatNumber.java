@@ -108,7 +108,7 @@ public class SearchFlatNumber extends BaseActivity implements SearchView.OnQuery
      */
     private void initializeListWithFlatNumbers() {
         DatabaseReference apartmentReference = Constants.APARTMENTS_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY);
+                .child(Constants.GUARD_SOCIETY_NAME);
         // Retrieving List of all Apartment names from firebase.
         apartmentReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

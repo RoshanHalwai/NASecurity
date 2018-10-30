@@ -75,8 +75,8 @@ public class FamilyMemberList extends BaseActivity {
         String flat = getIntent().getStringExtra(Constants.FIREBASE_CHILD_FLAT_NUMBER);
         // Retrieving UID of all Family Members of a particular flat from (userData->private->apartment->flat->flatMembers) in firebase.
         DatabaseReference familyMemberUid = Constants.PRIVATE_USER_DATA_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BANGALURU)
-                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
+                .child(Constants.GUARD_CITY_NAME)
+                .child(Constants.GUARD_SOCIETY_NAME)
                 .child(apartment)
                 .child(flat)
                 .child(Constants.FIREBASE_CHILD_FLAT_MEMBERS);

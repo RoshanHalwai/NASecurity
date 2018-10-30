@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_SOCIETY_DETAILS_REFERENCE;
+
 public class SocietyMemberAndExpectedPackageArrival extends BaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
 
     /* ------------------------------------------------------------- *
@@ -187,11 +189,10 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
         switch (viewId) {
             case R.id.editApartment:
                 hideViews();
-                updateItemsInList(Constants.APARTMENTS_REFERENCE
-                        .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY));
+                updateItemsInList(PRIVATE_SOCIETY_DETAILS_REFERENCE);
                 break;
             case R.id.editFlat:
-                updateItemsInList(Constants.FLATS_REFERENCE
+                updateItemsInList(PRIVATE_SOCIETY_DETAILS_REFERENCE
                         .child(editApartment.getText().toString()));
                 break;
         }
@@ -206,6 +207,7 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                itemsInList.clear();
                 for (DataSnapshot values : dataSnapshot.getChildren()) {
                     itemsInList.add(values.getKey());
                 }
@@ -258,8 +260,8 @@ public class SocietyMemberAndExpectedPackageArrival extends BaseActivity impleme
 
         /*Database Reference for Retrieving all details of that particular flat from (userData->private->apartment->flat) in firebase.*/
         flatReference = Constants.PRIVATE_USER_DATA_REFERENCE
-                .child(Constants.FIREBASE_CHILD_BANGALURU)
-                .child(Constants.FIREBASE_CHILD_BRIGADEGATEWAY)
+                .child(Constants.GUARD_CITY_NAME)
+                .child(Constants.GUARD_SOCIETY_NAME)
                 .child(apartment)
                 .child(flat);
         if (screenTitle == R.string.society_member) {
