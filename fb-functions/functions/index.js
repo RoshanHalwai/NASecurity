@@ -224,7 +224,6 @@ function guestNotifications(instance, change, context) {
 
 		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
-			const guestNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().guest;
 			const flatDetails = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val();
 			const userCity = flatDetails.city;
 			const userSocietyName = flatDetails.societyName;
@@ -242,35 +241,19 @@ function guestNotifications(instance, change, context) {
 							}
 
 							const notificationMessage = "Your Guest " + guestName + " has " + status + " your society.";
-							if (guestNotificationSound) {
-								payload = {
-									notification: {
-										title: APP_NAME,
-										body: notificationMessage,
-										"sound": "default",
-										"badge": "1"
-									},
-									data: {
-										message: notificationMessage,
-										"sound": "default",
-										type: "Guest_Notification"
-									}
-								};
-							} else {
-								payload = {
-									notification: {
-										title: APP_NAME,
-										body: notificationMessage,
-										"sound": "",
-										"badge": "1"
-									},
-									data: {
-										message: notificationMessage,
-										"sound": "",
-										type: "Guest_Notification"
-									}
-								};
-							}
+							payload = {
+								notification: {
+									title: APP_NAME,
+									body: notificationMessage,
+									"sound": "default",
+									"badge": "1"
+								},
+								data: {
+									message: notificationMessage,
+									"sound": "default",
+									type: "Guest_Notification"
+								}
+							};
 
 							return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 								return console.log("Notification sent");
@@ -318,7 +301,6 @@ function dailyServiceNotification(instance, change, context) {
 
 					const userDataReference = admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(userUID).once('value').then(queryResult => {
 						const tokenId = queryResult.val().tokenId;
-						const dailyServiceNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().dailyService;
 
 						const flatDetailsSnapshot = queryResult.child(FIREBASE_CHILD_FLATDETAILS).val();
 						const userSocietyName = flatDetailsSnapshot.societyName;
@@ -338,36 +320,19 @@ function dailyServiceNotification(instance, change, context) {
 								}
 
 								const notificationMessage = "Your " + dailyServiceLookup[dailyServiceType] + " has " + status + " your society.";
-								if (dailyServiceNotificationSound) {
-									payload = {
-										notification: {
-											title: APP_NAME,
-											body: notificationMessage,
-											"sound": "default",
-											"badge": "1"
-										},
-										data: {
-											message: notificationMessage,
-											"sound": "default",
-											type: "Daily_Service_Notification"
-										}
-									};
-								}
-								else {
-									payload = {
-										notification: {
-											title: APP_NAME,
-											body: notificationMessage,
-											"sound": "",
-											"badge": "1"
-										},
-										data: {
-											message: notificationMessage,
-											"sound": "",
-											type: "Daily_Service_Notification"
-										}
-									};
-								}
+								payload = {
+									notification: {
+										title: APP_NAME,
+										body: notificationMessage,
+										"sound": "default",
+										"badge": "1"
+									},
+									data: {
+										message: notificationMessage,
+										"sound": "default",
+										type: "Daily_Service_Notification"
+									}
+								};
 
 								return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 									return console.log("Notification sent");
@@ -484,40 +449,22 @@ function cabNotifications(instance, change, context) {
 
 		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
-			const cabNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().cab;
 			var payload;
 
 			const notificationMessage = "Your Cab has " + status + " your society.";
-			if (cabNotificationSound) {
-				payload = {
-					notification: {
-						title: APP_NAME,
-						body: notificationMessage,
-						"sound": "default",
-						"badge": "1"
-					},
-					data: {
-						message: notificationMessage,
-						"sound": "default",
-						type: "Cab_Notification"
-					}
-				};
-			}
-			else {
-				payload = {
-					notification: {
-						title: APP_NAME,
-						body: notificationMessage,
-						"sound": "",
-						"badge": "1"
-					},
-					data: {
-						message: notificationMessage,
-						"sound": "",
-						type: "Cab_Notification"
-					}
-				};
-			}
+			payload = {
+				notification: {
+					title: APP_NAME,
+					body: notificationMessage,
+					"sound": "default",
+					"badge": "1"
+				},
+				data: {
+					message: notificationMessage,
+					"sound": "default",
+					type: "Cab_Notification"
+				}
+			};
 
 			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 				return console.log("Notification sent");
@@ -560,41 +507,22 @@ function packageNotifications(instance, change, context) {
 
 		return admin.database(instance).ref("/users").child(FIREBASE_CHILD_PRIVATE).child(inviterUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
-			const packageNotificationSound = queryResult.child(FIREBASE_CHILD_OTHERDETAILS).child(FIREBASE_CHILD_NOTIFICATIONSOUND).val().package;
 			var payload;
 
 			const notificationMessage = "Your Package from " + reference + " has " + status + " your society.";
-			if (packageNotificationSound) {
-				payload = {
-					notification: {
-						title: APP_NAME,
-						body: notificationMessage,
-						"sound": "default",
-						"badge": "1"
-					},
-					data: {
-						message: notificationMessage,
-						"sound": "default",
-						type: "Package_Notification"
-					}
-				};
-
-			} else {
-				payload = {
-					notification: {
-						title: APP_NAME,
-						body: notificationMessage,
-						"sound": "",
-						"badge": "1"
-					},
-					data: {
-						message: notificationMessage,
-						"sound": "",
-						type: "Package_Notification"
-					}
-				};
-
-			}
+			payload = {
+				notification: {
+					title: APP_NAME,
+					body: notificationMessage,
+					"sound": "default",
+					"badge": "1"
+				},
+				data: {
+					message: notificationMessage,
+					"sound": "default",
+					type: "Package_Notification"
+				}
+			};
 
 			return admin.messaging().sendToDevice(tokenId, payload).then(result => {
 				return console.log("Notification sent");
