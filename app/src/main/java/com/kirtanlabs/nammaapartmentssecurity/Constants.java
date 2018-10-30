@@ -149,6 +149,7 @@ public class Constants {
      * Application Specific
      * ------------------------------------------------------------- */
 
+    public static final String PACKAGE_NAME = "com.kirtanlabs.nammaapartmentssecurity";
     public static final String HYPHEN = "-";
     public static final String EMERGENCY_TYPE_MEDICAL = "Medical";
     public static final String EMERGENCY_TYPE_FIRE = "Fire";
