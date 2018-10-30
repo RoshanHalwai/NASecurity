@@ -1032,22 +1032,27 @@ function userCancelsSocietyServiceRequestNotifications(instance, change, context
 
 // Notifications triggered to Society Admin when User request to donate food 
 
-exports.donateFoodNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}')
+exports.donateFoodNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}/status')
 .onWrite((change, context) => {
 	return donateFoodNotifications(defaultInstance, change, context);
 });
 
-exports.donateFoodNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}')
+exports.donateFoodNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}/status')
 .onWrite((change, context) => {
 	return donateFoodNotifications(airForceColonyInstance, change, context);
 });
 
-exports.donateFoodNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}')
+exports.donateFoodNotifications_brigade = functions.database.instance(BRIGADE_GATEWAY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}/status')
 .onWrite((change, context) => {
 	return donateFoodNotifications(brigadeGatewayInstance, change, context);
 });
 
 function donateFoodNotifications(instance, change, context) {
+	
+	const status = change.after.val();
+	if (status === null || status === "Completed")
+		return 0;
+	
 	const foodDonationNotificationUID = context.params.foodDonationNotificationUID;
 
 	return admin.database(instance).ref("/foodDonations").child(foodDonationNotificationUID).once('value').then(queryResult => {
