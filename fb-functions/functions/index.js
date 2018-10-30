@@ -1005,7 +1005,7 @@ exports.userCancelsSocietyServiceRequestNotifications_brigade = functions.databa
 
 function userCancelsSocietyServiceRequestNotifications(instance, change, context){
 
-	const status = change.after.val;
+	const status = change.after.val();
 	if (status === null || status !== "Cancelled")
 		return 0;
 
