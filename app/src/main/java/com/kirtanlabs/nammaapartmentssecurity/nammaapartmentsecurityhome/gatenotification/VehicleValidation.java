@@ -100,7 +100,7 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
             //We need Progress Indicator in this screen
             showProgressIndicator();
             checkDetailsInFirebase(vehicleNumber);
-            textErrorVehicleNumber.setVisibility(View.GONE);
+
         } else {
             textErrorVehicleNumber.setVisibility(View.VISIBLE);
         }
@@ -123,6 +123,7 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    textErrorVehicleNumber.setVisibility(View.GONE);
                     editVehicleRtoNumber.requestFocus();
                 }
             }
@@ -143,6 +144,7 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
                 if (s.length() == EDIT_TEXT_MIN_LENGTH) {
                     editVehicleStateCode.requestFocus();
                 } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    textErrorVehicleNumber.setVisibility(View.GONE);
                     editVehicleSerialNumberOne.requestFocus();
                 }
             }
@@ -164,6 +166,7 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
                 if (s.length() == EDIT_TEXT_MIN_LENGTH) {
                     editVehicleRtoNumber.requestFocus();
                 } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    textErrorVehicleNumber.setVisibility(View.GONE);
                     editVehicleSerialNumberTwo.requestFocus();
 
                 }
@@ -190,7 +193,7 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                textErrorVehicleNumber.setVisibility(View.GONE);
             }
         });
     }
