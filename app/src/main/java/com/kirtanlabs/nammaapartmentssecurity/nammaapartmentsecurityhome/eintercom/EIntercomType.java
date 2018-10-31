@@ -35,8 +35,8 @@ public class EIntercomType extends BaseActivity {
         List<Type> notificationServicesList = new ArrayList<>();
 
         notificationServicesList.add(new Type(R.drawable.team, getString(R.string.guest)));
-        notificationServicesList.add(new Type(R.drawable.taxi, getString(R.string.cab)));
-        notificationServicesList.add(new Type(R.drawable.delivery_man, getString(R.string.package_vendor)));
+        notificationServicesList.add(new Type(R.drawable.taxi_na, getString(R.string.cab)));
+        notificationServicesList.add(new Type(R.drawable.delivery_man_na, getString(R.string.package_vendor)));
 
         /*Creating the Adapter*/
         EIntercomTypeAdapter adapter = new EIntercomTypeAdapter(this, notificationServicesList);

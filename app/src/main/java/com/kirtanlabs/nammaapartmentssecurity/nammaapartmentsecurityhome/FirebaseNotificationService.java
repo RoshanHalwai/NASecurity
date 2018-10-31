@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EMERGENCY_TYPE_FIRE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EMERGENCY_TYPE_MEDICAL;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EMERGENCY_TYPE_THEFT;
 
 public class FirebaseNotificationService extends FirebaseMessagingService {
 
@@ -61,17 +64,17 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
 
         int icon;
         switch (emergencyType) {
-            case "Medical":
-                icon = R.drawable.medical_emergency;
+            case EMERGENCY_TYPE_MEDICAL:
+                icon = R.drawable.medical_emergency_na;
                 break;
-            case "Fire":
-                icon = R.drawable.fire_alarm;
+            case EMERGENCY_TYPE_FIRE:
+                icon = R.drawable.fire_alarm_na;
                 break;
-            case "Theft":
-                icon = R.drawable.theft_alarm;
+            case EMERGENCY_TYPE_THEFT:
+                icon = R.drawable.theft_alarm_na;
                 break;
             default:
-                icon = R.drawable.water_emergency;
+                icon = R.drawable.water_emergency_na;
                 break;
         }
 
