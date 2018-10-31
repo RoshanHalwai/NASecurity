@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.kirtanlabs.nammaapartmentssecurity.R;
 
-public class NammaApartmentSecurityHomeAdapter extends BaseAdapter {
+class NammaApartmentSecurityHomeAdapter extends BaseAdapter {
 
     /* ------------------------------------------------------------- *
      * Private Members

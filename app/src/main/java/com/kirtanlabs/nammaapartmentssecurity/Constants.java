@@ -1,5 +1,6 @@
 package com.kirtanlabs.nammaapartmentssecurity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 
@@ -134,6 +135,7 @@ public class Constants {
      * Firebase Database References
      * ------------------------------------------------------------- */
 
+    @SuppressLint("StaticFieldLeak")
     private static final FirebaseApp FIREBASE_APP = FirebaseApp.getInstance(DEV_ENV);
     private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance(FIREBASE_APP);
     public static final FirebaseStorage FIREBASE_STORAGE = FirebaseStorage.getInstance(FIREBASE_APP);
