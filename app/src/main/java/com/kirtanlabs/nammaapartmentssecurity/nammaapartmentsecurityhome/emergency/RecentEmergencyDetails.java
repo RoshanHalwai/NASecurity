@@ -11,6 +11,11 @@ import com.kirtanlabs.nammaapartmentssecurity.R;
 
 import java.util.Objects;
 
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EMERGENCY_TYPE_FIRE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EMERGENCY_TYPE_MEDICAL;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EMERGENCY_TYPE_THEFT;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.EMERGENCY_TYPE_WATER;
+
 public class RecentEmergencyDetails extends BaseActivity {
 
     /* ------------------------------------------------------------- *
@@ -106,17 +111,17 @@ public class RecentEmergencyDetails extends BaseActivity {
 
         /* Here we are setting image in cardView according to the emergency type */
         switch (Objects.requireNonNull(emergencyType)) {
-            case Constants.EMERGENCY_TYPE_MEDICAL:
-                imageEmergencyType.setImageResource(R.drawable.medical_emergency);
+            case EMERGENCY_TYPE_MEDICAL:
+                imageEmergencyType.setImageResource(R.drawable.medical_emergency_na);
                 break;
-            case Constants.EMERGENCY_TYPE_FIRE:
-                imageEmergencyType.setImageResource(R.drawable.fire_alarm);
+            case EMERGENCY_TYPE_FIRE:
+                imageEmergencyType.setImageResource(R.drawable.fire_alarm_na);
                 break;
-            case Constants.EMERGENCY_TYPE_THEFT:
-                imageEmergencyType.setImageResource(R.drawable.theft_alarm);
+            case EMERGENCY_TYPE_THEFT:
+                imageEmergencyType.setImageResource(R.drawable.theft_alarm_na);
                 break;
-            case Constants.EMERGENCY_TYPE_WATER:
-                imageEmergencyType.setImageResource(R.drawable.water_emergency);
+            case EMERGENCY_TYPE_WATER:
+                imageEmergencyType.setImageResource(R.drawable.water_emergency_na);
                 break;
         }
     }

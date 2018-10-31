@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layoutBaseActivity"
         android:layout_margin="20dp"
-        android:drawableLeft="@drawable/search"
-        android:drawableStart="@drawable/search"
+        android:drawableLeft="@drawable/search_na"
+        android:drawableStart="@drawable/search_na"
         android:hint="@string/search_flat_number_hint"
         android:visibility="gone"
         tools:ignore="TextFields" />
@@ -47,7 +47,7 @@
             android:layout_gravity="center"
             android:layout_margin="20dp"
             android:contentDescription="@string/no_emergency_desc"
-            android:src="@drawable/feature_unavailable" />
+            android:src="@drawable/feature_unavailable_na" />
 
         <TextView
             android:id="@+id/textFeatureUnavailable"

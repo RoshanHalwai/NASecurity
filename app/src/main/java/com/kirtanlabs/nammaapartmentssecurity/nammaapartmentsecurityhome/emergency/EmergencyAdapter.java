@@ -59,16 +59,16 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Emer
         // Here we are setting image in cardView according to the emergency type
         switch (emergencyType) {
             case Constants.EMERGENCY_TYPE_MEDICAL:
-                holder.imageEmergencyType.setImageResource(R.drawable.medical_emergency);
+                holder.imageEmergencyType.setImageResource(R.drawable.medical_emergency_na);
                 break;
             case Constants.EMERGENCY_TYPE_FIRE:
-                holder.imageEmergencyType.setImageResource(R.drawable.fire_alarm);
+                holder.imageEmergencyType.setImageResource(R.drawable.fire_alarm_na);
                 break;
             case Constants.EMERGENCY_TYPE_THEFT:
-                holder.imageEmergencyType.setImageResource(R.drawable.theft_alarm);
+                holder.imageEmergencyType.setImageResource(R.drawable.theft_alarm_na);
                 break;
             case Constants.EMERGENCY_TYPE_WATER:
-                holder.imageEmergencyType.setImageResource(R.drawable.water_emergency);
+                holder.imageEmergencyType.setImageResource(R.drawable.water_emergency_na);
                 break;
         }
     }

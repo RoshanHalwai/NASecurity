@@ -76,9 +76,9 @@ public class GateNotificationHome extends BaseActivity implements AdapterView.On
     private GateNotificationHomeAdapter getAdapter() {
         int[] imageGateNotificationServices = {
                 R.drawable.vehicle_na,
-                R.drawable.delivery_man,
-                R.drawable.gift,
-                R.drawable.delivery
+                R.drawable.delivery_man_na,
+                R.drawable.gift_na,
+                R.drawable.delivery_na
         };
 
         String[] stringGateNotificationServices = {getString(R.string.vehicle_validation),

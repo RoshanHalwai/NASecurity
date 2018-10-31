@@ -18,7 +18,7 @@
         android:layout_weight="0.05"
         android:contentDescription="@string/back_button_description"
         android:scaleType="fitXY"
-        android:src="@drawable/arrow_left_white" />
+        android:src="@drawable/arrow_left_white_na" />
 
     <TextView
         android:id="@+id/textActivityTitle"

@@ -132,10 +132,10 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
                 imageVisitorPic.setImageBitmap(dailyServiceProfilePic);
                 break;
             case CAB:
-                imageVisitorPic.setImageDrawable(getResources().getDrawable(R.drawable.taxi));
+                imageVisitorPic.setImageDrawable(getResources().getDrawable(R.drawable.taxi_na));
                 break;
             default:
-                imageVisitorPic.setImageDrawable(getResources().getDrawable(R.drawable.delivery_man));
+                imageVisitorPic.setImageDrawable(getResources().getDrawable(R.drawable.delivery_man_na));
         }
 
         /*Setting on click listeners to the Views*/
