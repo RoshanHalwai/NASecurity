@@ -229,7 +229,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                     Bitmap dailyServiceProfilePic = getBitmapFromFile(EIntercom.this, imageFile);
                     circleImageView.setImageBitmap(dailyServiceProfilePic);
                     profilePhotoPath = imageFile;
-                    if (profilePhotoPath != null) {
+                    if (imageAbsolutePath != null) {
                         textErrorProfilePic.setVisibility(View.INVISIBLE);
                     }
                 }
@@ -492,6 +492,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    textErrorCabNumber.setVisibility(View.GONE);
                     editCabRtoNumber.requestFocus();
                 }
             }
@@ -512,6 +513,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                 if (s.length() == EDIT_TEXT_MIN_LENGTH) {
                     editCabStateCode.requestFocus();
                 } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    textErrorCabNumber.setVisibility(View.GONE);
                     editCabSerialNumberOne.requestFocus();
                 }
             }
@@ -533,6 +535,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                 if (s.length() == EDIT_TEXT_MIN_LENGTH) {
                     editCabRtoNumber.requestFocus();
                 } else if (s.length() == CAB_NUMBER_FIELD_LENGTH) {
+                    textErrorCabNumber.setVisibility(View.GONE);
                     editCabSerialNumberTwo.requestFocus();
 
                 }
@@ -559,7 +562,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                textErrorCabNumber.setVisibility(View.GONE);
             }
         });
     }

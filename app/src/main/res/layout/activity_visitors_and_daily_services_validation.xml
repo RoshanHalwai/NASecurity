@@ -55,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
             android:inputType="phone"
+            android:digits="0123456789"
             android:maxLength="10"
             android:textColor="@color/nmBlack"
             android:textSize="20sp"
