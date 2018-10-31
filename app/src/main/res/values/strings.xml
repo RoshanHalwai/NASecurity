@@ -10,14 +10,8 @@
     <string name="send_notification">Send Notification</string>
     <string name="mobile_number">User\'s Mobile Number</string>
     <string name="visitor_mobile_number">Visitor Mobile Number</string>
-    <string name="name_validation">Please Enter Name</string>
-    <string name="mobile_number_validation">Please Enter Mobile Number</string>
-    <string name="accept_alphabets">Accept Alphabets Only.</string>
-    <string name="upload_image">Please Upload Image</string>
     <string name="notifying_user">Notifying User</string>
     <string name="please_wait_a_moment">Please wait a moment</string>
-    <string name="cab_number_validation">Please enter cab number</string>
-
 
     <!--NammaApartment security E-Intercom-->
     <string name="image_of_visitor">Image of Visitor</string>
@@ -148,8 +142,7 @@
     <string name="search_flat_number">Search Flat number</string>
     <string name="recent_emergency">Recent Emergency</string>
 
-    <!--Validation-->
-    <string name="number_10digit_validation">Please Enter a valid 10 digit mobile number</string>
+    <!--Notifications Strings-->
     <string name="default_notification_channel_id">03</string>
 
     <!--Sign In Activity-->
@@ -171,17 +164,21 @@
     <string name="login_error_message">Login Error Message</string>
     <string name="mobile_number_found">Mobile Number not found. Contact \'Admin\' to add your Mobile Number.</string>
 
-    <!--E-Intercom-->
-    <!--Apartment Services Activity-->
-
     <!--Vehicle Validation Activity-->
     <string name="vehicle_number">Vehicle Number</string>
     <string name="verify_vehicle">Verify Vehicle</string>
-    <string name="vehicle_number_validation">Please enter vehicle number</string>
 
     <!--Vehicle Details Activity-->
     <string name="vehicle_details">Vehicle Details</string>
     <string name="owner_name">Owner Name:</string>
     <string name="vehicle_type">Vehicle Type:</string>
+
+    <!--Validations-->
+    <string name="number_10digit_validation">Please enter a valid 10 digit mobile number</string>
+    <string name="mobile_number_validation">Please enter mobile number</string>
+    <string name="name_validation">Please enter name</string>
+    <string name="upload_image">Please upload image</string>
+    <string name="cab_number_validation">Please enter cab number</string>
+    <string name="vehicle_number_validation">Please enter vehicle number</string>
 
 </resources>
