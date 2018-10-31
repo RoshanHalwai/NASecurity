@@ -952,6 +952,18 @@ function userCancelsSocietyServiceRequestNotifications(instance, change, context
 
 		return admin.database(instance).ref("/societyServices").child(societyServiceType).child(FIREBASE_CHILD_PRIVATE).child(FIREBASE_CHILD_DATA).child(societyServiceUID).once('value').then(queryResult => {
 			const tokenId = queryResult.val().tokenId;
+			var serviceCount = queryResult.val().serviceCount;
+			
+			//Decreasing Service Count of society service.
+			admin.database(instance)
+			.ref("/societyServices")
+			.child(societyServiceType)
+			.child(FIREBASE_CHILD_PRIVATE)
+			.child(FIREBASE_CHILD_DATA)
+			.child(societyServiceUID)
+			.child("serviceCount")
+			.set((serviceCount - 1));
+			
 			const payload = {
 				data: {
 					message: "Service has been Cancelled by the User",
