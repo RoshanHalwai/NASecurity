@@ -45,6 +45,7 @@
             android:layout_weight="0.1"
             android:inputType="phone"
             android:maxLength="10"
+            android:digits="0123456789"
             android:textColor="@color/nmBlack"
             android:textSize="20sp"
             tools:ignore="LabelFor" />
