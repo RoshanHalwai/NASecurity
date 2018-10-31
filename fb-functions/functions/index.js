@@ -947,7 +947,7 @@ function userCancelsSocietyServiceRequestNotifications(instance, change, context
 			const tokenId = queryResult.val().tokenId;
 			var serviceCount = queryResult.val().serviceCount;
 			
-			//Decrimenting Service Count of society service.
+			//Decreasing Service Count of society service.
 			admin.database(instance)
 			.ref("/societyServices")
 			.child(societyServiceType)
