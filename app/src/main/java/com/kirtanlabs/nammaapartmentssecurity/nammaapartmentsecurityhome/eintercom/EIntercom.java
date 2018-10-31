@@ -208,7 +208,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
                     Bitmap dailyServiceProfilePic = getBitmapFromFile(EIntercom.this, imageFile);
                     circleImageView.setImageBitmap(dailyServiceProfilePic);
                     profilePhotoPath = imageFile;
-                    if (profilePhotoPath != null) {
+                    if (imageAbsolutePath != null) {
                         textErrorProfilePic.setVisibility(View.INVISIBLE);
                     }
                 }
