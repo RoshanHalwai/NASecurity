@@ -37,6 +37,7 @@
         android:layout_below="@+id/textMobileNumber"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
+        android:digits="0123456789"
         android:inputType="phone"
         android:maxLength="10"
         android:textColor="@color/nmBlack"
