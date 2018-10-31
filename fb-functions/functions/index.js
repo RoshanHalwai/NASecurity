@@ -701,13 +701,20 @@ function receivedChatNotification(instance, change, context) {
 						}
 					}
 					
+					const notificationMessage = "A new message has been received";
 					const payload = {
-					data: {
-						message: "A new message has been received",
-						sender_uid: senderUID,
-						chat_room_uid: chatRoomUID,
-						type:"neighbour_chat"
-					}
+						notification: {
+							title: APP_NAME,
+							body: notificationMessage,
+							"sound": "default",
+							"badge": "1"
+							},
+						data: {
+							message: notificationMessage,
+							sender_uid: senderUID,
+							chat_room_uid: chatRoomUID,
+							type:"neighbour_chat"
+						}
 				};
 			
 				return admin.messaging().sendToDevice(tokenId,payload).then(result => {

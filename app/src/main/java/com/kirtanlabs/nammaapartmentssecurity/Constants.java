@@ -86,7 +86,6 @@ public class Constants {
 
     public static final String FAILED = "failed";
     public static final String SUCCESS = "success";
-    public static final String WARNING = "warning";
 
     /* ------------------------------------------------------------- *
      * Firebase Keys
@@ -210,6 +209,25 @@ public class Constants {
     public static final String NAMMA_APARTMENTS_SECURITY_PREFERENCE = "nammaApartmentsSecurityPreference";
     public static final String LOGGED_IN = "loggedIn";
     public static final String SECURITY_GUARD_UID = "securityGuardUid";
+    public static final String GUEST_APPROVAL_NOTIFICATION_UID = "guestApprovalNotificationUid";
+    public static final String CAB_APPROVAL_NOTIFICATION_UID = "cabApprovalNotificationUid";
+    public static final String PACKAGE_APPROVAL_NOTIFICATION_UID = "packageApprovalNotificationUid";
+    public static final String GUEST_APPROVAL_USER_UID = "guestApprovalUserUid";
+    public static final String CAB_APPROVAL_USER_UID = "cabApprovalUserUid";
+    public static final String PACKAGE_APPROVAL_USER_UID = "packageApprovalUserUid";
+    public static final String GUEST_APPROVAL_REFERENCE = "guestApprovalReference";
+    public static final String CAB_APPROVAL_REFERENCE = "cabApprovalReference";
+    public static final String PACKAGE_APPROVAL_REFERENCE = "packageApprovalReference";
+    public static final String GUEST_APPROVAL_USER_MOBILE_NUMBER = "guestApprovalUserMobileNumber";
+    public static final String CAB_APPROVAL_USER_MOBILE_NUMBER = "cabApprovalUserMobileNumber";
+    public static final String PACKAGE_APPROVAL_USER_MOBILE_NUMBER = "packageApprovalUserMobileNumber";
+    public static final String GUEST_APPROVAL_USER_APARTMENT_NAME = "guestApprovalUserApartmentName";
+    public static final String CAB_APPROVAL_USER_APARTMENT_NAME = "cabApprovalUserApartmentName";
+    public static final String PACKAGE_APPROVAL_USER_APARTMENT_NAME = "packageApprovalUserApartmentName";
+    public static final String GUEST_APPROVAL_USER_FLAT_NUMBER = "guestApprovalUserFlatNumber";
+    public static final String CAB_APPROVAL_USER_FLAT_NUMBER = "cabApprovalUserFlatNumber";
+    public static final String PACKAGE_APPROVAL_USER_FLAT_NUMBER = "packageApprovalUserFlatNumber";
+    public static final String GUEST_APPROVAL_VISITOR_IMAGE_PATH = "guestApprovalVisitorImagePath";
 
     /* ------------------------------------------------------------- *
      * Font Types
