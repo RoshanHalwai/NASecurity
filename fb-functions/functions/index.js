@@ -978,7 +978,7 @@ exports.donateFoodNotifications_brigade = functions.database.instance(BRIGADE_GA
 function donateFoodNotifications(instance, change, context) {
 	
 	const status = change.after.val();
-	if (status === null || status === "Completed")
+	if (status === null || status === "Collected")
 		return 0;
 	
 	const foodDonationNotificationUID = context.params.foodDonationNotificationUID;
