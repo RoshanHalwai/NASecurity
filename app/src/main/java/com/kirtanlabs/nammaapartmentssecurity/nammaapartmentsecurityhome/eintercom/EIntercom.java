@@ -2,6 +2,7 @@ package com.kirtanlabs.nammaapartmentssecurity.nammaapartmentsecurityhome.einter
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -38,6 +39,12 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.ALL_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_APPROVAL_NOTIFICATION_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_APPROVAL_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_APPROVAL_USER_APARTMENT_NAME;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_APPROVAL_USER_FLAT_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_APPROVAL_USER_MOBILE_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_APPROVAL_USER_UID;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAB_NUMBER_FIELD_LENGTH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.CAMERA_PERMISSION_REQUEST_CODE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.EDIT_TEXT_MIN_LENGTH;
@@ -51,9 +58,23 @@ import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_UI
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_CHILD_VISITORS;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.FIREBASE_STORAGE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST_APPROVAL_NOTIFICATION_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST_APPROVAL_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST_APPROVAL_USER_APARTMENT_NAME;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST_APPROVAL_USER_FLAT_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST_APPROVAL_USER_MOBILE_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST_APPROVAL_USER_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.GUEST_APPROVAL_VISITOR_IMAGE_PATH;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.HYPHEN;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.NAMMA_APARTMENTS_SECURITY_PREFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.NOTIFICATION_UID;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE_APPROVAL_NOTIFICATION_UID;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE_APPROVAL_REFERENCE;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE_APPROVAL_USER_APARTMENT_NAME;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE_APPROVAL_USER_FLAT_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE_APPROVAL_USER_MOBILE_NUMBER;
+import static com.kirtanlabs.nammaapartmentssecurity.Constants.PACKAGE_APPROVAL_USER_UID;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USERS_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.PRIVATE_USER_DATA_REFERENCE;
 import static com.kirtanlabs.nammaapartmentssecurity.Constants.REFERENCE;
@@ -85,7 +106,7 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
     private CircleImageView circleImageView;
     private File profilePhotoPath;
     private String eIntercomType, visitorMobileNumber, reference, imageAbsolutePath,
-            userMobileNumber, profilePhoto;
+            userMobileNumber, profilePhoto, userApartmentName, userFlatNumber;
 
     /* ------------------------------------------------------------- *
      * Overriding BaseActivity Methods
@@ -322,11 +343,13 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
 
                             /*We store Notification under FlatDetails->Notification->userUID*/
                             UserFlatDetails userFlatDetails = Objects.requireNonNull(nammaApartmentUser).getFlatDetails();
+                            userApartmentName = userFlatDetails.getApartmentName();
+                            userFlatNumber = userFlatDetails.getFlatNumber();
                             DatabaseReference userDataReference = PRIVATE_USER_DATA_REFERENCE
                                     .child(userFlatDetails.getCity())
                                     .child(userFlatDetails.getSocietyName())
-                                    .child(userFlatDetails.getApartmentName())
-                                    .child(userFlatDetails.getFlatNumber());
+                                    .child(userApartmentName)
+                                    .child(userFlatNumber);
 
                             /*We create a unique ID for every push notifications*/
                             DatabaseReference notificationsReference = userDataReference
@@ -397,6 +420,38 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
      * @param notificationUID UID of the notification details
      */
     private void callAwaitingResponseActivity(String userUID, String notificationUID) {
+        /*Storing E-Intercom Request Details in Shared preference*/
+        SharedPreferences sharedPreferences = getSharedPreferences(NAMMA_APARTMENTS_SECURITY_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        switch (eIntercomType) {
+            case GUEST:
+                editor.putString(GUEST_APPROVAL_USER_UID, userUID);
+                editor.putString(GUEST_APPROVAL_NOTIFICATION_UID, notificationUID);
+                editor.putString(GUEST_APPROVAL_REFERENCE, reference);
+                editor.putString(GUEST_APPROVAL_USER_MOBILE_NUMBER, userMobileNumber);
+                editor.putString(GUEST_APPROVAL_USER_APARTMENT_NAME, userApartmentName);
+                editor.putString(GUEST_APPROVAL_USER_FLAT_NUMBER, userFlatNumber);
+                editor.putString(GUEST_APPROVAL_VISITOR_IMAGE_PATH, imageAbsolutePath);
+                break;
+            case CAB:
+                editor.putString(CAB_APPROVAL_USER_UID, userUID);
+                editor.putString(CAB_APPROVAL_NOTIFICATION_UID, notificationUID);
+                editor.putString(CAB_APPROVAL_REFERENCE, reference);
+                editor.putString(CAB_APPROVAL_USER_MOBILE_NUMBER, userMobileNumber);
+                editor.putString(CAB_APPROVAL_USER_APARTMENT_NAME, userApartmentName);
+                editor.putString(CAB_APPROVAL_USER_FLAT_NUMBER, userFlatNumber);
+                break;
+            case PACKAGE:
+                editor.putString(PACKAGE_APPROVAL_USER_UID, userUID);
+                editor.putString(PACKAGE_APPROVAL_NOTIFICATION_UID, notificationUID);
+                editor.putString(PACKAGE_APPROVAL_REFERENCE, reference);
+                editor.putString(PACKAGE_APPROVAL_USER_MOBILE_NUMBER, userMobileNumber);
+                editor.putString(PACKAGE_APPROVAL_USER_APARTMENT_NAME, userApartmentName);
+                editor.putString(PACKAGE_APPROVAL_USER_FLAT_NUMBER, userFlatNumber);
+                break;
+        }
+        editor.apply();
+
         /*Call AwaitingResponse activity, by this time user should have received the Notification
          * Since, cloud functions would have been triggered*/
         Intent awaitingResponseIntent = new Intent(EIntercom.this, AwaitingResponse.class);

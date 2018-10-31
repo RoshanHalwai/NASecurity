@@ -150,9 +150,9 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
         /*Keep track of user response*/
         getUserResponse(visitorType);
 
-        /*Action to be performed when no response received - Timeout 45 Seconds*/
+        /*Action to be performed when no response received - Timeout 30 Seconds*/
         Handler h = new Handler(Looper.getMainLooper());
-        long delayInMilliseconds = 45000;
+        long delayInMilliseconds = 30000;
         h.postDelayed(() -> setNotificationToIgnored(userUID, visitorType, notificationUID), delayInMilliseconds);
     }
 
