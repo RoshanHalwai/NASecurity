@@ -131,7 +131,7 @@ function sendNotifications(instance, change, context) {
 	.once('value').then(queryResult => {
 		const notificationSnapshot = queryResult.val();
 		const message = notificationSnapshot.message;
-		const profilePhoto = notificationSnapshot.profilePhoto;
+		var profilePhoto = notificationSnapshot.profilePhoto;
 		var mobileNumber;
 		if (visitorType === "guests") {
 			mobileNumber = notificationSnapshot.mobileNumber;
@@ -158,6 +158,12 @@ function sendNotifications(instance, change, context) {
 					return console.log("Notification sent");
 				});
 			} else {
+				/*In iOS to get notifications quickly we need profile photo; hence putting cab and package photos URL from DEV-Storage*/
+				if (visitorType === "cabs") {
+					profilePhoto = "https://firebasestorage.googleapis.com/v0/b/nammaapartments-development.appspot.com/o/taxi_na.png?alt=media&token=ad682f31-4b30-43cc-8ca2-06f9e0b3c8a6";
+				} else if((visitorType === "packages")) {
+					profilePhoto = "https://firebasestorage.googleapis.com/v0/b/nammaapartments-development.appspot.com/o/delivery_man_na.png?alt=media&token=aba63338-7bb0-48e9-a50b-dbde9d48edcb";
+				}
 				const payload = {
 					notification: {
 						title: APP_NAME,
