@@ -5,14 +5,14 @@ const admin = require('firebase-admin');
 const APP_NAME = "Namma Apartments";
 
 /*Society Details*/
-const DEFAULT_DB_URL = "https://nammaapartments-development.firebaseio.com/"
-const DEFAULT_INSTANCE_NAME = "nammaapartments-development"
+const DEFAULT_DB_URL = "https://nammaapartments-beta.firebaseio.com/"
+const DEFAULT_INSTANCE_NAME = "nammaapartments-beta"
 
-const AIR_FORCE_COLONY_DB_URL = "https://nammaapartments-dev-airforcecolony.firebaseio.com/"
-const AIR_FORCE_COLONY_INSTANCE_NAME = "nammaapartments-dev-airforcecolony"
+const AIR_FORCE_COLONY_DB_URL = "https://nammaapartments-beta-airforcecolony.firebaseio.com/"
+const AIR_FORCE_COLONY_INSTANCE_NAME = "nammaapartments-beta-airforcecolony"
 
-const BRIGADE_GATEWAY_DB_URL = "https://brigadegateway.firebaseio.com/"
-const BRIGADE_GATEWAY_INSTANCE_NAME = "brigadegateway"
+const BRIGADE_GATEWAY_DB_URL = "https://nammaapartments-beta-brigade.firebaseio.com/"
+const BRIGADE_GATEWAY_INSTANCE_NAME = "nammaapartments-beta-brigade"
 
 /*Mapping Daily Service Firebase Keys with Notification value*/
 const dailyServiceLookup = {};
@@ -106,11 +106,6 @@ exports.updatePendingDues = functions.https.onRequest((req, res) => {
 // Notifications related to Namma Apartments App (where user's action is required)
 
 //Notifications triggered when Security Guard uses E-Intercom facility to ask permission from User
-exports.sendNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
-.onCreate((change, context) => {
-	return sendNotifications(defaultInstance, change, context);
-});
-
 exports.sendNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/gateNotifications/{userUID}/{visitorType}/{notificationUID}')
 .onCreate((change, context) => {
 	return sendNotifications(airForceColonyInstance, change, context);
@@ -194,11 +189,6 @@ function sendNotifications(instance, change, context) {
 // Nofications related to Namma Apartments App (where user's action is  not required)
 
 //Notifications triggered when Guests either Enters or Leaves the Society
-exports.guestNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/visitors/private/{visitorUID}/status')
-.onWrite((change, context) => {
-	return guestNotifications(defaultInstance, change, context);
-});
-
 exports.guestNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/visitors/private/{visitorUID}/status')
 .onWrite((change, context) => {
 	return guestNotifications(airForceColonyInstance, change, context);
@@ -268,11 +258,6 @@ function guestNotifications(instance, change, context) {
 }
 
 //Notifications triggered when Daily Services either Enters or Leaves the User Society
-exports.dailyServiceNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
-.onWrite((change, context) => {
-	return dailyServiceNotification(defaultInstance, change, context);
-});
-
 exports.dailyServiceNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/dailyServices/all/public/{dailyServiceType}/{dailyServiceUID}/status')
 .onWrite((change, context) => {
 	return dailyServiceNotification(airForceColonyInstance, change, context);
@@ -351,11 +336,6 @@ function dailyServiceNotification(instance, change, context) {
 	}
 
 //Notifications triggered when Admin adds a Notice
-exports.noticeBoardNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/noticeBoard/{noticeBoardUID}')
-.onWrite((change, context) => {
-	return noticeBoardNotification(defaultInstance, change, context);
-});
-
 exports.noticeBoardNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/noticeBoard/{noticeBoardUID}')
 .onWrite((change, context) => {
 	return noticeBoardNotification(airForceColonyInstance, change, context);
@@ -422,11 +402,6 @@ function noticeBoardNotification(instance, change, context) {
 
 //Notifications triggered when Cabs either Enters or Leaves the User Society
 
-exports.cabNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/cabs/private/{cabUID}/status')
-.onWrite((change, context) => {
-	return cabNotifications(defaultInstance, change, context);
-});
-
 exports.cabNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/cabs/private/{cabUID}/status')
 .onWrite((change, context) => {
 	return cabNotifications(airForceColonyInstance, change, context);
@@ -477,11 +452,6 @@ function cabNotifications(instance, change, context) {
 }
 
 //Notifications triggered when Packages either Enters or Leaves the User Society
-
-exports.packageNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/deliveries/private/{deliveryUID}/status')
-.onWrite((change, context) => {
-	return packageNotifications(defaultInstance, change, context);
-});
 
 exports.packageNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/deliveries/private/{deliveryUID}/status')
 .onWrite((change, context) => {
@@ -535,11 +505,6 @@ function packageNotifications(instance, change, context) {
 }
 
 //Notifications triggered when privilege value is set to 0,1 or 2
-
-exports.activateAccountNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/users/private/{userUID}/privileges/verified')
-.onWrite((change, context) => {
-	return activateAccountNotification(defaultInstance, change, context);
-});
 
 exports.activateAccountNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/users/private/{userUID}/privileges/verified')
 .onWrite((change, context) => {
@@ -608,12 +573,6 @@ function activateAccountNotification(instance, change, context) {
 }
 
 // Notifications triggered when society service accepts User's Society Service request
-
-exports.societyServiceResponseNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
-.onWrite((change, context) => {
-	return societyServiceResponseNotifications(defaultInstance, change, context);
-});
-
 exports.societyServiceResponseNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/takenBy')
 .onWrite((change, context) => {
 	return societyServiceResponseNotifications(airForceColonyInstance, change, context);
@@ -660,12 +619,6 @@ function societyServiceResponseNotifications(instance, change, context) {
 }
 
 // Notifications triggered when user sents message to another admin user of different flat
-
-exports.receivedChatNotification_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/chats/private/{chatRoomUID}/{messageUID}')
-.onCreate((change, context) => {
-	console.log("receivedChatNotification_default API Called");
-	return receivedChatNotification(defaultInstance, change, context);
-});
 
 exports.receivedChatNotification_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/chats/private/{chatRoomUID}/{messageUID}')
 .onCreate((change, context) => {
@@ -730,12 +683,6 @@ function receivedChatNotification(instance, change, context) {
 // Nofications related to Namma Apartments Society Service App
 
 // Notifications triggered when User sends notification to Society Service
-
-exports.societyServiceNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
-.onWrite((change, context) => {
-	return societyServiceNotifications(defaultInstance, change, context);
-});
-
 exports.societyServiceNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/userData/private/{city}/{society}/{apartment}/{flat}/societyServiceNotifications/{societyServiceType}/{notificationUID}')
 .onWrite((change, context) => {
 	return societyServiceNotifications(airForceColonyInstance, change, context);
@@ -923,11 +870,6 @@ function societyServiceNotifications(instance, change, context) {
 }
 
 // Notifications triggered when user cancels society service request
-exports.userCancelsSocietyServiceRequestNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/status')
-.onWrite((change, context) => {
-	return userCancelsSocietyServiceRequestNotifications(defaultInstance, change, context);
-});
-
 exports.userCancelsSocietyServiceRequestNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/societyServiceNotifications/all/{notificationUID}/status')
 .onWrite((change, context) => {
 	return userCancelsSocietyServiceRequestNotifications(airForceColonyInstance, change, context);
@@ -979,11 +921,6 @@ function userCancelsSocietyServiceRequestNotifications(instance, change, context
 
 // Notifications triggered to Society Admin when User request to donate food 
 
-exports.donateFoodNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}/status')
-.onWrite((change, context) => {
-	return donateFoodNotifications(defaultInstance, change, context);
-});
-
 exports.donateFoodNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/foodDonations/{foodDonationNotificationUID}/status')
 .onWrite((change, context) => {
 	return donateFoodNotifications(airForceColonyInstance, change, context);
@@ -1029,11 +966,6 @@ function donateFoodNotifications(instance, change, context) {
 }
 
 // Notifications triggered to Society Admin when User raises 'Support' request 
-exports.supportNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/support/{supportUID}')
-.onWrite((change, context) => {
-	return supportNotifications(defaultInstance, change, context);
-});
-
 exports.supportNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/support/{supportUID}')
 .onWrite((change, context) => {
 	return supportNotifications(airForceColonyInstance, change, context);
@@ -1075,11 +1007,6 @@ function supportNotifications(instance, change, context) {
 // Nofications related to Namma Apartments Security App
 
 // Notifications triggered when User Raises an Emergency Alarm. The Security Guard Admin and the Society Admin gets notified.
-exports.emergencyNotifications_default = functions.database.instance(DEFAULT_INSTANCE_NAME).ref('/emergencies/public/{emergencyUID}')
-.onWrite((change, context) => {
-	return emergencyNotifications(defaultInstance, change, context);
-});
-
 exports.emergencyNotifications_2 = functions.database.instance(AIR_FORCE_COLONY_INSTANCE_NAME).ref('/emergencies/public/{emergencyUID}')
 .onWrite((change, context) => {
 	return emergencyNotifications(airForceColonyInstance, change, context);
