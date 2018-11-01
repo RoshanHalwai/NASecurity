@@ -5,14 +5,14 @@ const admin = require('firebase-admin');
 const APP_NAME = "Namma Apartments";
 
 /*Society Details*/
-const DEFAULT_DB_URL = "https://nammaapartments-beta.firebaseio.com/"
-const DEFAULT_INSTANCE_NAME = "nammaapartments-beta"
+const DEFAULT_DB_URL = "https://nammaapartments-development.firebaseio.com/"
+const DEFAULT_INSTANCE_NAME = "nammaapartments-development"
 
-const AIR_FORCE_COLONY_DB_URL = "https://nammaapartments-beta-airforcecolony.firebaseio.com/"
-const AIR_FORCE_COLONY_INSTANCE_NAME = "nammaapartments-beta-airforcecolony"
+const AIR_FORCE_COLONY_DB_URL = "https://nammaapartments-dev-airforcecolony.firebaseio.com/"
+const AIR_FORCE_COLONY_INSTANCE_NAME = "nammaapartments-dev-airforcecolony"
 
-const BRIGADE_GATEWAY_DB_URL = "https://nammaapartments-beta-brigade.firebaseio.com/"
-const BRIGADE_GATEWAY_INSTANCE_NAME = "nammaapartments-beta-brigade"
+const BRIGADE_GATEWAY_DB_URL = "https://brigadegateway.firebaseio.com/"
+const BRIGADE_GATEWAY_INSTANCE_NAME = "brigadegateway"
 
 /*Mapping Daily Service Firebase Keys with Notification value*/
 const dailyServiceLookup = {};
@@ -296,7 +296,7 @@ function dailyServiceNotification(instance, change, context) {
 						var payload;
 						return admin.database(instance).ref("/userData").child(FIREBASE_CHILD_PRIVATE)
 							.child(userCity).child(userSocietyName).child(userApartmentName).child(userFlatNumber).child("dailyServices").child(dailyServiceType).child(dailyServiceUID)
-							.once('value').then(queryResult => {
+							.child(userUID).once('value').then(queryResult => {
 
 								const isDailyServiceWorking = queryResult.val();
 
