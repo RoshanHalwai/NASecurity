@@ -5,6 +5,15 @@ const admin = require('firebase-admin');
 const APP_NAME = "Namma Apartments";
 
 /*Society Details*/
+/*https://nammaapartments-beta.firebaseio.com/*/
+/*nammaapartments-beta*/
+
+/*https://nammaapartments-beta-airforcecolony.firebaseio.com/*/
+/*nammaapartments-beta-airforcecolony*/
+
+/*https://nammaapartments-beta-brigade.firebaseio.com/*/
+/*nammaapartments-beta-brigade*/
+
 const DEFAULT_DB_URL = "https://nammaapartments-development.firebaseio.com/"
 const DEFAULT_INSTANCE_NAME = "nammaapartments-development"
 
