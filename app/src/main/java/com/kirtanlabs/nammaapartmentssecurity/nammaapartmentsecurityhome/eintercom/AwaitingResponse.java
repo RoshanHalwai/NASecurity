@@ -370,7 +370,6 @@ public class AwaitingResponse extends BaseActivity implements View.OnClickListen
                                     textUserResponse.setText(getString(R.string.rejected_request));
                                     break;
                                 default:
-                                    //TODO: Add new Image for Ignored case
                                     imageResponseStatus.setImageDrawable(getResources().getDrawable(R.drawable.failed));
                                     textUserResponse.setText(getString(R.string.ignored_request));
                                     layoutCallUser.setVisibility(View.VISIBLE);
