@@ -129,7 +129,15 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable et) {
+                String s = et.toString();
+                    /*We check if the text user has entered is lowercase if it is in lowercase then we change it
+                    to upper case*/
+                if (!s.equals(s.toUpperCase())) {
+                    s = s.toUpperCase();
+                    editVehicleStateCode.setText(s);
+                    editVehicleStateCode.setSelection(editVehicleStateCode.getText().length());
+                }
             }
         });
 
@@ -173,7 +181,15 @@ public class VehicleValidation extends BaseActivity implements View.OnClickListe
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable et) {
+                String s = et.toString();
+                    /*We check if the text user has entered is lowercase if it is in lowercase then we change it
+                    to upper case*/
+                if (!s.equals(s.toUpperCase())) {
+                    s = s.toUpperCase();
+                    editVehicleSerialNumberOne.setText(s);
+                    editVehicleSerialNumberOne.setSelection(editVehicleSerialNumberOne.getText().length());
+                }
 
             }
         });
