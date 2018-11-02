@@ -13,6 +13,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.kirtanlabs.nammaapartmentssecurity.NammaApartmentsSecurity.BUILD_VARIANT;
+
 /**
  * DO NOT AUTO-FORMAT THIS FILE
  */
@@ -22,18 +24,18 @@ public class Constants {
      * Environment
      * ------------------------------------------------------------- */
 
-    public static final String BETA_ENV = "beta_env";
-    public static final String DEV_ENV = "dev_env";
+    static final String BETA_ENV = "beta_env";
+    static final String DEV_ENV = "dev_env";
 
     /* ------------------------------------------------------------- *
      * Application Specific
      * ------------------------------------------------------------- */
 
     //TODO:Change the Guard's City and Society name when we deploy to new society.
-    public static final String GUARD_CITY_NAME = "Bengaluru";
-    public static final String GUARD_SOCIETY_NAME = "Brigade Gateway";
+    public static final String GUARD_CITY_NAME = "Chennai";
+    public static final String GUARD_SOCIETY_NAME = "Air Force Colony";
 
-    public static final String PACKAGE_NAME = "com.kirtanlabs.nammaapartmentssecurity";
+    static final String PACKAGE_NAME = "com.kirtanlabs.nammaapartmentssecurity";
     public static final String HYPHEN = "-";
     public static final String EMERGENCY_TYPE_MEDICAL = "Medical";
     public static final String EMERGENCY_TYPE_FIRE = "Fire";
@@ -135,7 +137,7 @@ public class Constants {
      * ------------------------------------------------------------- */
 
     @SuppressLint("StaticFieldLeak")
-    private static final FirebaseApp FIREBASE_APP = FirebaseApp.getInstance(DEV_ENV);
+    private static final FirebaseApp FIREBASE_APP = FirebaseApp.getInstance(BUILD_VARIANT);
     private static final FirebaseDatabase FIREBASE_DATABASE = FirebaseDatabase.getInstance(FIREBASE_APP);
     public static final FirebaseStorage FIREBASE_STORAGE = FirebaseStorage.getInstance(FIREBASE_APP);
     public static final FirebaseAuth FIREBASE_AUTH = FirebaseAuth.getInstance(FIREBASE_APP);
