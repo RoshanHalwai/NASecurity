@@ -498,7 +498,15 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable et) {
+                String s = et.toString();
+                    /*We check if the text user has entered is lowercase if it is in lowercase then we change it
+                    to upper case*/
+                if (!s.equals(s.toUpperCase())) {
+                    s = s.toUpperCase();
+                    editCabStateCode.setText(s);
+                    editCabStateCode.setSelection(editCabStateCode.getText().length());
+                }
             }
         });
 
@@ -542,8 +550,15 @@ public class EIntercom extends BaseActivity implements View.OnClickListener {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
+            public void afterTextChanged(Editable et) {
+                String s = et.toString();
+                    /*We check if the text user has entered is lowercase if it is in lowercase then we change it
+                    to upper case*/
+                if (!s.equals(s.toUpperCase())) {
+                    s = s.toUpperCase();
+                    editCabSerialNumberOne.setText(s);
+                    editCabSerialNumberOne.setSelection(editCabSerialNumberOne.getText().length());
+                }
             }
         });
 
